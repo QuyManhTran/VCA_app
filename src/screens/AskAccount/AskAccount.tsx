@@ -10,6 +10,9 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
   const onMoveLogin = () => {
     navigation.navigate("Login");
   };
+  const onMoveRegister = () => {
+    navigation.navigate("Register");
+  };
   return (
     <View style={{ flex: 1 }}>
       <Image
@@ -49,6 +52,7 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
             minHeight: 72,
           }}
           customeStyles={{ marginVertical: 12 }}
+          onPress={onMoveRegister}
         >
           <Text style={styles.title}>Sign up</Text>
         </Button>

@@ -7,6 +7,7 @@ import { montserratFonts } from "../../../../constants/fontFamiles";
 import { RouterProps } from "../../Splash/Splash";
 
 const SuccessfullyChange = ({ route, navigation }: RouterProps) => {
+  console.log(route);
   const onMoveLogin = () => {
     navigation.navigate("Login");
   };
@@ -16,11 +17,17 @@ const SuccessfullyChange = ({ route, navigation }: RouterProps) => {
         <Image source={congratulation}></Image>
       </View>
       <View style={{ marginTop: 10, width: 400 }}>
-        <Text style={styles.heading}>Password's changed successfully!</Text>
+        <Text style={styles.heading}>
+          {route.params
+            ? `Account have been created successfully!`
+            : `Password's changed successfully!`}
+        </Text>
       </View>
       <View style={{ marginTop: 30, width: 400, alignItems: "center" }}>
         <Text style={styles.remind}>
-          Now, You can use your new password to login
+          {route.params
+            ? `Now, You can use this account to login`
+            : `Now, You can use your new password to login`}
         </Text>
       </View>
       <TouchableOpacity activeOpacity={0.7} onPress={onMoveLogin}>

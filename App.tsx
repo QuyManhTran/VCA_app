@@ -8,6 +8,7 @@ import EmailRequirement from "./src/screens/ForgotPassword/EmailRequirement/Emai
 import CodeVerifying from "./src/screens/ForgotPassword/CodeVerifying";
 import ResetPassword from "./src/screens/ForgotPassword/ResetPassword";
 import SuccessfullyChange from "./src/screens/ForgotPassword/SuccessfullyChange";
+import Register from "./src/screens/Register";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
           name="SuccessfullyChange"
           component={SuccessfullyChange}
         />
+        <Stack.Screen name="Register" component={Register} />
       </Stack.Navigator>
     </NavigationContainer>
   );

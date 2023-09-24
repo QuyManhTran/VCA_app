@@ -4,13 +4,10 @@ import { montserratFonts } from "../../../constants/fontFamiles";
 const styles = StyleSheet.create({
   lockIcon: {
     position: "absolute",
-    // width: "100%",
+    width: "100%",
     top: 80,
     flexDirection: "row",
     justifyContent: "center",
-    // padding: 10,
-    // borderWidth: 2,
-    // borderColor: colors.primary,
   },
 
   container: {
@@ -39,21 +36,19 @@ const styles = StyleSheet.create({
   forgotPassword: {
     marginTop: 20,
     fontSize: 20,
-    textDecorationLine: "underline",
     fontFamily: montserratFonts.regular,
   },
   icon: {
     marginHorizontal: 20,
   },
-  continue: {
-    backgroundColor: "#fff",
-    width: 200,
+  create: {
+    backgroundColor: colors.primary,
+    width: 320,
     height: 60,
     borderRadius: 30,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 60,
   },
   disabled: {
     backgroundColor: "#ebebe4",
