@@ -86,7 +86,7 @@ const Login = ({ route, navigation }: RouterProps) => {
             value={userName}
             onChangeText={handleUserName}
             spellCheck={false}
-            underlineColorAndroid={"transparent"}
+            // underlineColorAndroid={"transparent"}
             selectionColor={colors.primary}
           ></TextInput>
         </Button>
