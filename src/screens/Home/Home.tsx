@@ -1,17 +1,30 @@
 import { View, Text, Switch, ScrollView } from "react-native";
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import ThemeContext, { darkTheme } from "../../utilies/theme";
-import { StatusBar } from "expo-status-bar";
 import { Animated } from "react-native";
+import { RouterProps } from "../Splash/Splash";
 
-const Home = () => {
-  const isDarkMode = useContext(ThemeContext);
+const Home = ({ route, navigation }: RouterProps) => {
+  const { isDarkMode, setHomeNavbar } = useContext(ThemeContext);
+  const [prevOffSetY, setPrevOffSetY] = useState(0);
   const scrollY = useRef(new Animated.Value(0)).current;
   const diffClampScrollY = Animated.diffClamp(scrollY, 0, 70);
   const headerBottom = diffClampScrollY.interpolate({
-    inputRange: [0, 14],
+    inputRange: [0, 70],
     outputRange: [0, -70],
   });
+
+  useEffect(() => {
+    scrollY.addListener(({ value }) => {
+      if (value > prevOffSetY) {
+        setHomeNavbar(true);
+      } else {
+        setHomeNavbar(false);
+      }
+    });
+    return () => scrollY.removeAllListeners();
+  });
+
   return (
     <View>
       <Animated.View
@@ -30,8 +43,8 @@ const Home = () => {
         <Text>Header</Text>
       </Animated.View>
       <Animated.ScrollView
-        bounces={false}
         showsVerticalScrollIndicator={false}
+        onScrollEndDrag={(e) => setPrevOffSetY(e.nativeEvent.contentOffset.y)}
         onScroll={Animated.event(
           [
             {

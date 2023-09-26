@@ -15,17 +15,25 @@ import ThemeContext from "./src/utilies/theme";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isHomeScrollDown, setIsHomeScrollDown] = useState(false);
+  const setHomeNavbar = (isScrollDown: boolean) => {
+    if (isScrollDown !== isHomeScrollDown) {
+      setIsHomeScrollDown(isScrollDown);
+    }
+  };
   useEffect(() => {
     const listener = EventRegister.addEventListener("ChangeTheme", (theme) => {
-      setDarkMode(theme);
+      setIsDarkMode(theme);
     });
     return () => {
       EventRegister.removeAllListeners();
     };
-  }, [darkMode]);
+  }, [isDarkMode]);
   return (
-    <ThemeContext.Provider value={darkMode}>
+    <ThemeContext.Provider
+      value={{ isDarkMode, isHomeScrollDown, setHomeNavbar }}
+    >
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {/* <Stack.Screen name="Splash" component={Splash} />
