@@ -5,6 +5,7 @@ import {
   useWindowDimensions,
   Animated,
   Easing,
+  Text,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./style";
@@ -14,6 +15,7 @@ import ArrowButton from "../../components/ArrowButton";
 import { fontFamilies } from "../../../constants";
 import customeFont from "../../../constants/customeFont";
 import { NavigationProp } from "@react-navigation/native";
+import { montserratFonts } from "../../../constants/fontFamiles";
 
 export interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -84,16 +86,35 @@ const Splash = ({ route, navigation }: RouterProps) => {
               ></Image>
               {item.heading && (
                 <View style={[styles.containerTitle, { width: width }]}>
+                  <View style={{ flex: 0 }}>
+                    <Animated.Text
+                      style={[
+                        styles.heading,
+                        {
+                          opacity: opacity,
+                          fontFamily: isFont
+                            ? montserratFonts.extra
+                            : undefined,
+                        },
+                      ]}
+                    >
+                      {item.heading}
+                    </Animated.Text>
+                  </View>
                   <Animated.Text
                     style={[
-                      styles.heading,
+                      {
+                        marginTop: 20,
+                        maxWidth: 300,
+                        lineHeight: 20,
+                      },
                       {
                         opacity: opacity,
                         fontFamily: isFont ? fontFamilies.bold : undefined,
                       },
                     ]}
                   >
-                    {item.heading}
+                    {item.description}
                   </Animated.Text>
                 </View>
               )}
@@ -119,6 +140,7 @@ const Splash = ({ route, navigation }: RouterProps) => {
         onViewableItemsChanged={viewableItemsChange}
         scrollEventThrottle={32}
         viewabilityConfig={viewConfig}
+        bounces={false}
       ></FlatList>
 
       <View style={styles.paginator}>

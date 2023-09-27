@@ -5,9 +5,6 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   View,
-  Alert,
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import styles from "./style";
@@ -15,9 +12,7 @@ import Button from "../../components/Button";
 import UserIcon from "../../../assets/icons/UserIcon";
 import EyeIcon from "../../../assets/icons/EyeIcon";
 import HideEyeIcon from "../../../assets/icons/HideEyeIcon";
-import GoogleIcon from "../../../assets/icons/GoogleIcon";
 import { colors } from "../../../constants";
-import LockIcon from "../../../assets/icons/LockIcon";
 import { RouterProps } from "../Splash/Splash";
 import {
   isEmail as isRealEmail,
@@ -26,7 +21,10 @@ import {
 } from "../../utilies/validation";
 import useDebounce from "../../../hooks/useDebounce";
 import EmailIcon from "../../../assets/icons/EmailIcon";
-import { montserratFonts } from "../../../constants/fontFamiles";
+import fontFamilies, { montserratFonts } from "../../../constants/fontFamiles";
+import AuthenBackGround from "../../components/AuthenBackGround";
+import NavButton from "../../components/NavButton";
+import screenWidth from "../../../constants/screenWidth";
 
 const Register = ({ route, navigation }: RouterProps) => {
   const [userName, setUserName] = useState("");
@@ -38,6 +36,7 @@ const Register = ({ route, navigation }: RouterProps) => {
   const [isHidePassword, setIsHidePassWord] = useState(true);
   const debounce = useDebounce(password, 500);
   const emailDebounce = useDebounce(email, 500);
+  const width = screenWidth();
   const onRegister = () => {
     if (!isValidated) {
       if (!userName.length) {
@@ -96,99 +95,105 @@ const Register = ({ route, navigation }: RouterProps) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        <View style={styles.lockIcon}>
-          <LockIcon fill color={colors.lock} size={40}></LockIcon>
-        </View>
-        <Text style={styles.heading}>Sign up</Text>
-        <Button loginStyle={true}>
-          <View style={styles.icon}>
-            <UserIcon></UserIcon>
-          </View>
-          <TextInput
-            placeholder="User Name"
-            style={[styles.input]}
-            value={userName}
-            onChangeText={handleUserName}
-            spellCheck={false}
-            underlineColorAndroid={"transparent"}
-            selectionColor={colors.primary}
-          ></TextInput>
-        </Button>
-        <Button loginStyle={true}>
-          <View style={[styles.icon, , { marginTop: 1 }]}>
-            <EmailIcon size={24}></EmailIcon>
-          </View>
-          <TextInput
-            placeholder="Email"
-            style={[
-              styles.input,
-              {
-                color: !isEmail ? "red" : undefined,
-              },
-            ]}
-            value={email}
-            onChangeText={handleEmail}
-            spellCheck={false}
-            underlineColorAndroid={"transparent"}
-            selectionColor={colors.primary}
-          ></TextInput>
-        </Button>
-        <Button loginStyle={true}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => setIsHidePassWord(!isHidePassword)}
-          >
+        <AuthenBackGround></AuthenBackGround>
+        <View style={styles.wrapper}>
+          <Text style={styles.heading}>Sign up</Text>
+          <Button loginStyle={true}>
             <View style={styles.icon}>
-              {!isHidePassword && <EyeIcon></EyeIcon>}
-              {isHidePassword && <HideEyeIcon></HideEyeIcon>}
+              <UserIcon></UserIcon>
             </View>
-          </TouchableOpacity>
-          <TextInput
-            secureTextEntry={isHidePassword}
-            placeholder="Password"
-            style={[
-              styles.input,
-              {
-                color: !isPassword ? "red" : undefined,
-              },
-            ]}
-            selectionColor={colors.primary}
-            value={password}
-            onChangeText={handlePassword}
-            spellCheck={false}
-          ></TextInput>
-        </Button>
-        {/* <Text style={styles.selection}>or login with</Text> */}
-        {/* <Button customeStyles={{ marginVertical: 20 }}>
-          <View style={styles.icon}>
-            <GoogleIcon width="36px" height="36px"></GoogleIcon>
-          </View>
-          <Text style={{ fontSize: 20 }}>Continue with Google</Text>
-        </Button> */}
-
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onPress={onRegister}
-          style={{ marginTop: 40 }}
-        >
-          <View style={[styles.create]}>
-            <Text
+            <TextInput
+              placeholder="User Name"
+              style={[styles.input]}
+              value={userName}
+              onChangeText={handleUserName}
+              spellCheck={false}
+              underlineColorAndroid={"transparent"}
+              selectionColor={colors.primary}
+            ></TextInput>
+          </Button>
+          <Button loginStyle={true}>
+            <View style={[styles.icon, , { marginTop: 1 }]}>
+              <EmailIcon size={24}></EmailIcon>
+            </View>
+            <TextInput
+              placeholder="Email"
               style={[
+                styles.input,
                 {
-                  fontSize: 24,
-                  color: "#fff",
-                  fontFamily: montserratFonts.bold,
+                  color: !isEmail ? "red" : undefined,
                 },
               ]}
+              value={email}
+              onChangeText={handleEmail}
+              spellCheck={false}
+              underlineColorAndroid={"transparent"}
+              selectionColor={colors.primary}
+            ></TextInput>
+          </Button>
+          <Button loginStyle={true}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => setIsHidePassWord(!isHidePassword)}
             >
-              Creat account
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.forgotPassword}>Already have an account? </Text>
-          <TouchableOpacity activeOpacity={0.6} onPress={onLogin}>
-            <Text style={{ ...styles.forgotPassword, color: colors.primary }}>
+              <View style={styles.icon}>
+                {!isHidePassword && <EyeIcon></EyeIcon>}
+                {isHidePassword && <HideEyeIcon></HideEyeIcon>}
+              </View>
+            </TouchableOpacity>
+            <TextInput
+              secureTextEntry={isHidePassword}
+              placeholder="Password"
+              style={[
+                styles.input,
+                {
+                  color: !isPassword ? "red" : undefined,
+                },
+              ]}
+              selectionColor={colors.primary}
+              value={password}
+              onChangeText={handlePassword}
+              spellCheck={false}
+            ></TextInput>
+          </Button>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={onRegister}
+            style={{
+              alignSelf: "flex-end",
+              marginRight: width < 400 ? 26 : 34,
+              marginTop: 34,
+            }}
+          >
+            <NavButton>Create</NavButton>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            position: "absolute",
+            top: width < 400 ? 740 : 798,
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: width < 400 ? 16 : 18,
+              fontFamily: montserratFonts.semi,
+            }}
+          >
+            Already have an account?{" "}
+          </Text>
+          <TouchableOpacity activeOpacity={0.7} onPress={onLogin}>
+            <Text
+              style={{
+                color: colors.primary,
+                fontSize: 18,
+                fontFamily: montserratFonts.semi,
+              }}
+            >
               Login
             </Text>
           </TouchableOpacity>

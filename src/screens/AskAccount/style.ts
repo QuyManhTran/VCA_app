@@ -4,7 +4,7 @@ import { montserratFonts } from "../../../constants/fontFamiles";
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 380,
+    top: 280,
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 22,
     fontFamily: fontFamilies.bold,
-    color: "white",
+    marginBottom: 20,
   },
   title: {
     fontSize: 30,
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   whiteLine: {
     width: 80,
     borderWidth: 0.75,
-    borderColor: "#fff",
+    borderColor: colors.primary,
     marginTop: 6,
   },
 });

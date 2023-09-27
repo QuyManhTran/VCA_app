@@ -5,21 +5,16 @@ import { montserratFonts } from "../../../../constants/fontFamiles";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.authentication,
-    alignItems: "center",
   },
-  lockIcon: {
-    position: "absolute",
-    width: "100%",
-    top: 160,
-    flexDirection: "row",
-    justifyContent: "center",
+  wrapper: {
+    flex: 1,
+    marginLeft: 38,
+    marginTop: 141,
   },
 
   heading: {
-    textAlign: "center",
+    fontFamily: montserratFonts.extra,
     fontSize: 50,
-    fontFamily: montserratFonts.bold,
     lineHeight: 60,
   },
   input: {

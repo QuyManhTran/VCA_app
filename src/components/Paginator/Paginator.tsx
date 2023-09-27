@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import splashes from "../../../assets/img/splash";
+import { colors } from "../../../constants";
 
 const Paginator = ({ scrollX }) => {
   const { width } = useWindowDimensions();
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
   dot: {
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#fff",
+    backgroundColor: "#000",
     marginHorizontal: 8,
   },
 });

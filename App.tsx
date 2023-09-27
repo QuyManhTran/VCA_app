@@ -36,7 +36,7 @@ export default function App() {
     >
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen name="Splash" component={Splash} />
+          <Stack.Screen name="Splash" component={Splash} />
           <Stack.Screen name="AskAccount" component={AskAccount} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="EmailRequirement" component={EmailRequirement} />
@@ -46,7 +46,7 @@ export default function App() {
             name="SuccessfullyChange"
             component={SuccessfullyChange}
           />
-          <Stack.Screen name="Register" component={Register} /> */}
+          <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="Navbar" component={Navbar} />
         </Stack.Navigator>
       </NavigationContainer>

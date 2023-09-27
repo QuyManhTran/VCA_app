@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../../constants";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -7,7 +8,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     position: "absolute",
-    backgroundColor: "#00B14F",
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 40,
   },

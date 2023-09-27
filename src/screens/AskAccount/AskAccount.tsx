@@ -1,10 +1,13 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { singleLego } from "../../../assets/img/splash";
 import styles from "./style";
 import Button from "../../components/Button";
 import { NavigationProp } from "@react-navigation/native";
 import { RouterProps } from "../Splash/Splash";
+import AuthenBackGround from "../../components/AuthenBackGround";
+import { colors } from "../../../constants";
+import NavButton from "../../components/NavButton";
 
 const AskAccount = ({ route, navigation }: RouterProps) => {
   const onMoveLogin = () => {
@@ -15,22 +18,18 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
   };
   return (
     <View style={{ flex: 1 }}>
-      <Image
-        source={singleLego}
-        style={{ width: "100%", height: "100%" }}
-      ></Image>
+      <AuthenBackGround></AuthenBackGround>
       <View style={styles.container}>
         <Text style={styles.heading}>You have an account</Text>
-        <Button
-          otherStyles={{
-            justifyContent: "center",
-            minHeight: 72,
-          }}
-          customeStyles={{ marginVertical: 12 }}
-          onPress={onMoveLogin}
-        >
-          <Text style={styles.title}>Login</Text>
-        </Button>
+        <TouchableOpacity onPress={onMoveLogin} activeOpacity={0.7}>
+          <NavButton
+            width={340}
+            height={72}
+            customeText={{ fontSize: 28, lineHeight: undefined }}
+          >
+            Login
+          </NavButton>
+        </TouchableOpacity>
         <View
           style={{
             marginVertical: 12,
@@ -40,22 +39,23 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
           }}
         >
           <View style={styles.whiteLine}></View>
-          <Text style={{ fontSize: 28, color: "#fff", marginHorizontal: 8 }}>
+          <Text
+            style={{ fontSize: 28, color: colors.primary, marginHorizontal: 8 }}
+          >
             or
           </Text>
           <View style={styles.whiteLine}></View>
         </View>
         <Text style={[styles.heading]}>You don't have </Text>
-        <Button
-          otherStyles={{
-            justifyContent: "center",
-            minHeight: 72,
-          }}
-          customeStyles={{ marginVertical: 12 }}
-          onPress={onMoveRegister}
-        >
-          <Text style={styles.title}>Sign up</Text>
-        </Button>
+        <TouchableOpacity onPress={onMoveRegister} activeOpacity={0.7}>
+          <NavButton
+            width={340}
+            height={72}
+            customeText={{ fontSize: 28, lineHeight: undefined }}
+          >
+            Sign up
+          </NavButton>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -5,11 +5,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { useState, useEffect } from "react";
 import React from "react";
 import styles from "./style";
-import LockIcon from "../../../../assets/icons/LockIcon";
 import { colors } from "../../../../constants";
 import Button from "../../../components/Button";
 import { montserratFonts } from "../../../../constants/fontFamiles";
@@ -18,8 +18,12 @@ import EmailIcon from "../../../../assets/icons/EmailIcon";
 import { isSpace } from "../../../utilies/validation";
 import useDebounce from "../../../../hooks/useDebounce";
 import { isEmail as emailValidation } from "../../../utilies/validation";
+import AuthenBackGround from "../../../components/AuthenBackGround";
+import NavButton from "../../../components/NavButton";
+import screenWidth from "../../../../constants/screenWidth";
 
 const EmailRequirement = ({ route, navigation }: RouterProps) => {
+  const width = screenWidth();
   const [email, setEmail] = useState("");
   const [isEmail, setIsEmail] = useState(false);
   const emailDebounce = useDebounce(email, 500);
@@ -46,59 +50,49 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        <View style={styles.lockIcon}>
-          <LockIcon fill color={colors.lock} size={40}></LockIcon>
-        </View>
-        <View style={{ marginTop: 256, width: 256 }}>
-          <Text style={styles.heading}>Forgot Password</Text>
-        </View>
-        <Button loginStyle>
-          <View style={[styles.icon, { marginTop: 1 }]}>
-            <EmailIcon fill></EmailIcon>
+        <AuthenBackGround></AuthenBackGround>
+        <View style={styles.wrapper}>
+          <Text style={[styles.heading, { fontSize: width < 400 ? 48 : 50 }]}>
+            Forgot Password
+          </Text>
+          <View style={{ marginTop: 16, marginBottom: 32 }}>
+            <Text style={{ fontSize: width < 400 ? 18 : 20 }}>
+              Enter your email and we'll send you a{" "}
+              <Text
+                style={{
+                  color: colors.primary,
+                  fontFamily: montserratFonts.semi,
+                }}
+              >
+                Verification Code{" "}
+              </Text>
+            </Text>
           </View>
-          <TextInput
-            value={email}
-            placeholder="Email"
-            style={[styles.input, { color: !isEmail ? "red" : undefined }]}
-            spellCheck={false}
-            underlineColorAndroid={"transparent"}
-            selectionColor={colors.primary}
-            onChangeText={handleEmail}
-          ></TextInput>
-        </Button>
-        <TouchableOpacity activeOpacity={0.7} onPress={onSendCode}>
-          <View
+          <Button loginStyle>
+            <View style={[styles.icon, { marginTop: 1 }]}>
+              <EmailIcon fill></EmailIcon>
+            </View>
+            <TextInput
+              value={email}
+              placeholder="Email"
+              style={[styles.input, { color: !isEmail ? "red" : undefined }]}
+              spellCheck={false}
+              underlineColorAndroid={"transparent"}
+              selectionColor={colors.primary}
+              onChangeText={handleEmail}
+            ></TextInput>
+          </Button>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={onSendCode}
             style={{
-              width: 320,
-              height: 66,
-              borderRadius: 36,
-              backgroundColor: colors.primary,
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 4,
+              alignSelf: "flex-end",
+              marginRight: width < 400 ? 26 : 34,
+              marginTop: 34,
             }}
           >
-            <Text
-              style={{
-                fontSize: 26,
-                fontFamily: montserratFonts.medium,
-                color: "#fff",
-              }}
-            >
-              Continue
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View style={{ marginTop: 16 }}>
-          <Text style={{ fontSize: 16 }}>
-            We'll send you a{" "}
-            <Text
-              style={{ color: colors.primary, textDecorationLine: "underline" }}
-            >
-              Verification Code{" "}
-            </Text>
-            to your email
-          </Text>
+            <NavButton>Continue</NavButton>
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableWithoutFeedback>

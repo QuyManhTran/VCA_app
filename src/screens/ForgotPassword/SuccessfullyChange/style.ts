@@ -6,20 +6,23 @@ import fontFamilies, {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.authentication,
-    alignItems: "center",
   },
+  wrapper: {
+    flex: 1,
+    marginLeft: 38,
+    marginTop: 80,
+  },
+
   heading: {
-    textAlign: "center",
-    fontSize: 32,
-    fontFamily: montserratFonts.bold,
-    lineHeight: 40,
+    fontFamily: montserratFonts.extra,
+    fontSize: 50,
+    lineHeight: 60,
   },
   remind: {
     fontSize: 18,
-    fontFamily: fontFamilies.regular,
-    textAlign: "center",
-    maxWidth: 320,
+    fontFamily: fontFamilies.bold,
+    lineHeight: 24,
+    maxWidth: 340,
   },
 });
 export default styles;

@@ -2,24 +2,20 @@ import { StyleSheet } from "react-native";
 import { colors, fontFamilies } from "../../../constants";
 import { montserratFonts } from "../../../constants/fontFamiles";
 const styles = StyleSheet.create({
-  lockIcon: {
-    position: "absolute",
-    width: "100%",
-    top: 80,
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-
   container: {
     flex: 1,
-    alignItems: "center",
-    backgroundColor: colors.authentication,
   },
+  wrapper: {
+    flex: 1,
+    marginLeft: 38,
+    marginTop: 141,
+  },
+
   heading: {
-    marginTop: 154,
-    fontFamily: montserratFonts.bold,
+    fontFamily: montserratFonts.extra,
     fontSize: 50,
-    marginBottom: 20,
+    lineHeight: 60,
+    marginBottom: 50,
   },
   input: {
     fontSize: 20,

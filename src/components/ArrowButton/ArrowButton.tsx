@@ -3,6 +3,7 @@ import React, { useRef, useEffect } from "react";
 import { Svg, Circle, G } from "react-native-svg";
 import { AntDesign } from "@expo/vector-icons";
 import styles from "./style";
+import { colors } from "../../../constants";
 
 const ArrowButton = ({ percentage, onNext }) => {
   const size = 78;
@@ -49,7 +50,7 @@ const ArrowButton = ({ percentage, onNext }) => {
             strokeWidth={strokeWidth}
           ></Circle>
           <Circle
-            stroke={"#fff"}
+            stroke={"black"}
             fill={"rgba(0, 0, 0, 0.1)"}
             cx={center}
             cy={center}
@@ -66,7 +67,7 @@ const ArrowButton = ({ percentage, onNext }) => {
         onPress={onNext}
         touchSoundDisabled={true}
       >
-        <AntDesign name="arrowright" size={32} color={"#fff"}></AntDesign>
+        <AntDesign name="arrowright" size={32} color={"black"}></AntDesign>
       </TouchableOpacity>
     </View>
   );

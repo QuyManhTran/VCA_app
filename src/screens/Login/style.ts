@@ -2,28 +2,28 @@ import { StyleSheet } from "react-native";
 import { colors, fontFamilies } from "../../../constants";
 import { montserratFonts } from "../../../constants/fontFamiles";
 const styles = StyleSheet.create({
-  lockIcon: {
-    position: "absolute",
-    // width: "100%",
-    top: 80,
-    flexDirection: "row",
-    justifyContent: "center",
-    // padding: 10,
-    // borderWidth: 2,
-    // borderColor: colors.primary,
-  },
-
   container: {
     flex: 1,
-    alignItems: "center",
-    backgroundColor: colors.authentication,
   },
+
+  wrapper: {
+    flex: 1,
+    marginLeft: 38,
+    marginTop: 141,
+  },
+
   heading: {
-    marginTop: 154,
-    fontFamily: montserratFonts.bold,
+    fontFamily: montserratFonts.extra,
     fontSize: 50,
-    marginBottom: 20,
+    lineHeight: 78,
   },
+
+  requirement: {
+    fontFamily: fontFamilies.medium,
+    fontSize: 18,
+    marginBottom: 44,
+  },
+
   input: {
     fontSize: 20,
     flexDirection: "row",
@@ -37,10 +37,9 @@ const styles = StyleSheet.create({
     fontFamily: montserratFonts.bold,
   },
   forgotPassword: {
-    marginTop: 20,
     fontSize: 20,
-    textDecorationLine: "underline",
-    fontFamily: montserratFonts.regular,
+    fontFamily: montserratFonts.extra,
+    color: colors.primary,
   },
   icon: {
     marginHorizontal: 20,
