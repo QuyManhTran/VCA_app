@@ -95,7 +95,9 @@ const Register = ({ route, navigation }: RouterProps) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        <AuthenBackGround></AuthenBackGround>
+        <AuthenBackGround
+          onPress={() => navigation.goBack()}
+        ></AuthenBackGround>
         <View style={styles.wrapper}>
           <Text style={styles.heading}>Sign up</Text>
           <Button loginStyle={true}>

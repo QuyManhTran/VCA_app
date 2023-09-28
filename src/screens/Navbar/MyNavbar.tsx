@@ -23,7 +23,7 @@ function MyTabBar({ state, descriptors, navigation }) {
   useEffect(() => {
     if (isHomeScrollDown) {
       Animated.timing(bottomDownAnimation, {
-        toValue: 85,
+        toValue: 90,
         duration: 500,
         useNativeDriver: false,
       }).start();

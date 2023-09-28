@@ -76,7 +76,9 @@ const Login = ({ route, navigation }: RouterProps) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        <AuthenBackGround></AuthenBackGround>
+        <AuthenBackGround
+          onPress={() => navigation.goBack()}
+        ></AuthenBackGround>
         <View style={styles.wrapper}>
           <Text style={styles.heading}>Login</Text>
           <Text style={styles.requirement}>Please sign in to continue</Text>

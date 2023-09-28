@@ -10,7 +10,7 @@ const Home = ({ route, navigation }: RouterProps) => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const diffClampScrollY = Animated.diffClamp(scrollY, 0, 70);
   const headerBottom = diffClampScrollY.interpolate({
-    inputRange: [0, 70],
+    inputRange: [0, 35],
     outputRange: [0, -70],
   });
 

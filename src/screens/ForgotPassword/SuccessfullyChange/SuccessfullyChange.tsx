@@ -17,7 +17,10 @@ const SuccessfullyChange = ({ route, navigation }: RouterProps) => {
   };
   return (
     <View style={styles.container}>
-      <AuthenBackGround></AuthenBackGround>
+      <AuthenBackGround
+        onPress={() => navigation.goBack()}
+        isBack={false}
+      ></AuthenBackGround>
       <View style={styles.wrapper}>
         <View>
           <Image source={congratulation}></Image>

@@ -92,7 +92,7 @@ const MyTabBarIcon = ({ focused, route }) => {
         disabled={focused ? false : true}
         style={{
           color: colors.primary,
-          fontSize: 12,
+          fontSize: 14,
         }}
       >
         {route.name}

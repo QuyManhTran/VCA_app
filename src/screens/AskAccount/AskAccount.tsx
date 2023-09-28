@@ -18,7 +18,10 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
   };
   return (
     <View style={{ flex: 1 }}>
-      <AuthenBackGround></AuthenBackGround>
+      <AuthenBackGround
+        onPress={() => navigation.goBack()}
+        isBack={false}
+      ></AuthenBackGround>
       <View style={styles.container}>
         <Text style={styles.heading}>You have an account</Text>
         <TouchableOpacity onPress={onMoveLogin} activeOpacity={0.7}>

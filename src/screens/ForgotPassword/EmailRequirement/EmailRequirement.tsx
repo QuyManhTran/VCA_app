@@ -50,7 +50,9 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        <AuthenBackGround></AuthenBackGround>
+        <AuthenBackGround
+          onPress={() => navigation.goBack()}
+        ></AuthenBackGround>
         <View style={styles.wrapper}>
           <Text style={[styles.heading, { fontSize: width < 400 ? 48 : 50 }]}>
             Forgot Password
