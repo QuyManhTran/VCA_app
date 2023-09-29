@@ -21,18 +21,20 @@ import { isEmail as emailValidation } from "../../../utilies/validation";
 import AuthenBackGround from "../../../components/AuthenBackGround";
 import NavButton from "../../../components/NavButton";
 import screenWidth from "../../../../constants/screenWidth";
+import Modal from "../../../components/Modal";
 
 const EmailRequirement = ({ route, navigation }: RouterProps) => {
   const width = screenWidth();
   const [email, setEmail] = useState("");
   const [isEmail, setIsEmail] = useState(false);
+  const [isModal, setIsModal] = useState(false);
   const emailDebounce = useDebounce(email, 500);
   const onSendCode = () => {
     // if otp is sent, will be navigated
     if (isEmail && email.length > 0) {
       navigation.navigate("CodeVerifying");
     } else {
-      alert("Your email is not in the correct format");
+      setIsModal(true);
     }
   };
   const handleEmail = (text: string) => {
@@ -96,6 +98,17 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
             <NavButton>Continue</NavButton>
           </TouchableOpacity>
         </View>
+        {isModal && (
+          <Modal
+            title={"Email"}
+            content={
+              email.length === 0
+                ? `Email can't be empty!`
+                : `Email isn't in correct format!`
+            }
+            onPress={() => setIsModal(false)}
+          ></Modal>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );

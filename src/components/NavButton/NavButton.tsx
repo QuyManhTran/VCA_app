@@ -9,6 +9,7 @@ interface NavBtnProps {
   width?: number;
   height?: number;
   rightArrow?: boolean;
+  customeStyle?: object;
   customeText?: object;
 }
 const NavButton = ({
@@ -17,13 +18,14 @@ const NavButton = ({
   height = 52,
   customeText = {},
   rightArrow = false,
+  customeStyle = {},
 }: NavBtnProps) => {
   return (
     <LinearGradient
       colors={linearColors}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
-      style={{ width: width, height: height, borderRadius: 20 }}
+      style={[{ width: width, height: height, borderRadius: 20 }, customeStyle]}
     >
       <View style={styles.container}>
         <Text style={[styles.text, customeText]}>{children}</Text>

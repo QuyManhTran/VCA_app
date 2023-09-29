@@ -13,7 +13,6 @@ import { colors } from "../../../../constants";
 import fontFamilies, {
   montserratFonts,
 } from "../../../../constants/fontFamiles";
-import LockIcon from "../../../../assets/icons/LockIcon";
 import Button from "../../../components/Button";
 import { RouterProps } from "../../Splash/Splash";
 import { FontAwesome } from "@expo/vector-icons";
@@ -21,14 +20,16 @@ import { isOTP } from "../../../utilies/validation";
 import AuthenBackGround from "../../../components/AuthenBackGround";
 import NavButton from "../../../components/NavButton";
 import screenWidth from "../../../../constants/screenWidth";
+import Modal from "../../../components/Modal";
 const CodeVerifying = ({ route, navigation }: RouterProps) => {
   const [otp, setOTP] = useState("");
+  const [isModal, setIsModal] = useState(false);
   const width = screenWidth();
   const onChangePassword = () => {
     if (isOTP(otp)) {
       navigation.navigate("ResetPassword");
     } else {
-      alert("OTP code must be 6 digits");
+      setIsModal(true);
     }
   };
   const reSend = () => {
@@ -122,6 +123,13 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
             </Text>
           </TouchableOpacity>
         </View>
+        {isModal && (
+          <Modal
+            title="OTP Code"
+            content="OTP code must be 6 digits"
+            onPress={() => setIsModal(false)}
+          ></Modal>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );

@@ -1,17 +1,18 @@
-import { Image, useWindowDimensions } from "react-native";
+import { Image, useWindowDimensions, Animated } from "react-native";
 import React from "react";
 import { authenBackGround } from "../../../assets/img/splash";
-import { View } from "react-native-animatable";
 import BackButton from "../BackButton";
 interface AuthenBackGroundProps {
   onPress: any;
   isBack?: boolean;
+  customStyle?: object;
 }
 const AuthenBackGround = ({
   onPress,
   isBack = true,
+  customStyle = {},
 }: AuthenBackGroundProps) => {
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   return (
     <>
       <Image
@@ -24,9 +25,11 @@ const AuthenBackGround = ({
         }}
       ></Image>
       {isBack && (
-        <View style={{ position: "absolute", top: 72, left: 16 }}>
+        <Animated.View
+          style={[{ position: "absolute", top: 72, left: 16 }, customStyle]}
+        >
           <BackButton onPress={onPress} size={38}></BackButton>
-        </View>
+        </Animated.View>
       )}
     </>
   );

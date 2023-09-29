@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     marginLeft: 38,
-    marginTop: 141,
   },
 
   heading: {

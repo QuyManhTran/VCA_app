@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./style";
@@ -22,8 +23,12 @@ import { isLoginPassword, isSpace } from "../../../utilies/validation";
 import AuthenBackGround from "../../../components/AuthenBackGround";
 import NavButton from "../../../components/NavButton";
 import screenWidth from "../../../../constants/screenWidth";
+import Modal from "../../../components/Modal";
 
 const ResetPassword = ({ route, navigation }: RouterProps) => {
+  const keyBoardUp = useRef(new Animated.Value(141)).current;
+  const arrowUp = useRef(new Animated.Value(72)).current;
+  const [isModal, setIsModal] = useState(false);
   const [isHidePassword, setIsHidePassWord] = useState(true);
   const [password, setPassword] = useState("");
   const [isPassword, setIsPassword] = useState(false);
@@ -32,7 +37,7 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
   const width = screenWidth();
   const onSave = () => {
     if (password !== confirmPassword || !isPassword || password.length === 0) {
-      alert("password do not match");
+      setIsModal(true);
     } else {
       navigation.navigate("SuccessfullyChange");
     }
@@ -45,6 +50,42 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
   };
 
   useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      if (width < 400) {
+        Animated.timing(keyBoardUp, {
+          toValue: 100,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+        Animated.timing(arrowUp, {
+          toValue: 32,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+      }
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      if (width < 400) {
+        Animated.timing(keyBoardUp, {
+          toValue: 141,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+        Animated.timing(arrowUp, {
+          toValue: 72,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+      }
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
     const isPass = isLoginPassword(passwordDebounce);
     setIsPassword(isPass);
   }, [passwordDebounce]);
@@ -53,8 +94,9 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
       <View style={styles.container}>
         <AuthenBackGround
           onPress={() => navigation.goBack()}
+          customStyle={{ top: arrowUp }}
         ></AuthenBackGround>
-        <View style={styles.wrapper}>
+        <Animated.View style={[styles.wrapper, { marginTop: keyBoardUp }]}>
           <Text style={[styles.heading, { fontSize: width < 400 ? 48 : 50 }]}>
             Change Password
           </Text>
@@ -128,7 +170,14 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
           >
             <NavButton>Save</NavButton>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
+        {isModal && (
+          <Modal
+            title="Password"
+            content={`password don't match`}
+            onPress={() => setIsModal(false)}
+          ></Modal>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );

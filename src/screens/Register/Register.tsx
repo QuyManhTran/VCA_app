@@ -5,8 +5,9 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   View,
+  Animated,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./style";
 import Button from "../../components/Button";
 import UserIcon from "../../../assets/icons/UserIcon";
@@ -25,8 +26,11 @@ import fontFamilies, { montserratFonts } from "../../../constants/fontFamiles";
 import AuthenBackGround from "../../components/AuthenBackGround";
 import NavButton from "../../components/NavButton";
 import screenWidth from "../../../constants/screenWidth";
+import Modal from "../../components/Modal";
 
 const Register = ({ route, navigation }: RouterProps) => {
+  const keyBoardUp = useRef(new Animated.Value(141)).current;
+  const arrowUp = useRef(new Animated.Value(72)).current;
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,20 +38,42 @@ const Register = ({ route, navigation }: RouterProps) => {
   const [isEmail, setIsEmail] = useState(false);
   const [isValidated, setIsValidated] = useState(false);
   const [isHidePassword, setIsHidePassWord] = useState(true);
+  const [isModal, setIsModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalContent, setModalContent] = useState("");
   const debounce = useDebounce(password, 500);
   const emailDebounce = useDebounce(email, 500);
   const width = screenWidth();
   const onRegister = () => {
     if (!isValidated) {
       if (!userName.length) {
-        alert("Username can not be blank!");
-      } else if (!isEmail) {
-        alert("Email is not in correct format or being empty!");
+        const title = "UserName";
+        const content = "Username can not be blank!";
+        if (title !== modalTitle) {
+          setModalTitle(title);
+          setModalContent(content);
+        }
+        setIsModal(true);
+      } else if (!isEmail || email.length === 0) {
+        const title = "Email";
+        const content =
+          email.length === 0
+            ? `Email can't be empty!`
+            : `Email isn't in correct format!`;
+        setModalTitle(title);
+        setModalContent(content);
+        setIsModal(true);
       } else {
-        alert("Password is not in correct format or being empty!");
+        const title = "Password";
+        const content =
+          password.length === 0
+            ? `Password can't be empty!`
+            : `Password must contain at least 8 characters`;
+        setModalTitle(title);
+        setModalContent(content);
+        setIsModal(true);
       }
     } else {
-      // Alert.alert(JSON.stringify({ userName, email, password }));
       navigation.navigate("SuccessfullyChange", {
         from: "Register",
       });
@@ -77,6 +103,42 @@ const Register = ({ route, navigation }: RouterProps) => {
   };
 
   useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      if (width < 400) {
+        Animated.timing(keyBoardUp, {
+          toValue: 100,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+        Animated.timing(arrowUp, {
+          toValue: 32,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+      }
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      if (width < 400) {
+        Animated.timing(keyBoardUp, {
+          toValue: 141,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+        Animated.timing(arrowUp, {
+          toValue: 72,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+      }
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
     const isMail = isRealEmail(emailDebounce);
     const isPass = isLoginPassword(debounce);
     const isRealValidate =
@@ -97,8 +159,9 @@ const Register = ({ route, navigation }: RouterProps) => {
       <View style={styles.container}>
         <AuthenBackGround
           onPress={() => navigation.goBack()}
+          customStyle={{ top: arrowUp }}
         ></AuthenBackGround>
-        <View style={styles.wrapper}>
+        <Animated.View style={[styles.wrapper, { marginTop: keyBoardUp }]}>
           <Text style={styles.heading}>Sign up</Text>
           <Button loginStyle={true}>
             <View style={styles.icon}>
@@ -169,7 +232,7 @@ const Register = ({ route, navigation }: RouterProps) => {
           >
             <NavButton>Create</NavButton>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
         <View
           style={{
             position: "absolute",
@@ -200,6 +263,13 @@ const Register = ({ route, navigation }: RouterProps) => {
             </Text>
           </TouchableOpacity>
         </View>
+        {isModal && (
+          <Modal
+            title={modalTitle}
+            content={modalContent}
+            onPress={() => setIsModal(false)}
+          ></Modal>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );

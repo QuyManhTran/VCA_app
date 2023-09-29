@@ -106,7 +106,8 @@ const Splash = ({ route, navigation }: RouterProps) => {
                       {
                         marginTop: 20,
                         maxWidth: 300,
-                        lineHeight: 20,
+                        lineHeight: width < 400 ? 20 : 24,
+                        fontSize: width < 400 ? 16 : 20,
                       },
                       {
                         opacity: opacity,
