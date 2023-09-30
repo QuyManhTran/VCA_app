@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Splash from "./src/screens/Splash";
@@ -22,6 +23,9 @@ export default function App() {
       setIsHomeScrollDown(isScrollDown);
     }
   };
+  useEffect(() => {
+    LogBox.ignoreLogs(["new NativeEventEmitter()"]);
+  }, []);
   useEffect(() => {
     const listener = EventRegister.addEventListener("ChangeTheme", (theme) => {
       setIsDarkMode(theme);

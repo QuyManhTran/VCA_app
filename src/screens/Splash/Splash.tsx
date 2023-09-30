@@ -38,7 +38,9 @@ const Splash = ({ route, navigation }: RouterProps) => {
   };
 
   const viewableItemsChange = useRef(({ viewableItems }) => {
-    setActiveIndex(viewableItems[0].index);
+    if (viewableItems[0] !== undefined) {
+      setActiveIndex(viewableItems[0].index);
+    }
   }).current;
 
   useEffect(() => {
@@ -91,6 +93,7 @@ const Splash = ({ route, navigation }: RouterProps) => {
                       style={[
                         styles.heading,
                         {
+                          marginTop: width < 400 ? 0 : 10,
                           opacity: opacity,
                           fontFamily: isFont
                             ? montserratFonts.extra
@@ -105,7 +108,7 @@ const Splash = ({ route, navigation }: RouterProps) => {
                     style={[
                       {
                         marginTop: 20,
-                        maxWidth: 300,
+                        maxWidth: width < 400 ? 300 : 320,
                         lineHeight: width < 400 ? 20 : 24,
                         fontSize: width < 400 ? 16 : 20,
                       },
