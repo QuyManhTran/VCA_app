@@ -105,7 +105,7 @@ const Home = ({ route, navigation }: RouterProps) => {
           <View
             style={{
               flexDirection: "row",
-              // backgroundColor: "#000",
+
               justifyContent: "center",
               alignItems: "center",
               width: "100%",
@@ -123,7 +123,6 @@ const Home = ({ route, navigation }: RouterProps) => {
                 flex: 1,
                 width: "100%",
                 height: "100%",
-                // transform: [{ rotate: "90deg" }],
               }}
               isLooping
               onPlaybackStatusUpdate={(status) => setStatus(() => status)}

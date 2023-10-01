@@ -1,13 +1,8 @@
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import IconProps from ".";
 
-interface Props {
-  fill?: boolean;
-  color?: string;
-  size?: number;
-}
-
-const RightArrow = ({ fill, color = "black", size = 24 }: Props) => {
+const RightArrow = ({ fill, color = "black", size = 24 }: IconProps) => {
   return (
     <Ionicons
       name={fill ? "arrow-forward" : "arrow-forward-outline"}

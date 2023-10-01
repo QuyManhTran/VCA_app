@@ -1,13 +1,8 @@
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import IconProps from ".";
 
-interface Props {
-  fill?: boolean;
-  color?: string;
-  size?: number;
-}
-
-const HideEyeIcon = ({ fill, color = "black", size = 24 }: Props) => {
+const HideEyeIcon = ({ fill, color = "black", size = 24 }: IconProps) => {
   return (
     <Ionicons
       name={fill ? "eye-off" : "eye-off-outline"}
