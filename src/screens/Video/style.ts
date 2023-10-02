@@ -27,10 +27,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: 60,
     height: 60,
-    backgroundColor: "#fff",
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
+    borderColor: "#fff",
+    borderWidth: 1,
+  },
+  progressBar: {
+    position: "absolute",
+    bottom: 40,
+    left: 0,
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });
 export default styles;

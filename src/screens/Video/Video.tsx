@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   Pressable,
+  SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./style";
@@ -14,15 +15,20 @@ import PlayIcon from "../../../assets/icons/PlayIcon";
 import PauseIcon from "../../../assets/icons/PauseIcon";
 import ForWardIcon from "../../../assets/icons/ForWardIcon";
 import BackWardIcon from "../../../assets/icons/BackWardIcon";
+import ProgressBar from "../../components/ProgressBar/ProgressBar";
 const Video = () => {
   const { width, height } = useWindowDimensions();
   const vidRef = useRef<VideoPlayer>(null);
   const [status, setStatus] = useState(null);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isSeeking, setIsSeeking] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isTouchStart, setIsTouchStart] = useState(false);
   const [isTouchEnd, setIsTouchEnd] = useState(false);
   const timeOutRef: { current: NodeJS.Timeout | null } = useRef(null);
+  const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
   const toggleFullscreen = async () => {
     if (isFullscreen) {
       ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
@@ -37,6 +43,12 @@ const Video = () => {
     setIsFullscreen(!isFullscreen);
   };
 
+  const onLoad = () => {
+    if (status) {
+      setDuration(status.durationMillis);
+    }
+  };
+
   const onPlay = () => {
     if (isPlaying) {
       vidRef.current.pauseAsync();
@@ -48,45 +60,74 @@ const Video = () => {
 
   const onBackWard = () => {
     if (status) {
-      const newPosition = status.positionMillis - 10000;
-      if (newPosition > 0) {
-        vidRef.current.setPositionAsync(newPosition);
-      } else {
-        vidRef.current.setPositionAsync(0);
+      let newPosition = status.positionMillis - 10000;
+      if (newPosition <= 0) {
+        newPosition = 0;
       }
+      vidRef.current.setPositionAsync(newPosition);
+      setCurrentTime(newPosition);
     }
   };
 
   const onForWard = () => {
     if (status) {
-      const newPosition = status.positionMillis + 10000;
-      if (newPosition < status.durationMillis) {
-        vidRef.current.setPositionAsync(newPosition);
-      } else {
-        vidRef.current.setPositionAsync(status.durationMillis);
+      let newPosition = status.positionMillis + 10000;
+      if (newPosition >= status.durationMillis) {
+        newPosition = status.durationMillis;
       }
+      vidRef.current.setPositionAsync(newPosition);
+      setCurrentTime(newPosition);
     }
   };
+
+  const onSeek = (currentTime) => {
+    setCurrentTime(currentTime);
+    if (vidRef && !isSeeking) {
+      vidRef.current.setPositionAsync(currentTime);
+    }
+  };
+
+  const seekingEvent = (isSeeking: boolean) => {
+    setIsSeeking(isSeeking);
+  };
   // Effect
+  useEffect(() => {
+    // console.log(currentTime, duration);
+  }, [currentTime]);
+
   useEffect(() => {
     // auto play
     (async () => {
       if (vidRef.current) {
         await vidRef.current.playAsync();
+        setIsPlaying(true);
       }
     })();
+  }, []);
+
+  useEffect(() => {
+    const updateCurrentTime = async () => {
+      if (vidRef.current) {
+        const status = await vidRef.current.getStatusAsync();
+        if (status.isLoaded && !isSeeking) {
+          setCurrentTime(status.positionMillis);
+        }
+      }
+    };
+    intervalRef.current = setInterval(updateCurrentTime, 1000);
+    return () => clearInterval(intervalRef.current as NodeJS.Timeout);
   }, []);
 
   useEffect(() => {
     if (isTouchEnd) {
       timeOutRef.current = setTimeout(() => {
         setIsTouchStart(false);
-      }, 3000);
+      }, 2000);
     }
     return () => clearTimeout(timeOutRef.current as NodeJS.Timeout);
   }, [isTouchEnd]);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View
         style={[
           styles.vidWarpper,
@@ -97,8 +138,12 @@ const Video = () => {
       >
         <VideoPlayer
           ref={vidRef}
+          usePoster={true}
+          posterSource={{
+            uri: "https://images.pexels.com/photos/50859/pexels-photo-50859.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          }}
           source={{
-            uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+            uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
           }}
           resizeMode={ResizeMode.STRETCH}
           style={{
@@ -106,12 +151,14 @@ const Video = () => {
             height: "100%",
           }}
           isLooping
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          //  onLoadStart={() => console.log(status.durationMillis)}
+          onLoad={onLoad}
           onTouchStart={() => {
             setIsTouchStart(true);
             setIsTouchEnd(false);
           }}
           onTouchEnd={() => setIsTouchEnd(true)}
+          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         ></VideoPlayer>
         {isTouchStart && (
           <Pressable
@@ -127,11 +174,17 @@ const Video = () => {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={[styles.btnPlay, { paddingLeft: isPlaying ? 2 : 4 }]}
+              style={[
+                styles.btnPlay,
+                {
+                  paddingLeft: isPlaying ? 2 : 4,
+                  backgroundColor: isPlaying ? "transparent" : "#fff",
+                },
+              ]}
               onPress={onPlay}
             >
               {!isPlaying && <PlayIcon fill size={28}></PlayIcon>}
-              {isPlaying && <PauseIcon fill size={28}></PauseIcon>}
+              {isPlaying && <PauseIcon fill size={28} color="#fff"></PauseIcon>}
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.5} onPress={onForWard}>
               <ForWardIcon></ForWardIcon>
@@ -143,6 +196,15 @@ const Video = () => {
             >
               <FullScreen size={28} color="white"></FullScreen>
             </TouchableOpacity>
+            <View style={styles.progressBar}>
+              <ProgressBar
+                currentTime={currentTime}
+                duration={duration}
+                onSeek={onSeek}
+                seekingEvent={seekingEvent}
+                isSeeking={isSeeking}
+              ></ProgressBar>
+            </View>
           </Pressable>
         )}
         {/* <TouchableOpacity
@@ -158,7 +220,7 @@ const Video = () => {
           <NavButton>Play</NavButton>
         </TouchableOpacity> */}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
