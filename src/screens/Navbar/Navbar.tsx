@@ -30,15 +30,15 @@ const Navbar = () => {
           shadowColor: "#171717",
           shadowOpacity: 0.5,
           shadowRadius: 8,
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
+          borderTopLeftRadius: 32,
+          borderTopRightRadius: 32,
         },
         tabBarIcon: ({ focused }) => (
           <MyTabBarIcon focused={focused} route={route}></MyTabBarIcon>
         ),
       })}
     >
-      <Tab.Screen name="Explore" component={Explore} />
+      <Tab.Screen name="Library" component={Explore} />
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Account" component={Account} />
     </Tab.Navigator>

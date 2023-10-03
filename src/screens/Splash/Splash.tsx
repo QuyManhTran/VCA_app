@@ -15,7 +15,7 @@ import ArrowButton from "../../components/ArrowButton";
 import { fontFamilies } from "../../../constants";
 import customeFont from "../../../constants/customeFont";
 import { NavigationProp } from "@react-navigation/native";
-import { montserratFonts } from "../../../constants/fontFamiles";
+import { baloo2Fonts, montserratFonts } from "../../../constants/fontFamiles";
 
 export interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -95,9 +95,7 @@ const Splash = ({ route, navigation }: RouterProps) => {
                         {
                           marginTop: width < 400 ? 0 : 10,
                           opacity: opacity,
-                          fontFamily: isFont
-                            ? montserratFonts.extra
-                            : undefined,
+                          fontFamily: isFont ? baloo2Fonts.extra : undefined,
                         },
                       ]}
                     >

@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
     paddingLeft: 50,
   },
   heading: {
-    fontSize: 36,
+    fontSize: 40,
     borderBottomWidth: 1,
     borderBottomColor: "black",
-    paddingBottom: 8,
+    paddingBottom: 4,
     alignSelf: "flex-start",
   },
 });

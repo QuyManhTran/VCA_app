@@ -8,6 +8,7 @@ import { RouterProps } from "../Splash/Splash";
 import AuthenBackGround from "../../components/AuthenBackGround";
 import { colors } from "../../../constants";
 import NavButton from "../../components/NavButton";
+import { baloo2Fonts } from "../../../constants/fontFamiles";
 
 const AskAccount = ({ route, navigation }: RouterProps) => {
   const onMoveLogin = () => {
@@ -28,7 +29,11 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
           <NavButton
             width={340}
             height={72}
-            customeText={{ fontSize: 28, lineHeight: undefined }}
+            customeText={{
+              fontSize: 36,
+              lineHeight: undefined,
+              fontFamily: baloo2Fonts.extra,
+            }}
           >
             Login
           </NavButton>
@@ -54,7 +59,11 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
           <NavButton
             width={340}
             height={72}
-            customeText={{ fontSize: 28, lineHeight: undefined }}
+            customeText={{
+              fontSize: 36,
+              lineHeight: undefined,
+              fontFamily: baloo2Fonts.extra,
+            }}
           >
             Sign up
           </NavButton>

@@ -3,13 +3,17 @@ import React, { useRef, useEffect } from "react";
 import * as Animatable from "react-native-animatable";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../constants";
+import NavBarIcon from "../../../assets/icons/NavBarIcon";
+import { LinearGradient } from "expo-linear-gradient";
+import { navbarLinearColors } from "../../../constants/colors";
+import { baloo2Fonts } from "../../../constants/fontFamiles";
 const MyTabBarIcon = ({ focused, route }) => {
   const animateFocused = {
     0: { scale: 1, translateY: 0 },
-    1: { scale: 1.2, translateY: -20 },
+    1: { scale: 1.2, translateY: -24 },
   };
   const animateBlured = {
-    0: { scale: 1.2, translateY: -20 },
+    0: { scale: 1.2, translateY: -24 },
     1: { scale: 1, translateY: 0 },
   };
   const circleFocused = {
@@ -25,10 +29,10 @@ const MyTabBarIcon = ({ focused, route }) => {
   };
   const textFocused = {
     0: { scale: 1, translateY: 0 },
-    1: { scale: 1, translateY: -20 },
+    1: { scale: 1, translateY: -24 },
   };
   const textBlured = {
-    0: { scale: 0, translateY: -20 },
+    0: { scale: 0, translateY: -24 },
     1: { scale: 0, translateY: 0 },
   };
   const tabRef = useRef(null);
@@ -36,11 +40,11 @@ const MyTabBarIcon = ({ focused, route }) => {
   const lableRef = useRef(null);
   let iconName;
   if (route.name === "Home") {
-    iconName = focused ? "home" : "home-outline";
-  } else if (route.name === "Explore") {
-    iconName = focused ? "search" : "search-outline";
+    iconName = focused ? "home-fill" : "home-outline";
+  } else if (route.name === "Library") {
+    iconName = focused ? "album-fill" : "album-outline";
   } else if (route.name === "Account") {
-    iconName = focused ? "person" : "person-outline";
+    iconName = focused ? "user-fill" : "user-outline";
   }
   useEffect(() => {
     if (focused) {
@@ -62,13 +66,10 @@ const MyTabBarIcon = ({ focused, route }) => {
         style={{
           alignItems: "center",
           justifyContent: "center",
-          borderWidth: 4,
-          borderColor: "#fff",
           width: 50,
           height: 50,
           borderRadius: 25,
-          backgroundColor: "#fff",
-          marginTop: 34,
+          marginTop: 50,
         }}
       >
         <Animatable.View
@@ -76,23 +77,33 @@ const MyTabBarIcon = ({ focused, route }) => {
           ref={circelRef}
           style={{
             ...StyleSheet.absoluteFillObject,
-            backgroundColor: colors.primary,
             borderRadius: 25,
+            // backgroundColor: "#FFD28D",
+            overflow: "hidden",
           }}
-        ></Animatable.View>
-        <Ionicons
-          name={iconName}
-          size={28}
-          color={focused ? "#fff" : colors.primary}
-        />
+        >
+          <LinearGradient
+            colors={navbarLinearColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+          ></LinearGradient>
+        </Animatable.View>
+        <NavBarIcon name={iconName} width={28} height={28}></NavBarIcon>
       </Animatable.View>
       <Animatable.Text
         duration={500}
         ref={lableRef}
         disabled={focused ? false : true}
         style={{
-          color: colors.primary,
-          fontSize: 14,
+          fontSize: 18,
+          fontFamily: baloo2Fonts.extra,
         }}
       >
         {route.name}

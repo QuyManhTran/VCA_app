@@ -2,6 +2,8 @@ import { View, Text, TouchableOpacity, Easing } from "react-native";
 import { Animated } from "react-native";
 import { useContext, useEffect, useRef } from "react";
 import ThemeContext from "../../utilies/theme";
+import { LinearGradient } from "expo-linear-gradient";
+import { navbarLinearColors } from "../../../constants/colors";
 function MyTabBar({ state, descriptors, navigation }) {
   const focusedOptions = descriptors[state.routes[state.index].key].options;
   const { isHomeScrollDown } = useContext(ThemeContext);
@@ -47,6 +49,20 @@ function MyTabBar({ state, descriptors, navigation }) {
         transform: [{ translateY: bottomDownAnimation }],
       }}
     >
+      <LinearGradient
+        colors={navbarLinearColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          borderTopLeftRadius: 32,
+          borderTopRightRadius: 32,
+        }}
+      ></LinearGradient>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;
