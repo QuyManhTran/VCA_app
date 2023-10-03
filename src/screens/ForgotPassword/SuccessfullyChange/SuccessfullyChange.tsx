@@ -1,22 +1,27 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import { useContext } from "react";
 import styles from "./style";
 import { congratulation } from "../../../../assets/img/splash";
 import { colors } from "../../../../constants";
-import { montserratFonts } from "../../../../constants/fontFamiles";
 import { RouterProps } from "../../Splash/Splash";
 import AuthenBackGround from "../../../components/AuthenBackGround";
 import NavButton from "../../../components/NavButton";
 import screenWidth from "../../../../constants/screenWidth";
+import ThemeContext from "../../../utilies/theme";
 
 const SuccessfullyChange = ({ route, navigation }: RouterProps) => {
-  // console.log(route);
+  const { isDarkMode } = useContext(ThemeContext);
   const width = screenWidth();
   const onMoveLogin = () => {
     navigation.navigate("Login");
   };
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: isDarkMode ? "black" : "#fff" },
+      ]}
+    >
       <AuthenBackGround
         onPress={() => navigation.goBack()}
         isBack={false}
@@ -32,6 +37,7 @@ const SuccessfullyChange = ({ route, navigation }: RouterProps) => {
               {
                 fontSize: width < 400 ? 44 : 50,
                 lineHeight: width < 400 ? 50 : 60,
+                color: isDarkMode ? "#Fff" : "black",
               },
             ]}
           >
@@ -39,7 +45,9 @@ const SuccessfullyChange = ({ route, navigation }: RouterProps) => {
           </Text>
         </View>
         <View style={{ marginTop: 20 }}>
-          <Text style={styles.remind}>
+          <Text
+            style={[styles.remind, { color: isDarkMode ? "#Fff" : "black" }]}
+          >
             {route.params
               ? `Now, You can use this account to login`
               : `Now, You can use your new password to login`}

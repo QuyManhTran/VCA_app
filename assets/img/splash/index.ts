@@ -24,4 +24,5 @@ const splashes = [
 export const singleLego = require("./singleLogo.jpg");
 export const congratulation = require("./Congratulation.png");
 export const authenBackGround = require("./Login.png");
+export const authenDarkBackGround = require("./darkTheme.png");
 export default splashes;

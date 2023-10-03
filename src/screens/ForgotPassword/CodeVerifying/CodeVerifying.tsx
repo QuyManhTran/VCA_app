@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styles from "./style";
 import { colors } from "../../../../constants";
 import fontFamilies, {
@@ -21,7 +21,9 @@ import AuthenBackGround from "../../../components/AuthenBackGround";
 import NavButton from "../../../components/NavButton";
 import screenWidth from "../../../../constants/screenWidth";
 import Modal from "../../../components/Modal";
+import ThemeContext from "../../../utilies/theme";
 const CodeVerifying = ({ route, navigation }: RouterProps) => {
+  const { isDarkMode } = useContext(ThemeContext);
   const [otp, setOTP] = useState("");
   const [isModal, setIsModal] = useState(false);
   const width = screenWidth();
@@ -40,12 +42,25 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: isDarkMode ? "black" : "#fff" },
+        ]}
+      >
         <AuthenBackGround
           onPress={() => navigation.goBack()}
         ></AuthenBackGround>
         <View style={styles.wrapper}>
-          <Text style={[styles.heading, { fontSize: width < 400 ? 40 : 46 }]}>
+          <Text
+            style={[
+              styles.heading,
+              {
+                fontSize: width < 400 ? 40 : 46,
+                color: isDarkMode ? "#fff" : "black",
+              },
+            ]}
+          >
             Enter code
           </Text>
           <View style={{ marginTop: 14, width: 260, marginBottom: 24 }}>
@@ -53,6 +68,7 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
               style={{
                 fontSize: 16,
                 fontFamily: fontFamilies.bold,
+                color: isDarkMode ? "#fff" : "black",
               }}
             >
               Enter{" "}
@@ -69,16 +85,21 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
           </View>
           <Button loginStyle>
             <View style={[styles.icon, { marginTop: 4 }]}>
-              <FontAwesome name="pencil-square-o" size={24} color="black" />
+              <FontAwesome
+                name="pencil-square-o"
+                size={24}
+                color={isDarkMode ? "#fff" : "black"}
+              />
             </View>
             <TextInput
               value={otp}
               placeholder="Enter here"
-              style={styles.input}
+              style={[styles.input, { color: isDarkMode ? "#fff" : "black" }]}
               spellCheck={false}
               underlineColorAndroid={"transparent"}
               selectionColor={colors.primary}
               onChangeText={handleOTP}
+              placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
             ></TextInput>
           </Button>
           <TouchableOpacity
@@ -107,6 +128,7 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
             style={{
               fontSize: 18,
               fontFamily: montserratFonts.semi,
+              color: isDarkMode ? "#fff" : "black",
             }}
           >
             Don't receive code?{" "}

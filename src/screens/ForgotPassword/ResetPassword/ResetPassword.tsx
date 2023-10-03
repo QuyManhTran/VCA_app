@@ -7,14 +7,11 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import styles from "./style";
-import LockIcon from "../../../../assets/icons/LockIcon";
 import { colors } from "../../../../constants";
 import Button from "../../../components/Button";
-import fontFamilies, {
-  montserratFonts,
-} from "../../../../constants/fontFamiles";
+import fontFamilies from "../../../../constants/fontFamiles";
 import { RouterProps } from "../../Splash/Splash";
 import EyeIcon from "../../../../assets/icons/EyeIcon";
 import HideEyeIcon from "../../../../assets/icons/HideEyeIcon";
@@ -24,8 +21,10 @@ import AuthenBackGround from "../../../components/AuthenBackGround";
 import NavButton from "../../../components/NavButton";
 import screenWidth from "../../../../constants/screenWidth";
 import Modal from "../../../components/Modal";
+import ThemeContext from "../../../utilies/theme";
 
 const ResetPassword = ({ route, navigation }: RouterProps) => {
+  const { isDarkMode } = useContext(ThemeContext);
   const keyBoardUp = useRef(new Animated.Value(141)).current;
   const arrowUp = useRef(new Animated.Value(72)).current;
   const [isModal, setIsModal] = useState(false);
@@ -91,13 +90,26 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
   }, [passwordDebounce]);
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: isDarkMode ? "black" : "#fff" },
+        ]}
+      >
         <AuthenBackGround
           onPress={() => navigation.goBack()}
           customStyle={{ top: arrowUp }}
         ></AuthenBackGround>
         <Animated.View style={[styles.wrapper, { marginTop: keyBoardUp }]}>
-          <Text style={[styles.heading, { fontSize: width < 400 ? 48 : 50 }]}>
+          <Text
+            style={[
+              styles.heading,
+              {
+                fontSize: width < 400 ? 48 : 50,
+                color: isDarkMode ? "#fff" : "black",
+              },
+            ]}
+          >
             Change Password
           </Text>
           <View style={{ marginTop: 16, marginBottom: 16 }}>
@@ -106,6 +118,7 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
                 fontSize: 16,
                 fontFamily: fontFamilies.bold,
                 lineHeight: 24,
+                color: isDarkMode ? "#fff" : "black",
               }}
             >
               Your password contains at least{" "}
@@ -118,8 +131,14 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
               onPress={() => setIsHidePassWord(!isHidePassword)}
             >
               <View style={styles.icon}>
-                {!isHidePassword && <EyeIcon></EyeIcon>}
-                {isHidePassword && <HideEyeIcon></HideEyeIcon>}
+                {!isHidePassword && (
+                  <EyeIcon color={isDarkMode ? "#fff" : "black"}></EyeIcon>
+                )}
+                {isHidePassword && (
+                  <HideEyeIcon
+                    color={isDarkMode ? "#fff" : "black"}
+                  ></HideEyeIcon>
+                )}
               </View>
             </TouchableOpacity>
             <TextInput
@@ -127,9 +146,10 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
               style={[
                 styles.input,
                 {
-                  color: !isPassword ? "red" : undefined,
+                  color: !isPassword ? "red" : isDarkMode ? "#fff" : "black",
                 },
               ]}
+              placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
               spellCheck={false}
               underlineColorAndroid={"transparent"}
               secureTextEntry={isHidePassword}
@@ -144,13 +164,20 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
               onPress={() => setIsHidePassWord(!isHidePassword)}
             >
               <View style={styles.icon}>
-                {!isHidePassword && <EyeIcon></EyeIcon>}
-                {isHidePassword && <HideEyeIcon></HideEyeIcon>}
+                {!isHidePassword && (
+                  <EyeIcon color={isDarkMode ? "#fff" : "black"}></EyeIcon>
+                )}
+                {isHidePassword && (
+                  <HideEyeIcon
+                    color={isDarkMode ? "#fff" : "black"}
+                  ></HideEyeIcon>
+                )}
               </View>
             </TouchableOpacity>
             <TextInput
               placeholder="Confirm Password"
-              style={styles.input}
+              style={[styles.input, { color: isDarkMode ? "#fff" : "black" }]}
+              placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
               spellCheck={false}
               underlineColorAndroid={"transparent"}
               secureTextEntry={isHidePassword}

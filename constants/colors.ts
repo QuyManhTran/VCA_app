@@ -4,6 +4,8 @@ const colors = {
   authentication: "#D6F7BD",
   lock: "#096933",
   gray: "#16182399",
+  black: "#292929",
+  placeHolder: "#b3b3b3",
 };
 export const linearColors = ["#FF0000", "#FF9900"];
 export const navbarLinearColors = ["#FFD28D", "#FF6666"];

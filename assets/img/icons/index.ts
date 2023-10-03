@@ -1,5 +1,14 @@
 export const forward = require("./forward.png");
 export const backward = require("./backward.png");
 export const homeFill = require("./home-fill.png");
+export const homeOutline = require("./home-outline.png");
+export const homeWhiteOutline = require("./home-white-outline.png");
+export const homeWhiteFill = require("./home-white-fill.png");
 export const albumOutline = require("./music-album-outline.png");
+export const albumFill = require("./music-album-fill.png");
+export const albumWhiteFill = require("./music-album-white-fill.png");
+export const albumWhiteOutline = require("./music-album-white-outline.png");
 export const userOutline = require("./user-outline.png");
+export const userFill = require("./user-fill.png");
+export const userWhiteFill = require("./user-white-fill.png");
+export const userWhiteOutline = require("./user-white-outline.png");

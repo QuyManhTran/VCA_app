@@ -5,8 +5,10 @@ import {
   useWindowDimensions,
   Pressable,
   SafeAreaView,
+  Animated,
+  ActivityIndicator,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./style";
 import { Video as VideoPlayer, ResizeMode, AVPlaybackStatus } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -21,15 +23,15 @@ import ChapterTime from "../../components/ChapterTime";
 const fakeData = [
   {
     uri: "https://media.istockphoto.com/id/516449022/vi/anh/qu%C3%BD-b%C3%A0-v%E1%BB%9Bi-thuy%E1%BB%81n-kayak.jpg?s=2048x2048&w=is&k=20&c=Nd4zm-2C08g9MFeqDLd-K1ajzU0jEk0awf5A-4UjL1w=",
-    time: "0:00",
+    time: 0,
   },
   {
     uri: "https://media.istockphoto.com/id/1096035138/vi/anh/c%E1%BA%B7p-v%E1%BB%A3-ch%E1%BB%93ng-tr%E1%BA%BB-xinh-%C4%91%E1%BA%B9p-th%C6%B0-gi%C3%A3n-sau-khi-%C4%91i-b%E1%BB%99-%C4%91%C6%B0%E1%BB%9Dng-d%C3%A0i-v%C3%A0-ngh%E1%BB%89-ng%C6%A1i.jpg?s=2048x2048&w=is&k=20&c=Afu8GGrImDYZ-MzvKgCgl2uaUohvoJLHcYokxBaIcGo=",
-    time: "2:06",
+    time: 100,
   },
   {
     uri: "https://media.istockphoto.com/id/909195692/vi/anh/c%E1%BA%B7p-v%E1%BB%A3-ch%E1%BB%93ng-th%E1%BB%A3-l%E1%BA%B7n-d%C5%A9ng-c%E1%BA%A3m-tr%E1%BA%BB-nh%E1%BA%A3y-kh%E1%BB%8Fi-v%C3%A1ch-%C4%91%C3%A1-xu%E1%BB%91ng-bi%E1%BB%83n.jpg?s=2048x2048&w=is&k=20&c=s7zyX8j_A4PWfqAGAnRzrGbgUgbMxb52oTSG-Bcyyww=",
-    time: "5:04",
+    time: 200,
   },
 ];
 const Video = () => {
@@ -39,6 +41,7 @@ const Video = () => {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isBuffering, setIsBuffering] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isTouchStart, setIsTouchStart] = useState(false);
@@ -108,10 +111,25 @@ const Video = () => {
   const seekingEvent = (isSeeking: boolean) => {
     setIsSeeking(isSeeking);
   };
+
+  const onChapter = useCallback(
+    (time: number) => {
+      if (vidRef.current) {
+        vidRef.current.setPositionAsync(time);
+        setCurrentTime(time);
+      }
+    },
+    [fakeData]
+  );
   // Effect
+
   useEffect(() => {
-    // console.log(currentTime, duration);
-  }, [currentTime]);
+    if (status) {
+      if ((status.isBuffering && !status.isPlaying) !== isBuffering) {
+        setIsBuffering((isBuffering) => !isBuffering);
+      }
+    }
+  }, [status]);
 
   useEffect(() => {
     // auto play
@@ -140,7 +158,7 @@ const Video = () => {
     if (isTouchEnd) {
       timeOutRef.current = setTimeout(() => {
         setIsTouchStart(false);
-      }, 2000);
+      }, 1000);
     }
     return () => clearTimeout(timeOutRef.current as NodeJS.Timeout);
   }, [isTouchEnd]);
@@ -169,15 +187,29 @@ const Video = () => {
             height: "100%",
           }}
           isLooping
-          //  onLoadStart={() => console.log(status.durationMillis)}
           onLoad={onLoad}
           onTouchStart={() => {
             setIsTouchStart(true);
             setIsTouchEnd(false);
           }}
           onTouchEnd={() => setIsTouchEnd(true)}
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          onPlaybackStatusUpdate={(status) => {
+            setStatus(() => status);
+          }}
         ></VideoPlayer>
+        {isBuffering && !isTouchStart && (
+          <ActivityIndicator
+            size="large"
+            color="#fff"
+            style={{
+              position: "absolute",
+              width: "100%",
+              top: "48%",
+              left: 0,
+              alignItems: "center",
+            }}
+          ></ActivityIndicator>
+        )}
         {isTouchStart && (
           <Pressable
             style={styles.vidControl}
@@ -273,7 +305,9 @@ const Video = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.contentContainer}>
-            {isChapters && <ChapterTime data={fakeData}></ChapterTime>}
+            {isChapters && (
+              <ChapterTime onChapter={onChapter} data={fakeData}></ChapterTime>
+            )}
           </View>
         </View>
       )}

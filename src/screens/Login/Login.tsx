@@ -5,10 +5,8 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   View,
-  Alert,
-  useWindowDimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "./style";
 import Button from "../../components/Button";
 import UserIcon from "../../../assets/icons/UserIcon";
@@ -23,8 +21,10 @@ import AuthenBackGround from "../../components/AuthenBackGround";
 import NavButton from "../../components/NavButton";
 import { montserratFonts } from "../../../constants/fontFamiles";
 import screenWidth from "../../../constants/screenWidth";
+import ThemeContext from "../../utilies/theme";
 
 const Login = ({ route, navigation }: RouterProps) => {
+  const { isDarkMode } = useContext(ThemeContext);
   const width = screenWidth();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -75,25 +75,32 @@ const Login = ({ route, navigation }: RouterProps) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
+      <View
+        style={[styles.container, isDarkMode && { backgroundColor: "black" }]}
+      >
         <AuthenBackGround
           onPress={() => navigation.goBack()}
         ></AuthenBackGround>
         <View style={styles.wrapper}>
-          <Text style={styles.heading}>Login</Text>
-          <Text style={styles.requirement}>Please sign in to continue</Text>
+          <Text style={[styles.heading, isDarkMode && { color: "#fff" }]}>
+            Login
+          </Text>
+          <Text style={[styles.requirement, isDarkMode && { color: "#fff" }]}>
+            Please sign in to continue
+          </Text>
           <Button loginStyle={true}>
             <View style={styles.icon}>
-              <UserIcon></UserIcon>
+              <UserIcon color={isDarkMode ? "#fff" : "black"}></UserIcon>
             </View>
             <TextInput
               placeholder="Email"
               style={[
                 styles.input,
                 {
-                  color: !isUserName ? "red" : undefined,
+                  color: !isUserName ? "red" : isDarkMode ? "#fff" : "black",
                 },
               ]}
+              placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
               value={userName}
               onChangeText={handleUserName}
               spellCheck={false}
@@ -107,8 +114,14 @@ const Login = ({ route, navigation }: RouterProps) => {
               onPress={() => setIsHidePassWord(!isHidePassword)}
             >
               <View style={styles.icon}>
-                {!isHidePassword && <EyeIcon></EyeIcon>}
-                {isHidePassword && <HideEyeIcon></HideEyeIcon>}
+                {!isHidePassword && (
+                  <EyeIcon color={isDarkMode ? "#fff" : "black"}></EyeIcon>
+                )}
+                {isHidePassword && (
+                  <HideEyeIcon
+                    color={isDarkMode ? "#fff" : "black"}
+                  ></HideEyeIcon>
+                )}
               </View>
             </TouchableOpacity>
             <TextInput
@@ -117,9 +130,10 @@ const Login = ({ route, navigation }: RouterProps) => {
               style={[
                 styles.input,
                 {
-                  color: !isPassword ? "red" : undefined,
+                  color: !isPassword ? "red" : isDarkMode ? "#fff" : "black",
                 },
               ]}
+              placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
               selectionColor={colors.primary}
               value={password}
               onChangeText={handlePassword}
@@ -169,6 +183,7 @@ const Login = ({ route, navigation }: RouterProps) => {
             style={{
               fontSize: width < 400 ? 16 : 18,
               fontFamily: montserratFonts.semi,
+              color: isDarkMode ? "#fff" : "black",
             }}
           >
             You don't have an account?{" "}

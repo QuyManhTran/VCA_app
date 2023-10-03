@@ -34,5 +34,6 @@ export interface NavBarProps {
   width: number;
   height: number;
   name?: string;
+  darkMode?: boolean;
 }
 export default NavBarIcon;

@@ -5,10 +5,9 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
-  useWindowDimensions,
 } from "react-native";
 import { useState, useEffect } from "react";
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./style";
 import { colors } from "../../../../constants";
 import Button from "../../../components/Button";
@@ -22,8 +21,10 @@ import AuthenBackGround from "../../../components/AuthenBackGround";
 import NavButton from "../../../components/NavButton";
 import screenWidth from "../../../../constants/screenWidth";
 import Modal from "../../../components/Modal";
+import ThemeContext from "../../../utilies/theme";
 
 const EmailRequirement = ({ route, navigation }: RouterProps) => {
+  const { isDarkMode } = useContext(ThemeContext);
   const width = screenWidth();
   const [email, setEmail] = useState("");
   const [isEmail, setIsEmail] = useState(false);
@@ -51,16 +52,35 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: isDarkMode ? "black" : "#fff" },
+        ]}
+      >
         <AuthenBackGround
           onPress={() => navigation.goBack()}
         ></AuthenBackGround>
         <View style={styles.wrapper}>
-          <Text style={[styles.heading, { fontSize: width < 400 ? 48 : 50 }]}>
+          <Text
+            style={[
+              styles.heading,
+              {
+                fontSize: width < 400 ? 48 : 50,
+                color: isDarkMode ? "#fff" : "black",
+              },
+            ]}
+          >
             Forgot Password
           </Text>
           <View style={{ marginTop: 16, marginBottom: 32 }}>
-            <Text style={{ fontSize: width < 400 ? 18 : 20 }}>
+            <Text
+              style={{
+                fontSize: width < 400 ? 18 : 20,
+                color: isDarkMode ? "#fff" : "black",
+                fontFamily: montserratFonts.semi,
+              }}
+            >
               Enter your email and we'll send you a{" "}
               <Text
                 style={{
@@ -74,12 +94,16 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
           </View>
           <Button loginStyle>
             <View style={[styles.icon, { marginTop: 1 }]}>
-              <EmailIcon fill></EmailIcon>
+              <EmailIcon fill color={isDarkMode ? "#fff" : "black"}></EmailIcon>
             </View>
             <TextInput
               value={email}
               placeholder="Email"
-              style={[styles.input, { color: !isEmail ? "red" : undefined }]}
+              style={[
+                styles.input,
+                { color: !isEmail ? "red" : isDarkMode ? "#fff" : "black" },
+              ]}
+              placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
               spellCheck={false}
               underlineColorAndroid={"transparent"}
               selectionColor={colors.primary}

@@ -1,16 +1,15 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
-import React from "react";
-import { singleLego } from "../../../assets/img/splash";
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { useContext } from "react";
 import styles from "./style";
-import Button from "../../components/Button";
-import { NavigationProp } from "@react-navigation/native";
 import { RouterProps } from "../Splash/Splash";
 import AuthenBackGround from "../../components/AuthenBackGround";
 import { colors } from "../../../constants";
 import NavButton from "../../components/NavButton";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
+import ThemeContext from "../../utilies/theme";
 
 const AskAccount = ({ route, navigation }: RouterProps) => {
+  const { isDarkMode } = useContext(ThemeContext);
   const onMoveLogin = () => {
     navigation.navigate("Login");
   };
@@ -18,13 +17,15 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
     navigation.navigate("Register");
   };
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
       <AuthenBackGround
         onPress={() => navigation.goBack()}
         isBack={false}
       ></AuthenBackGround>
       <View style={styles.container}>
-        <Text style={styles.heading}>You have an account</Text>
+        <Text style={[styles.heading, isDarkMode && { color: "#fff" }]}>
+          You have an account
+        </Text>
         <TouchableOpacity onPress={onMoveLogin} activeOpacity={0.7}>
           <NavButton
             width={340}
@@ -54,7 +55,9 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
           </Text>
           <View style={styles.whiteLine}></View>
         </View>
-        <Text style={[styles.heading]}>You don't have </Text>
+        <Text style={[styles.heading, isDarkMode && { color: "#fff" }]}>
+          You don't have{" "}
+        </Text>
         <TouchableOpacity onPress={onMoveRegister} activeOpacity={0.7}>
           <NavButton
             width={340}

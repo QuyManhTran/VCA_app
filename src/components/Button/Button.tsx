@@ -1,13 +1,13 @@
 import {
   StyleSheet,
-  Text,
-  TouchableHighlight,
   TouchableOpacity,
   View,
   useWindowDimensions,
 } from "react-native";
-import React from "react";
-import { fontFamilies } from "../../../constants";
+import React, { useContext } from "react";
+import ThemeContext from "../../utilies/theme";
+import { colors } from "../../../constants";
+
 const Button = ({
   children,
   onPress,
@@ -22,6 +22,7 @@ const Button = ({
   otherStyles?: object;
 }) => {
   const { width, height } = useWindowDimensions();
+  const { isDarkMode } = useContext(ThemeContext);
   return (
     <TouchableOpacity
       activeOpacity={loginStyle ? 1 : 0.7}
@@ -36,7 +37,10 @@ const Button = ({
       <View
         style={[
           styles.container,
-          { width: width < 400 ? 320 : 340 },
+          {
+            width: width < 400 ? 320 : 340,
+            backgroundColor: isDarkMode ? colors.black : "#fff",
+          },
           otherStyles,
         ]}
       >

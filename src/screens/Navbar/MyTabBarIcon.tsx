@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet } from "react-native";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import * as Animatable from "react-native-animatable";
-import { Ionicons } from "@expo/vector-icons";
-import { colors } from "../../../constants";
 import NavBarIcon from "../../../assets/icons/NavBarIcon";
 import { LinearGradient } from "expo-linear-gradient";
 import { navbarLinearColors } from "../../../constants/colors";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
+import ThemeContext from "../../utilies/theme";
 const MyTabBarIcon = ({ focused, route }) => {
+  const { isDarkMode } = useContext(ThemeContext);
   const animateFocused = {
     0: { scale: 1, translateY: 0 },
     1: { scale: 1.2, translateY: -24 },
@@ -78,7 +78,6 @@ const MyTabBarIcon = ({ focused, route }) => {
           style={{
             ...StyleSheet.absoluteFillObject,
             borderRadius: 25,
-            // backgroundColor: "#FFD28D",
             overflow: "hidden",
           }}
         >
@@ -95,7 +94,12 @@ const MyTabBarIcon = ({ focused, route }) => {
             }}
           ></LinearGradient>
         </Animatable.View>
-        <NavBarIcon name={iconName} width={28} height={28}></NavBarIcon>
+        <NavBarIcon
+          name={iconName}
+          width={28}
+          height={28}
+          darkMode={isDarkMode}
+        ></NavBarIcon>
       </Animatable.View>
       <Animatable.Text
         duration={500}
@@ -104,6 +108,7 @@ const MyTabBarIcon = ({ focused, route }) => {
         style={{
           fontSize: 18,
           fontFamily: baloo2Fonts.extra,
+          color: isDarkMode ? "#fff" : "black",
         }}
       >
         {route.name}

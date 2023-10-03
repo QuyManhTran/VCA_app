@@ -1,10 +1,11 @@
 import { View, Text, Switch } from "react-native";
-import React, { useState } from "react";
-import { darkTheme } from "../../utilies/theme";
+import React, { useState, useContext } from "react";
+import ThemeContext, { darkTheme } from "../../utilies/theme";
 import { EventRegister } from "react-native-event-listeners";
 
 const Account = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { isDarkMode } = useContext(ThemeContext);
+  const [darkMode, setDarkMode] = useState(isDarkMode);
   return (
     <View
       style={{

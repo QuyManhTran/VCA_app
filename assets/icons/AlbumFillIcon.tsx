@@ -1,12 +1,16 @@
 import React from "react";
 import { Image } from "react-native";
-import { albumOutline } from "../img/icons";
+import { albumFill, albumWhiteFill } from "../img/icons";
 import { NavBarProps } from "./NavBarIcon";
 
-const AlbumFillIcon = ({ width = 36, height = 36 }: NavBarProps) => {
+const AlbumFillIcon = ({
+  width = 36,
+  height = 36,
+  darkMode = false,
+}: NavBarProps) => {
   return (
     <Image
-      source={albumOutline}
+      source={darkMode ? albumWhiteFill : albumFill}
       resizeMode="cover"
       style={{ width: width, height: height }}
     ></Image>
