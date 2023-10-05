@@ -33,7 +33,11 @@ const AuthenBackGround = ({
         <Animated.View
           style={[{ position: "absolute", top: 72, left: 16 }, customStyle]}
         >
-          <BackButton onPress={onPress} size={38}></BackButton>
+          <BackButton
+            onPress={onPress}
+            size={38}
+            color={isDarkMode ? "#fff" : "black"}
+          ></BackButton>
         </Animated.View>
       )}
     </>

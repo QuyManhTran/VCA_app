@@ -100,6 +100,7 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
               selectionColor={colors.primary}
               onChangeText={handleOTP}
               placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
+              keyboardType="number-pad"
             ></TextInput>
           </Button>
           <TouchableOpacity

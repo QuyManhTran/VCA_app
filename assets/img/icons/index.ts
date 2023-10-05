@@ -12,3 +12,6 @@ export const userOutline = require("./user-outline.png");
 export const userFill = require("./user-fill.png");
 export const userWhiteFill = require("./user-white-fill.png");
 export const userWhiteOutline = require("./user-white-outline.png");
+export const searchDark = require("./search-dark.png");
+export const searchWhite = require("./search-white.png");
+export const userAvatar = require("./avatar.png");

@@ -145,11 +145,16 @@ const Splash = ({ route, navigation }: RouterProps) => {
         bounces={false}
       ></FlatList>
 
-      <View style={styles.paginator}>
+      <View style={[styles.paginator, width > 400 && { top: 670 }]}>
         <Paginator scrollX={scrollX}></Paginator>
       </View>
 
-      <Animated.View style={[styles.btn, { opacity: bottomButton }]}>
+      <Animated.View
+        style={[
+          styles.btn,
+          { opacity: bottomButton, top: width < 400 ? 698 : 720 },
+        ]}
+      >
         <ArrowButton
           percentage={(activeIndex + 1) * (100 / splashes.length)}
           onNext={onNext}

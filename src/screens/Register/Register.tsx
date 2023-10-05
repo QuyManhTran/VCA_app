@@ -7,7 +7,7 @@ import {
   View,
   Animated,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styles from "./style";
 import Button from "../../components/Button";
 import UserIcon from "../../../assets/icons/UserIcon";
@@ -27,10 +27,13 @@ import AuthenBackGround from "../../components/AuthenBackGround";
 import NavButton from "../../components/NavButton";
 import screenWidth from "../../../constants/screenWidth";
 import Modal from "../../components/Modal";
+import ThemeContext from "../../utilies/theme";
 
 const Register = ({ route, navigation }: RouterProps) => {
+  const { isDarkMode } = useContext(ThemeContext);
   const keyBoardUp = useRef(new Animated.Value(141)).current;
   const arrowUp = useRef(new Animated.Value(72)).current;
+  const opacity = useRef(new Animated.Value(0.5)).current;
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -101,6 +104,13 @@ const Register = ({ route, navigation }: RouterProps) => {
   const onLogin = () => {
     navigation.navigate("Login");
   };
+  useEffect(() => {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  }, []);
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -156,20 +166,30 @@ const Register = ({ route, navigation }: RouterProps) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
+      <Animated.View
+        style={[
+          styles.container,
+          { backgroundColor: isDarkMode ? "black" : "#fff", opacity: opacity },
+        ]}
+      >
         <AuthenBackGround
           onPress={() => navigation.goBack()}
           customStyle={{ top: arrowUp }}
         ></AuthenBackGround>
         <Animated.View style={[styles.wrapper, { marginTop: keyBoardUp }]}>
-          <Text style={styles.heading}>Sign up</Text>
+          <Text
+            style={[styles.heading, { color: isDarkMode ? "#fff" : "black" }]}
+          >
+            Sign up
+          </Text>
           <Button loginStyle={true}>
             <View style={styles.icon}>
-              <UserIcon></UserIcon>
+              <UserIcon color={isDarkMode ? "#fff" : "black"}></UserIcon>
             </View>
             <TextInput
               placeholder="User Name"
-              style={[styles.input]}
+              style={[styles.input, { color: isDarkMode ? "#fff" : "black" }]}
+              placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
               value={userName}
               onChangeText={handleUserName}
               spellCheck={false}
@@ -179,16 +199,20 @@ const Register = ({ route, navigation }: RouterProps) => {
           </Button>
           <Button loginStyle={true}>
             <View style={[styles.icon, , { marginTop: 1 }]}>
-              <EmailIcon size={24}></EmailIcon>
+              <EmailIcon
+                size={24}
+                color={isDarkMode ? "#fff" : "black"}
+              ></EmailIcon>
             </View>
             <TextInput
               placeholder="Email"
               style={[
                 styles.input,
                 {
-                  color: !isEmail ? "red" : undefined,
+                  color: !isEmail ? "red" : isDarkMode ? "#fff" : "black",
                 },
               ]}
+              placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
               value={email}
               onChangeText={handleEmail}
               spellCheck={false}
@@ -202,8 +226,14 @@ const Register = ({ route, navigation }: RouterProps) => {
               onPress={() => setIsHidePassWord(!isHidePassword)}
             >
               <View style={styles.icon}>
-                {!isHidePassword && <EyeIcon></EyeIcon>}
-                {isHidePassword && <HideEyeIcon></HideEyeIcon>}
+                {!isHidePassword && (
+                  <EyeIcon color={isDarkMode ? "#fff" : "black"}></EyeIcon>
+                )}
+                {isHidePassword && (
+                  <HideEyeIcon
+                    color={isDarkMode ? "#fff" : "black"}
+                  ></HideEyeIcon>
+                )}
               </View>
             </TouchableOpacity>
             <TextInput
@@ -212,9 +242,10 @@ const Register = ({ route, navigation }: RouterProps) => {
               style={[
                 styles.input,
                 {
-                  color: !isPassword ? "red" : undefined,
+                  color: !isEmail ? "red" : isDarkMode ? "#fff" : "black",
                 },
               ]}
+              placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
               selectionColor={colors.primary}
               value={password}
               onChangeText={handlePassword}
@@ -247,6 +278,7 @@ const Register = ({ route, navigation }: RouterProps) => {
             style={{
               fontSize: width < 400 ? 16 : 18,
               fontFamily: montserratFonts.semi,
+              color: isDarkMode ? "#fff" : "black",
             }}
           >
             Already have an account?{" "}
@@ -270,7 +302,7 @@ const Register = ({ route, navigation }: RouterProps) => {
             onPress={() => setIsModal(false)}
           ></Modal>
         )}
-      </View>
+      </Animated.View>
     </TouchableWithoutFeedback>
   );
 };
