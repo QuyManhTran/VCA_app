@@ -29,11 +29,11 @@ const LinearBackGround = ({
         height: height,
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "flex-end",
+        justifyContent: back ? "flex-start" : "flex-end",
       }}
     >
       {back && (
-        <View style={{ marginRight: 20 }}>
+        <View style={{ marginRight: 20, marginLeft: back ? 12 : 0 }}>
           <BackButton onPress={onPress} size={28}></BackButton>
         </View>
       )}
@@ -43,9 +43,11 @@ const LinearBackGround = ({
       >
         {title}
       </Text>
-      <TouchableOpacity activeOpacity={0.8}>
-        <Image source={userAvatar} style={{ height: 70, width: 70 }}></Image>
-      </TouchableOpacity>
+      {avatar && (
+        <TouchableOpacity activeOpacity={0.8}>
+          <Image source={userAvatar} style={{ height: 70, width: 70 }}></Image>
+        </TouchableOpacity>
+      )}
     </LinearGradient>
   );
 };

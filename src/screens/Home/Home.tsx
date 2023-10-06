@@ -1,5 +1,11 @@
 import { View, Text, ScrollView, useWindowDimensions } from "react-native";
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useContext,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import styles from "./style";
 import ThemeContext, { darkTheme } from "../../utilies/theme";
 import { Animated } from "react-native";
@@ -33,6 +39,10 @@ const Home = ({ route, navigation }: RouterProps) => {
     outputRange: [0, -70],
   });
 
+  const onNavigateSearch = useCallback(() => {
+    navigation.navigate("Search");
+  }, []);
+
   useEffect(() => {
     scrollY.addListener(({ value }) => {
       if (value > prevOffSetY) {
@@ -51,15 +61,11 @@ const Home = ({ route, navigation }: RouterProps) => {
     return () => scrollY.removeAllListeners();
   });
 
-  useEffect(() => {
-    console.log("hello");
-  }, [countVar]);
-
   return (
     <View style={{ flex: 1 }}>
       <LinearBackGround height={140} title="Chào buổi sáng"></LinearBackGround>
       <Animatable.View duration={1000} style={[styles.search]} ref={searchRef}>
-        <SearchTool></SearchTool>
+        <SearchTool isHome={true} onPress={onNavigateSearch}></SearchTool>
       </Animatable.View>
       <Animated.ScrollView
         disableIntervalMomentum
