@@ -5,6 +5,9 @@ export const southern = require("./southern.png");
 export const noodles = require("./noodles.png");
 export const rice = require("./rice.png");
 export const cake = require("./cake.png");
+export const springRoll = require("./spring-roll.png");
+export const nemRan = require("./nemran.jpg");
+export const ocNoodle = require("./ocnoodle.jpg");
 
 const exploreData = [
   {

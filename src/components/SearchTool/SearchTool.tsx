@@ -5,34 +5,31 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { searchDark } from "../../../assets/img/icons";
 import { colors } from "../../../constants";
-import useDebounce from "../../../hooks/useDebounce";
-import fontFamilies, {
-  baloo2Fonts,
-  montserratFonts,
-} from "../../../constants/fontFamiles";
+import fontFamilies, { baloo2Fonts } from "../../../constants/fontFamiles";
 
 interface SearchProps {
   isHome: boolean;
-  onPress?: any;
   width?: number;
+  onPress?: any;
+  onKeyword?: any;
+  keyword?: string;
 }
 const fakeData = ["truyền thống", "phổ biến ", "yêu thích", "liên quan"];
-const SearchTool = ({ width = 320, isHome, onPress }: SearchProps) => {
-  const resultRef = useRef<TextInput>(null);
-  const [keyword, setKeyword] = useState("");
-  const [data, setData] = useState(fakeData);
-  const debounceKeyword = useDebounce(keyword, 500);
-  useEffect(() => {
-    // sent API by debounceKeyword
-  }, [debounceKeyword]);
-  console.log("hello");
+const SearchTool = ({
+  width = 320,
+  isHome,
+  onPress,
+  onKeyword,
+  keyword,
+}: SearchProps) => {
   return (
-    <>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={[styles.container, { width: width }]}>
         <TouchableOpacity>
           <Image
@@ -44,10 +41,9 @@ const SearchTool = ({ width = 320, isHome, onPress }: SearchProps) => {
         <View style={styles.inputWrapper}>
           {!isHome && (
             <TextInput
-              ref={resultRef}
-              style={styles.input}
               value={keyword}
-              onChangeText={(text) => setKeyword(text)}
+              style={styles.input}
+              onChangeText={(text) => onKeyword(text)}
               placeholder="Tìm kiếm món ăn"
               spellCheck={false}
               selectionColor={colors.primary}
@@ -99,7 +95,7 @@ const SearchTool = ({ width = 320, isHome, onPress }: SearchProps) => {
           </View>
         </View>
       )} */}
-    </>
+    </TouchableWithoutFeedback>
   );
 };
 

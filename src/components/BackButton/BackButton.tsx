@@ -15,17 +15,20 @@ const BackButton = ({
   size = 24,
   onPress,
   rotate = "0deg",
-  customeStyle,
+  customeStyle = {},
 }: Props) => {
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={(e) => {
+        onPress();
+      }}
       activeOpacity={0.7}
       style={[
         {
           backgroundColor: "#fff",
           borderRadius: 20,
           transform: [{ rotate: rotate }],
+          padding: 12,
         },
         customeStyle,
       ]}
@@ -34,7 +37,6 @@ const BackButton = ({
         name={fill ? "arrow-back" : "arrow-back-outline"}
         color={color}
         size={size}
-        style={{ padding: 12 }}
       ></Ionicons>
     </TouchableOpacity>
   );

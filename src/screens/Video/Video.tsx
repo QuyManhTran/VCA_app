@@ -20,6 +20,7 @@ import BackWardIcon from "../../../assets/icons/BackWardIcon";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import { colors } from "../../../constants";
 import ChapterTime from "../../components/ChapterTime";
+import reviewDuyNen from "../../../assets/videos";
 const fakeData = [
   {
     uri: "https://media.istockphoto.com/id/516449022/vi/anh/qu%C3%BD-b%C3%A0-v%E1%BB%9Bi-thuy%E1%BB%81n-kayak.jpg?s=2048x2048&w=is&k=20&c=Nd4zm-2C08g9MFeqDLd-K1ajzU0jEk0awf5A-4UjL1w=",
@@ -176,12 +177,10 @@ const Video = () => {
           ref={vidRef}
           usePoster={true}
           posterSource={{
-            uri: "https://images.pexels.com/photos/50859/pexels-photo-50859.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            uri: "https://i.ytimg.com/vi/UsWhOcx0Zd4/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AHUBoAC4AOKAgwIABABGGUgRyhHMA8=&rs=AOn4CLAfyoph2lAgX61QUpDfYpI55ptIUQ",
           }}
-          source={{
-            uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          }}
-          resizeMode={ResizeMode.STRETCH}
+          source={reviewDuyNen}
+          resizeMode={ResizeMode.CONTAIN}
           style={{
             width: "100%",
             height: "100%",

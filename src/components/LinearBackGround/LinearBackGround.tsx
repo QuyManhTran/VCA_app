@@ -33,7 +33,7 @@ const LinearBackGround = ({
       }}
     >
       {back && (
-        <View style={{ marginRight: 20, marginLeft: back ? 12 : 0 }}>
+        <View style={{ marginRight: 20 }}>
           <BackButton onPress={onPress} size={28}></BackButton>
         </View>
       )}
