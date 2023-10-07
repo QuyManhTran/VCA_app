@@ -25,7 +25,6 @@ const BackButton = ({
       activeOpacity={0.7}
       style={[
         {
-          backgroundColor: "#fff",
           borderRadius: 20,
           transform: [{ rotate: rotate }],
           padding: 12,

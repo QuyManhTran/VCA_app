@@ -11,7 +11,14 @@ interface FoodReviewProps {
   img: any;
   onTag?: any;
 }
-const FoodReview = ({ name, like, rate, tag, img, onTag }: FoodReviewProps) => {
+const FoodReview = ({
+  name,
+  like,
+  rate,
+  tag,
+  img,
+  onTag = () => {},
+}: FoodReviewProps) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity activeOpacity={0.6} onPress={() => alert("touch")}>

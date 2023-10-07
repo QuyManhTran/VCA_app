@@ -1,12 +1,210 @@
-import { View, Text } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+} from "react-native";
+import React, { useState } from "react";
+import LinearBackGround from "../../components/LinearBackGround";
+import fontFamilies, { baloo2Fonts } from "../../../constants/fontFamiles";
+import { banhmy, list, springRoll } from "../../../assets/img/foods";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import Modal from "../../components/Modal";
+import BackButton from "../../components/BackButton";
+import { colors } from "../../../constants";
+import NavButton from "../../components/NavButton";
+import { RouterProps } from "../Splash/Splash";
+import FoodReview from "../../components/FoodReview";
+import { mostlySearch } from "../../../constants/fakeData";
+const fakeData = [
+  { img: list, name: "Món ngon Hà Nội" },
+  { img: list, name: "Gỏi các loại" },
+  { img: list, name: "Bún with love" },
+  { img: list, name: "Xem sau" },
+];
+const Explore = ({ route, navigation }: RouterProps) => {
+  const [allLists, setAllLists] = useState(fakeData);
+  const [newList, setNewList] = useState<string | null>("");
+  const [isModal, setIsModal] = useState(false);
+  const onTag = (keyword) => {
+    navigation.navigate("Search", {
+      keyword: keyword,
+    });
+  };
 
-const Explore = () => {
   return (
-    <View>
-      <Text>Explore</Text>
+    <View style={{ flex: 1 }}>
+      <LinearBackGround height={100}></LinearBackGround>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <View style={styles.listWrapper}>
+            <View style={styles.header}>
+              <Text style={styles.heading}>Danh sách của bạn</Text>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => setIsModal(true)}
+                style={{ marginRight: 8 }}
+              >
+                <FontAwesome5 name="plus" size={28} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View style={{}}>
+              {allLists.map((item, index) => (
+                <TouchableOpacity activeOpacity={0.6} key={index}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingBottom: 24,
+                    }}
+                  >
+                    <Image
+                      source={item.img}
+                      style={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: 8,
+                      }}
+                      resizeMode="cover"
+                    ></Image>
+                    <View style={{ marginLeft: 12 }}>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontFamily: baloo2Fonts.bold,
+                        }}
+                      >
+                        {item.name}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontFamily: baloo2Fonts.bold,
+                          color: colors.gray,
+                        }}
+                      >
+                        Andrew
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          {/* {allLists.map((list, index) => (
+            <View
+              key={index}
+              style={{ marginBottom: index === allLists.length - 1 ? 36 : 12 }}
+            >
+              <Text style={[styles.heading, { marginBottom: 12 }]}>
+                {list.name}
+              </Text>
+              {mostlySearch.map((food, index) => {
+                if (index <= 2) {
+                  return (
+                    <FoodReview
+                      {...food}
+                      key={index}
+                      onTag={onTag}
+                    ></FoodReview>
+                  );
+                }
+              })}
+            </View>
+          ))} */}
+        </View>
+      </ScrollView>
+      {isModal && (
+        <Modal>
+          <BackButton
+            fill
+            color="black"
+            size={32}
+            onPress={() => setIsModal(false)}
+            customeStyle={{ marginLeft: 8 }}
+          ></BackButton>
+          <View style={styles.newListWrapper}>
+            <View
+              style={{ width: "100%", paddingHorizontal: 24, marginBottom: 36 }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: fontFamilies.bold,
+                  color: colors.gray,
+                  marginBottom: 8,
+                }}
+              >
+                Tên danh sách
+              </Text>
+              <TextInput
+                placeholder="Nhập tên danh sách"
+                selectionColor={colors.primary}
+                value={newList}
+                style={{
+                  backgroundColor: "#fff",
+                  paddingVertical: 8,
+                  width: "100%",
+                  height: 50,
+                  borderBottomWidth: 4,
+                  borderColor: colors.primary,
+                  fontSize: 20,
+                  fontFamily: baloo2Fonts.medium,
+                }}
+                onChangeText={(text) => setNewList(text)}
+              ></TextInput>
+            </View>
+            <TouchableOpacity
+              disabled={newList.trim() ? false : true}
+              activeOpacity={0.6}
+              onPress={() => {
+                setAllLists((prevList) => [
+                  ...prevList,
+                  { img: springRoll, name: newList },
+                ]);
+                setIsModal(false);
+              }}
+              style={{ opacity: newList.trim() ? 1 : 0.5, marginBottom: 24 }}
+            >
+              <NavButton
+                customeStyle={{
+                  width: "100%",
+                  borderRadius: 24,
+                  paddingHorizontal: 20,
+                }}
+              >
+                Tạo danh sách
+              </NavButton>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 12,
+  },
+  listWrapper: {
+    paddingTop: 24,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  heading: {
+    fontSize: 28,
+    fontFamily: baloo2Fonts.bold,
+  },
+  newListWrapper: {
+    alignItems: "center",
+  },
+});
 export default Explore;

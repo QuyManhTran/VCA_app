@@ -51,7 +51,7 @@ const SearchTool = ({
           )}
           {isHome && (
             <Text
-              onPress={onPress}
+              onPress={() => onPress({})}
               style={{
                 fontSize: 20,
                 fontFamily: baloo2Fonts.regular,

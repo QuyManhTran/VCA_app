@@ -8,7 +8,7 @@ export const cake = require("./cake.png");
 export const springRoll = require("./spring-roll.png");
 export const nemRan = require("./nemran.jpg");
 export const ocNoodle = require("./ocnoodle.jpg");
-
+export const list = require("./list.jpg");
 const exploreData = [
   {
     name: "Miền Bắc",

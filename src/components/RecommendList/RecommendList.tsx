@@ -15,9 +15,13 @@ import { Entypo, Ionicons } from "@expo/vector-icons";
 interface RecommendListProps {
   heading: string;
   explore?: boolean;
+  onNavigateSearch: any;
 }
-const RecommendList = ({ heading, explore = false }: RecommendListProps) => {
-  const onPress = () => {};
+const RecommendList = ({
+  heading,
+  explore = false,
+  onNavigateSearch,
+}: RecommendListProps) => {
   let data = new Array(5);
   data.fill(6);
   if (explore) {
@@ -29,6 +33,7 @@ const RecommendList = ({ heading, explore = false }: RecommendListProps) => {
       <TouchableOpacity
         activeOpacity={0.6}
         style={{ paddingBottom: 0, flexDirection: "row", alignItems: "center" }}
+        onPress={() => onNavigateSearch({ keyword: heading })}
       >
         <Text style={styles.heading}>{heading}</Text>
         <Ionicons name="chevron-forward-outline" size={24}></Ionicons>
@@ -70,7 +75,7 @@ const RecommendList = ({ heading, explore = false }: RecommendListProps) => {
           >
             <BackButton
               color={colors.primary}
-              onPress={onPress}
+              onPress={() => onNavigateSearch({ keyword: heading })}
               rotate="180deg"
               customeStyle={{
                 borderRadius: 25,
@@ -78,7 +83,7 @@ const RecommendList = ({ heading, explore = false }: RecommendListProps) => {
                 height: 50,
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "rgba(255, 255, 255, 0.4)",
+                backgroundColor: "rgba(255, 255, 255, 1)",
               }}
             ></BackButton>
 

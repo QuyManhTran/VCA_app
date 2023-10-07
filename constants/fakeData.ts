@@ -42,18 +42,4 @@ export const mostlySearch = [
     rate: 4.9,
     tag: "Truyền thống",
   },
-  {
-    img: ocNoodle,
-    name: "Bún ốc",
-    like: 2.5,
-    rate: 4.9,
-    tag: "Truyền thống",
-  },
-  {
-    img: ocNoodle,
-    name: "Bún ốc",
-    like: 2.5,
-    rate: 4.9,
-    tag: "Truyền thống",
-  },
 ];

@@ -17,8 +17,9 @@ import FoodReview from "../../components/FoodReview";
 import { mostlySearch } from "../../../constants/fakeData";
 import BackButton from "../../components/BackButton";
 const Search = ({ route, navigation }: RouterProps) => {
+  //console.log("hello");
   const scrollOpacity = useRef(new Animated.Value(0)).current;
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState(route.params.keyword || "");
   const [data, setData] = useState(mostlySearch);
   const debounceKeyword = useDebounce(keyword, 300);
   const onKeyword = useCallback((text: string) => {
@@ -54,7 +55,11 @@ const Search = ({ route, navigation }: RouterProps) => {
     <View style={{ flex: 1 }}>
       <LinearBackGround height={140} avatar={false}></LinearBackGround>
       <View style={{ position: "absolute", top: 44, left: 10 }}>
-        <BackButton onPress={onBack} size={28}></BackButton>
+        <BackButton
+          onPress={onBack}
+          size={28}
+          customeStyle={{ backgroundColor: "#fff" }}
+        ></BackButton>
       </View>
       <View style={styles.search}>
         <SearchTool

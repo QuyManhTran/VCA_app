@@ -4,16 +4,19 @@ import {
   StyleSheet,
   TouchableOpacity,
   Animated,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import fontFamilies, { montserratFonts } from "../../../constants/fontFamiles";
 import { colors } from "../../../constants";
 interface ModalProps {
-  title: string;
-  content: string;
-  onPress: any;
+  title?: string;
+  content?: string;
+  onPress?: any;
+  children?: React.ReactNode;
 }
-const Modal = ({ title, content, onPress }: ModalProps) => {
+const Modal = ({ title, content, onPress, children }: ModalProps) => {
   const scaleUp = useRef(new Animated.Value(0.5)).current;
   const onClose = () => {
     Animated.timing(scaleUp, {
@@ -33,33 +36,40 @@ const Modal = ({ title, content, onPress }: ModalProps) => {
     }).start();
   }, []);
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.wrapper,
-          { opacity: scaleUp, transform: [{ scale: scaleUp }] },
-        ]}
-      >
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.content}>{content}</Text>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.closeBtn}
-          onPress={onClose}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <Animated.View
+          style={[
+            styles.wrapper,
+            { opacity: scaleUp, transform: [{ scale: scaleUp }] },
+          ]}
         >
-          <Text
-            style={{
-              color: colors.primary,
-              fontSize: 20,
-              padding: 8,
-              fontFamily: montserratFonts.bold,
-            }}
-          >
-            OK
-          </Text>
-        </TouchableOpacity>
-      </Animated.View>
-    </View>
+          {title && (
+            <>
+              <Text style={styles.title}>{title}</Text>
+              <Text style={styles.content}>{content}</Text>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.closeBtn}
+                onPress={onClose}
+              >
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontSize: 20,
+                    padding: 8,
+                    fontFamily: montserratFonts.bold,
+                  }}
+                >
+                  OK
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
+          {!title && children}
+        </Animated.View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -77,7 +87,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     width: 320,
-    height: 200,
+    minHeight: 200,
     borderRadius: 8,
     backgroundColor: "#fff",
   },

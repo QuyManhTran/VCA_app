@@ -39,8 +39,8 @@ const Home = ({ route, navigation }: RouterProps) => {
     outputRange: [0, -70],
   });
 
-  const onNavigateSearch = useCallback(() => {
-    navigation.navigate("Search");
+  const onNavigateSearch = useCallback((params: object) => {
+    navigation.navigate("Search", params);
   }, []);
 
   useEffect(() => {
@@ -88,7 +88,11 @@ const Home = ({ route, navigation }: RouterProps) => {
       >
         <View style={styles.container}>
           <View style={styles.wrapper}>
-            <RecommendList heading="Khám phá" explore></RecommendList>
+            <RecommendList
+              onNavigateSearch={onNavigateSearch}
+              heading="Khám phá"
+              explore
+            ></RecommendList>
             <View style={{ paddingBottom: 24 }}>
               <Text
                 style={{
@@ -112,9 +116,18 @@ const Home = ({ route, navigation }: RouterProps) => {
                 ))}
               </ScrollView>
             </View>
-            <RecommendList heading="Phổ biến"></RecommendList>
-            <RecommendList heading="Yêu thích"></RecommendList>
-            <RecommendList heading="Thêm gần đây"></RecommendList>
+            <RecommendList
+              onNavigateSearch={onNavigateSearch}
+              heading="Phổ biến"
+            ></RecommendList>
+            <RecommendList
+              onNavigateSearch={onNavigateSearch}
+              heading="Yêu thích"
+            ></RecommendList>
+            <RecommendList
+              onNavigateSearch={onNavigateSearch}
+              heading="Thêm gần đây"
+            ></RecommendList>
           </View>
         </View>
       </Animated.ScrollView>
