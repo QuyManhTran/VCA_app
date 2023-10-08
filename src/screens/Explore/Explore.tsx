@@ -7,37 +7,39 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import LinearBackGround from "../../components/LinearBackGround";
 import fontFamilies, { baloo2Fonts } from "../../../constants/fontFamiles";
-import { banhmy, list, springRoll } from "../../../assets/img/foods";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import Modal from "../../components/Modal";
 import BackButton from "../../components/BackButton";
 import { colors } from "../../../constants";
 import NavButton from "../../components/NavButton";
 import { RouterProps } from "../Splash/Splash";
-import FoodReview from "../../components/FoodReview";
 import { mostlySearch } from "../../../constants/fakeData";
-const fakeData = [
-  { img: list, name: "Món ngon Hà Nội" },
-  { img: list, name: "Gỏi các loại" },
-  { img: list, name: "Bún with love" },
-  { img: list, name: "Xem sau" },
-];
+import ThemeContext from "../../utilies/theme";
+import { useFocusEffect } from "@react-navigation/native";
+
 const Explore = ({ route, navigation }: RouterProps) => {
-  const [allLists, setAllLists] = useState(fakeData);
+  const { isDarkMode, personalLists, onAddList, onRemoveList } =
+    useContext(ThemeContext);
   const [newList, setNewList] = useState<string | null>("");
   const [isModal, setIsModal] = useState(false);
-
-  const onSingleList = (name: string, data, img: any) => {
+  const [isGoBack, setIsGoBack] = useState(true);
+  const onSingleList = (name: string, data, img: any, index: number) => {
     navigation.navigate("SingleList", {
       name: name,
       data: data,
       img: img,
+      position: index,
     });
   };
-
+  // When navigation goBack and set state
+  useFocusEffect(
+    useCallback(() => {
+      setIsGoBack(true);
+    }, [])
+  );
   return (
     <View style={{ flex: 1 }}>
       <LinearBackGround height={100}></LinearBackGround>
@@ -58,13 +60,14 @@ const Explore = ({ route, navigation }: RouterProps) => {
               </TouchableOpacity>
             </View>
             <View style={{}}>
-              {allLists.map((item, index) => (
+              {personalLists.map((item, index) => (
                 <TouchableOpacity
                   activeOpacity={0.6}
                   key={index}
-                  onPress={() =>
-                    onSingleList(item.name, mostlySearch, item.img)
-                  }
+                  onPress={() => {
+                    setIsGoBack(false);
+                    onSingleList(item.name, mostlySearch, item.img, index);
+                  }}
                 >
                   <View
                     style={{
@@ -106,27 +109,6 @@ const Explore = ({ route, navigation }: RouterProps) => {
               ))}
             </View>
           </View>
-          {/* {allLists.map((list, index) => (
-            <View
-              key={index}
-              style={{ marginBottom: index === allLists.length - 1 ? 36 : 12 }}
-            >
-              <Text style={[styles.heading, { marginBottom: 12 }]}>
-                {list.name}
-              </Text>
-              {mostlySearch.map((food, index) => {
-                if (index <= 2) {
-                  return (
-                    <FoodReview
-                      {...food}
-                      key={index}
-                      onTag={onTag}
-                    ></FoodReview>
-                  );
-                }
-              })}
-            </View>
-          ))} */}
         </View>
       </ScrollView>
       {isModal && (
@@ -173,10 +155,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
               disabled={newList.trim() ? false : true}
               activeOpacity={0.6}
               onPress={() => {
-                setAllLists((prevList) => [
-                  ...prevList,
-                  { img: springRoll, name: newList },
-                ]);
+                onAddList(newList);
                 setIsModal(false);
               }}
               style={{ opacity: newList.trim() ? 1 : 0.5, marginBottom: 24 }}

@@ -16,18 +16,37 @@ import ThemeContext from "./src/utilies/theme";
 import Video from "./src/screens/Video";
 import Search from "./src/screens/Search";
 import SingleList from "./src/screens/Explore/SingleList";
+import { list } from "./assets/img/foods";
 const Stack = createNativeStackNavigator();
-
+const fakeData = [
+  { img: list, name: "Món ngon Hà Nội" },
+  { img: list, name: "Gỏi các loại" },
+  { img: list, name: "Bún with love" },
+  { img: list, name: "Xem sau" },
+];
 export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isHomeScrollDown, setIsHomeScrollDown] = useState(false);
+  const [personalLists, setPersonalLists] = useState(fakeData);
   const setHomeNavbar = (isScrollDown: boolean) => {
     if (isScrollDown !== isHomeScrollDown) {
       setIsHomeScrollDown(isScrollDown);
     }
   };
+  const onAddList = (name: string) => {
+    setPersonalLists((prevLists) => [...prevLists, { img: list, name: name }]);
+  };
+  const onRemoveList = (index: number) => {
+    setPersonalLists((prevLists) => {
+      prevLists.splice(index, 1);
+      return prevLists;
+    });
+  };
   useEffect(() => {
-    LogBox.ignoreLogs(["new NativeEventEmitter()"]);
+    LogBox.ignoreLogs([
+      "new NativeEventEmitter()",
+      "Non-serializable values were found in the navigation state",
+    ]);
   }, []);
   useEffect(() => {
     const listener = EventRegister.addEventListener("ChangeTheme", (theme) => {
@@ -39,7 +58,14 @@ export default function App() {
   }, [isDarkMode]);
   return (
     <ThemeContext.Provider
-      value={{ isDarkMode, isHomeScrollDown, setHomeNavbar }}
+      value={{
+        isDarkMode,
+        isHomeScrollDown,
+        personalLists,
+        setHomeNavbar,
+        onAddList,
+        onRemoveList,
+      }}
     >
       <NavigationContainer>
         <Stack.Navigator

@@ -8,9 +8,10 @@ import Explore from "../Explore";
 import Account from "../Account";
 import MyTabBar from "./MyNavbar";
 import MyTabBarIcon from "./MyTabBarIcon";
+import { RouterProps } from "../Splash/Splash";
 
 const Tab = createBottomTabNavigator();
-const Navbar = () => {
+const Navbar = ({ route, navigation }: RouterProps) => {
   return (
     <Tab.Navigator
       initialRouteName="Home"

@@ -1,3 +1,4 @@
+import { Feather, Ionicons } from "@expo/vector-icons";
 import {
   banhmy,
   cake,
@@ -13,6 +14,7 @@ export const variousFoods = [
   { img: rice, title: "Cơm" },
   { img: cake, title: "Bánh" },
 ];
+
 export const mostlySearch = [
   {
     img: banhmy,
@@ -42,4 +44,10 @@ export const mostlySearch = [
     rate: 4.9,
     tag: "Truyền thống",
   },
+];
+
+export const listOptions = [
+  { icon: "pencil", title: "Chỉnh sửa tên danh sách" },
+  { icon: "share-social", title: "Chia sẻ danh sách" },
+  { icon: "trash-outline", title: "Xóa danh sách" },
 ];
