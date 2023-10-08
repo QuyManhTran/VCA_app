@@ -28,7 +28,7 @@ const FoodReview = ({
           resizeMode="cover"
         ></Image>
       </TouchableOpacity>
-      <View style={{ flex: 1, marginLeft: 12 }}>
+      <View style={{ marginLeft: 16 }}>
         <TouchableOpacity activeOpacity={0.6}>
           <Text style={styles.heading}>{name}</Text>
         </TouchableOpacity>

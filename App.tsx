@@ -15,6 +15,7 @@ import { EventRegister } from "react-native-event-listeners";
 import ThemeContext from "./src/utilies/theme";
 import Video from "./src/screens/Video";
 import Search from "./src/screens/Search";
+import SingleList from "./src/screens/Explore/SingleList";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -58,6 +59,7 @@ export default function App() {
           <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="Navbar" component={Navbar} />
           <Stack.Screen name="Search" component={Search} />
+          <Stack.Screen name="SingleList" component={SingleList} />
           <Stack.Screen name="Video" component={Video} />
         </Stack.Navigator>
       </NavigationContainer>

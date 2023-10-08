@@ -29,15 +29,21 @@ const Explore = ({ route, navigation }: RouterProps) => {
   const [allLists, setAllLists] = useState(fakeData);
   const [newList, setNewList] = useState<string | null>("");
   const [isModal, setIsModal] = useState(false);
-  const onTag = (keyword) => {
-    navigation.navigate("Search", {
-      keyword: keyword,
+
+  const onSingleList = (name: string, data, img: any) => {
+    navigation.navigate("SingleList", {
+      name: name,
+      data: data,
+      img: img,
     });
   };
 
   return (
     <View style={{ flex: 1 }}>
       <LinearBackGround height={100}></LinearBackGround>
+      <View style={{ position: "absolute", top: 30, left: 12 }}>
+        <Text style={[styles.heading, { fontSize: 30 }]}>Thư viện</Text>
+      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <View style={styles.listWrapper}>
@@ -53,7 +59,13 @@ const Explore = ({ route, navigation }: RouterProps) => {
             </View>
             <View style={{}}>
               {allLists.map((item, index) => (
-                <TouchableOpacity activeOpacity={0.6} key={index}>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  key={index}
+                  onPress={() =>
+                    onSingleList(item.name, mostlySearch, item.img)
+                  }
+                >
                   <View
                     style={{
                       flexDirection: "row",
