@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import React, { useRef, useEffect, useContext } from "react";
+import { useRef, useEffect, useContext } from "react";
 import * as Animatable from "react-native-animatable";
 import NavBarIcon from "../../../assets/icons/NavBarIcon";
 import { LinearGradient } from "expo-linear-gradient";

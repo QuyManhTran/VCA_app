@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Animated,
   Pressable,
+  TextInput,
 } from "react-native";
 import {
   useCallback,
@@ -16,38 +17,98 @@ import {
   useContext,
   memo,
 } from "react";
+import * as Animatable from "react-native-animatable";
 import { RouterProps } from "../../Splash/Splash";
 import LinearBackGround from "../../../components/LinearBackGround";
-import {
+import fontFamilies, {
   baloo2Fonts,
   montserratFonts,
 } from "../../../../constants/fontFamiles";
 import { colors } from "../../../../constants";
 import FoodReview from "../../../components/FoodReview";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { listOptions } from "../../../../constants/fakeData";
 import ThemeContext from "../../../utilies/theme";
+import Modal from "../../../components/Modal";
+import BackButton from "../../../components/BackButton";
+import NavButton from "../../../components/NavButton";
+import { list } from "../../../../assets/img/foods";
+const headerHide = {
+  0: { scale: 1, opacity: 1 },
+  1: { scale: 0, opacity: 0 },
+};
+const headerAppear = {
+  0: { scale: 0, opacity: 0 },
+  1: { scale: 1, opacity: 1 },
+};
+const listUp = {
+  0: { translateY: 0 },
+  1: { translateY: -400 },
+};
+const listDown = {
+  0: { translateY: -400 },
+  1: { translateY: 0 },
+};
 
 const SingleList = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, onRemoveList } = useContext(ThemeContext);
+  const { isDarkMode, onRemoveList, onAdjustList } = useContext(ThemeContext);
   const { name, data, img, position } = route.params;
+  const [realName, setRealName] = useState(name);
+  const [allRemoveList, setAllRemoveList] = useState(() => {
+    return data.map((value, index) => index);
+  });
+  const [removeList, setRemoveList] = useState([]);
   const [isModal, setIsModal] = useState(false);
-  const heightOptions = useRef(new Animated.Value(256)).current;
+  const [newName, setNewName] = useState(name);
+  const [isAdjustModal, setIsAdjustModal] = useState(false);
+  const [isRemoveMode, setIsRemoveMode] = useState(false);
+  const heightOptions = useRef(new Animated.Value(310)).current;
+  const headerAnimation = useRef(null);
+  const listAnimation = useRef(null);
+
+  const onPressOptions = (index: number) => {
+    if (index === 0) {
+      onCloseModal(400);
+      setIsAdjustModal(true);
+    } else if (index === 2) {
+      onCloseModal(400);
+      setIsRemoveMode(true);
+    } else if (index === 3) {
+      onRemoveList(position);
+      navigation.goBack();
+    }
+  };
+
+  const handleRemove = (index: number) => {
+    if (removeList.includes(index)) {
+      setRemoveList(removeList.filter((value) => value !== index));
+      return;
+    }
+    setRemoveList((prevList) => prevList.concat([index]));
+  };
+
+  const handleSelectRemove = () => {
+    if (removeList.length === data.length) {
+      setRemoveList([]);
+    } else {
+      setRemoveList(allRemoveList);
+    }
+  };
   const onBack = () => {
     navigation.goBack();
   };
   const onModal = () => {
     setIsModal(true);
   };
-  const onCloseModal = () => {
+  const onCloseModal = (duration: number) => {
     Animated.timing(heightOptions, {
-      toValue: 256,
-      duration: 400,
+      toValue: 310,
+      duration: duration,
       useNativeDriver: false,
     }).start();
     const timeout = setTimeout(() => {
       setIsModal(false);
-    }, 400);
+    }, duration);
   };
   const onTag = useCallback((keyword: string) => {
     navigation.navigate("Search", {
@@ -64,6 +125,16 @@ const SingleList = ({ route, navigation }: RouterProps) => {
       }).start();
     }
   }, [isModal]);
+
+  useEffect(() => {
+    if (isRemoveMode) {
+      headerAnimation.current.animate(headerHide);
+      listAnimation.current.animate(listUp);
+    } else {
+      headerAnimation.current.animate(headerAppear);
+      listAnimation.current.animate(listDown);
+    }
+  }, [isRemoveMode]);
   return (
     <View style={{ flex: 1 }}>
       <LinearBackGround
@@ -72,15 +143,41 @@ const SingleList = ({ route, navigation }: RouterProps) => {
         avatar={false}
         onPress={onBack}
       ></LinearBackGround>
-      <TouchableOpacity
-        style={{ position: "absolute", top: 40, right: 20 }}
-        onPress={onModal}
-      >
-        <Ionicons name="ellipsis-vertical" size={24}></Ionicons>
-      </TouchableOpacity>
+      {isRemoveMode && (
+        <TouchableOpacity
+          style={{ position: "absolute", top: 34, right: 120 }}
+          onPress={handleSelectRemove}
+        >
+          <Text style={{ fontSize: 20, fontFamily: baloo2Fonts.bold }}>
+            {removeList.length === data.length ? "Bỏ chọn" : "Chọn tất cả"}
+          </Text>
+        </TouchableOpacity>
+      )}
+      {isRemoveMode && (
+        <TouchableOpacity
+          style={{ position: "absolute", top: 34, right: 60 }}
+          onPress={() => setIsRemoveMode(false)}
+        >
+          <Text style={{ fontSize: 20, fontFamily: baloo2Fonts.bold }}>
+            Hủy
+          </Text>
+        </TouchableOpacity>
+      )}
+      {!isRemoveMode && (
+        <TouchableOpacity
+          style={{ position: "absolute", top: 40, right: 20 }}
+          onPress={onModal}
+        >
+          <Ionicons name="ellipsis-vertical" size={24}></Ionicons>
+        </TouchableOpacity>
+      )}
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ flex: 1 }}>
-          <View style={styles.header}>
+          <Animatable.View
+            duration={1000}
+            style={styles.header}
+            ref={headerAnimation}
+          >
             <View style={styles.imageWrapper}>
               <Image
                 source={img}
@@ -98,7 +195,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                 marginBottom: 4,
               }}
             >
-              {name}
+              {realName}
             </Text>
             <Text
               style={{
@@ -119,8 +216,12 @@ const SingleList = ({ route, navigation }: RouterProps) => {
             >
               {data.length} bài viết
             </Text>
-          </View>
-          <View style={styles.foodWrapper}>
+          </Animatable.View>
+          <Animatable.View
+            style={styles.foodWrapper}
+            ref={listAnimation}
+            duration={1000}
+          >
             {data.map((food, index) => {
               return (
                 <View
@@ -131,21 +232,38 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                   }}
                 >
                   <FoodReview {...food} onTag={onTag}></FoodReview>
-                  <Ionicons
-                    name="ellipsis-vertical"
-                    size={20}
-                    style={{ marginTop: 4 }}
-                  ></Ionicons>
+                  {isRemoveMode && (
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={() => handleRemove(index)}
+                    >
+                      {!removeList.includes(index) && (
+                        <Ionicons
+                          name="ellipse-outline"
+                          size={20}
+                          style={{ marginTop: 4 }}
+                        ></Ionicons>
+                      )}
+                      {removeList.includes(index) && (
+                        <Ionicons
+                          name="checkmark-circle"
+                          size={20}
+                          style={{ marginTop: 4 }}
+                          color={colors.primary}
+                        ></Ionicons>
+                      )}
+                    </TouchableOpacity>
+                  )}
                 </View>
               );
             })}
-          </View>
+          </Animatable.View>
         </View>
       </ScrollView>
       {isModal && (
         <TouchableOpacity
           activeOpacity={1}
-          onPress={onCloseModal}
+          onPress={() => onCloseModal(400)}
           style={styles.modal}
         >
           <Animated.View
@@ -176,19 +294,14 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                     marginLeft: 12,
                   }}
                 >
-                  {name}
+                  {realName}
                 </Text>
               </View>
               <View style={{ paddingTop: 16 }}>
                 {listOptions.map((item, index) => {
                   return (
                     <TouchableOpacity
-                      onPress={() => {
-                        if (index === 2) {
-                          onRemoveList(position);
-                          navigation.goBack();
-                        }
-                      }}
+                      onPress={() => onPressOptions(index)}
                       key={index}
                       activeOpacity={0.6}
                       style={{
@@ -224,6 +337,69 @@ const SingleList = ({ route, navigation }: RouterProps) => {
             </Pressable>
           </Animated.View>
         </TouchableOpacity>
+      )}
+      {isAdjustModal && (
+        <Modal>
+          <BackButton
+            fill
+            color="black"
+            size={32}
+            onPress={() => setIsAdjustModal(false)}
+            customeStyle={{ marginLeft: 8 }}
+          ></BackButton>
+          <View style={styles.newListWrapper}>
+            <View
+              style={{ width: "100%", paddingHorizontal: 24, marginBottom: 36 }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: fontFamilies.bold,
+                  color: colors.gray,
+                  marginBottom: 8,
+                }}
+              >
+                Tên danh sách
+              </Text>
+              <TextInput
+                placeholder="Nhập tên danh sách"
+                selectionColor={colors.primary}
+                value={newName}
+                style={{
+                  backgroundColor: "#fff",
+                  paddingVertical: 8,
+                  width: "100%",
+                  height: 50,
+                  borderBottomWidth: 4,
+                  borderColor: colors.primary,
+                  fontSize: 20,
+                  fontFamily: baloo2Fonts.medium,
+                }}
+                onChangeText={(text) => setNewName(text)}
+              ></TextInput>
+            </View>
+            <TouchableOpacity
+              disabled={newName.trim() ? false : true}
+              activeOpacity={0.6}
+              onPress={() => {
+                onAdjustList(position, { img: list, name: newName });
+                setRealName(newName);
+                setIsAdjustModal(false);
+              }}
+              style={{ opacity: newName.trim() ? 1 : 0.5, marginBottom: 24 }}
+            >
+              <NavButton
+                customeStyle={{
+                  width: "100%",
+                  borderRadius: 24,
+                  paddingHorizontal: 20,
+                }}
+              >
+                Xong
+              </NavButton>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       )}
     </View>
   );
@@ -268,5 +444,8 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
+  },
+  newListWrapper: {
+    alignItems: "center",
   },
 });

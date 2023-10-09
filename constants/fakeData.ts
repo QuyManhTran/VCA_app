@@ -49,5 +49,6 @@ export const mostlySearch = [
 export const listOptions = [
   { icon: "pencil", title: "Chỉnh sửa tên danh sách" },
   { icon: "share-social", title: "Chia sẻ danh sách" },
+  { icon: "trash-outline", title: "Xóa món ăn trong danh sách" },
   { icon: "trash-outline", title: "Xóa danh sách" },
 ];
