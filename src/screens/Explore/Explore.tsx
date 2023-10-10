@@ -21,8 +21,7 @@ import ThemeContext from "../../utilies/theme";
 import { useFocusEffect } from "@react-navigation/native";
 
 const Explore = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, personalLists, onAddList, onRemoveList } =
-    useContext(ThemeContext);
+  const { isDarkMode, personalLists, onAddList } = useContext(ThemeContext);
   const [newList, setNewList] = useState<string | null>("");
   const [isModal, setIsModal] = useState(false);
   const [isGoBack, setIsGoBack] = useState(true);
@@ -66,7 +65,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
                   key={index}
                   onPress={() => {
                     setIsGoBack(false);
-                    onSingleList(item.name, mostlySearch, item.img, index);
+                    onSingleList(item.name, item.data, item.img, index);
                   }}
                 >
                   <View

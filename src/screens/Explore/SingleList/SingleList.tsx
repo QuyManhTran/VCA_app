@@ -32,9 +32,9 @@ import ThemeContext from "../../../utilies/theme";
 import Modal from "../../../components/Modal";
 import BackButton from "../../../components/BackButton";
 import NavButton from "../../../components/NavButton";
-import { list } from "../../../../assets/img/foods";
 const headerHide = {
   0: { scale: 1, opacity: 1 },
+  0.8: { opacity: 0 },
   1: { scale: 0, opacity: 0 },
 };
 const headerAppear = {
@@ -51,8 +51,10 @@ const listDown = {
 };
 
 const SingleList = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, onRemoveList, onAdjustList } = useContext(ThemeContext);
   const { name, data, img, position } = route.params;
+  const [foodList, setFoodList] = useState(data);
+  const { isDarkMode, onRemoveList, onAdjustList, onRemoveBlogList } =
+    useContext(ThemeContext);
   const [realName, setRealName] = useState(name);
   const [allRemoveList, setAllRemoveList] = useState(() => {
     return data.map((value, index) => index);
@@ -67,6 +69,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
   const listAnimation = useRef(null);
 
   const onPressOptions = (index: number) => {
+    console.log(index);
     if (index === 0) {
       onCloseModal(400);
       setIsAdjustModal(true);
@@ -88,7 +91,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
   };
 
   const handleSelectRemove = () => {
-    if (removeList.length === data.length) {
+    if (removeList.length === foodList.length) {
       setRemoveList([]);
     } else {
       setRemoveList(allRemoveList);
@@ -135,6 +138,11 @@ const SingleList = ({ route, navigation }: RouterProps) => {
       listAnimation.current.animate(listDown);
     }
   }, [isRemoveMode]);
+  useEffect(() => {
+    if (foodList.length !== allRemoveList.length) {
+      setAllRemoveList(foodList.map((value, index) => index));
+    }
+  }, [foodList]);
   return (
     <View style={{ flex: 1 }}>
       <LinearBackGround
@@ -149,7 +157,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
           onPress={handleSelectRemove}
         >
           <Text style={{ fontSize: 20, fontFamily: baloo2Fonts.bold }}>
-            {removeList.length === data.length ? "Bỏ chọn" : "Chọn tất cả"}
+            {removeList.length === foodList.length ? "Bỏ chọn" : "Chọn tất cả"}
           </Text>
         </TouchableOpacity>
       )}
@@ -214,7 +222,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                 color: colors.gray,
               }}
             >
-              {data.length} bài viết
+              {foodList.length} bài viết
             </Text>
           </Animatable.View>
           <Animatable.View
@@ -222,7 +230,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
             ref={listAnimation}
             duration={1000}
           >
-            {data.map((food, index) => {
+            {foodList.map((food, index) => {
               return (
                 <View
                   key={index}
@@ -316,6 +324,8 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                             ? "pencil"
                             : index === 1
                             ? "share-social"
+                            : index === 2
+                            ? "trash-outline"
                             : "trash-outline"
                         }
                         size={24}
@@ -382,7 +392,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
               disabled={newName.trim() ? false : true}
               activeOpacity={0.6}
               onPress={() => {
-                onAdjustList(position, { img: list, name: newName });
+                onAdjustList(position, newName);
                 setRealName(newName);
                 setIsAdjustModal(false);
               }}
@@ -400,6 +410,36 @@ const SingleList = ({ route, navigation }: RouterProps) => {
             </TouchableOpacity>
           </View>
         </Modal>
+      )}
+      {isRemoveMode && (
+        <TouchableOpacity
+          onPress={() => {
+            setFoodList(onRemoveBlogList(position, removeList));
+            setRemoveList([]);
+            setIsRemoveMode(false);
+          }}
+          disabled={removeList.length === 0 ? true : false}
+          activeOpacity={0.6}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            opacity: removeList.length === 0 ? 0.5 : 1,
+          }}
+        >
+          <NavButton
+            customeStyle={{ width: "100%", borderRadius: 0 }}
+            customeText={{ fontSize: 18 }}
+          >
+            Xóa
+            {removeList.length === 0
+              ? undefined
+              : removeList.length === foodList.length
+              ? ` tất cả(${removeList.length})`
+              : `(${removeList.length})`}
+          </NavButton>
+        </TouchableOpacity>
       )}
     </View>
   );

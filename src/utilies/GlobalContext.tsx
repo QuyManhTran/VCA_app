@@ -3,14 +3,15 @@ import React, { useState, useEffect } from "react";
 import ThemeContext from "./theme";
 import { list } from "../../assets/img/foods";
 import { EventRegister } from "react-native-event-listeners";
+import { mostlySearch } from "../../constants/fakeData";
 interface GlobalContextProps {
   children: React.ReactNode;
 }
 const fakeData = [
-  { img: list, name: "Món ngon Hà Nội" },
-  { img: list, name: "Gỏi các loại" },
-  { img: list, name: "Bún with love" },
-  { img: list, name: "Xem sau" },
+  { img: list, name: "Món ngon Hà Nội", data: mostlySearch },
+  { img: list, name: "Gỏi các loại", data: mostlySearch },
+  { img: list, name: "Bún with love", data: mostlySearch },
+  { img: list, name: "Xem sau", data: mostlySearch },
 ];
 const GlobalContext = ({ children }: GlobalContextProps) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -22,7 +23,10 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
     }
   };
   const onAddList = (name: string) => {
-    setPersonalLists((prevLists) => [...prevLists, { img: list, name: name }]);
+    setPersonalLists((prevLists) => [
+      ...prevLists,
+      { img: list, name: name, data: mostlySearch },
+    ]);
   };
   const onRemoveList = (index: number) => {
     setPersonalLists((prevLists) => {
@@ -30,19 +34,34 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
       return prevLists;
     });
   };
-  const onAdjustList = (
-    position: number,
-    newList: { img: any; name: string }
-  ) => {
+  const onAdjustList = (position: number, newName: string) => {
     setPersonalLists((prevLists) => {
       return prevLists.map((list, index) => {
         if (index === position) {
-          return newList;
+          return { ...list, name: newName };
         } else {
           return list;
         }
       });
     });
+  };
+  const onRemoveBlogList = (position: number, removeList: number[]) => {
+    let result;
+    setPersonalLists((prevLists) => {
+      return prevLists.map((list, index) => {
+        if (index === position) {
+          result = list.data.filter(
+            (value, index) => !removeList.includes(index)
+          );
+          return {
+            ...list,
+            data: result,
+          };
+        }
+        return list;
+      });
+    });
+    return result;
   };
   useEffect(() => {
     LogBox.ignoreLogs([
@@ -58,6 +77,7 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
       EventRegister.removeAllListeners();
     };
   }, [isDarkMode]);
+
   return (
     <ThemeContext.Provider
       value={{
@@ -68,6 +88,7 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
         onAddList,
         onRemoveList,
         onAdjustList,
+        onRemoveBlogList,
       }}
     >
       {children}
