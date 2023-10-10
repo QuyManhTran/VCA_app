@@ -1,7 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { linearColors } from "../../../constants/colors";
+import colors, {
+  linearColors,
+  navbarDarkLinearColors,
+} from "../../../constants/colors";
 import { userAvatar } from "../../../assets/img/icons";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
@@ -11,6 +14,7 @@ interface LinearBackGroundProps {
   back?: boolean;
   onPress?: any;
   title?: string;
+  isDarkMode?: boolean;
 }
 const LinearBackGround = ({
   height,
@@ -18,10 +22,11 @@ const LinearBackGround = ({
   avatar = true,
   back = false,
   onPress,
+  isDarkMode = false,
 }: LinearBackGroundProps) => {
   return (
     <LinearGradient
-      colors={["#FF0701", "#FFD28D"]}
+      colors={isDarkMode ? navbarDarkLinearColors : ["#FF0701", "#FFD28D"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
       style={{
@@ -37,13 +42,20 @@ const LinearBackGround = ({
           <BackButton
             onPress={onPress}
             size={28}
-            customeStyle={{ backgroundColor: "#fff" }}
+            color={isDarkMode ? colors.whiteText : "black"}
+            customeStyle={{
+              backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+            }}
           ></BackButton>
         </View>
       )}
 
       <Text
-        style={{ fontFamily: baloo2Fonts.extra, fontSize: 30, color: "white" }}
+        style={{
+          fontFamily: baloo2Fonts.extra,
+          fontSize: 30,
+          color: isDarkMode ? "black" : "#fff",
+        }}
       >
         {title}
       </Text>

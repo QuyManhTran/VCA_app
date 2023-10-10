@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { colors } from "../../../constants";
 
 interface FoodReviewProps {
   name: string;
@@ -9,6 +10,7 @@ interface FoodReviewProps {
   rate: number;
   tag: string;
   img: any;
+  isDarkMode: boolean;
   onTag?: any;
 }
 const FoodReview = ({
@@ -17,6 +19,7 @@ const FoodReview = ({
   rate,
   tag,
   img,
+  isDarkMode = false,
   onTag = () => {},
 }: FoodReviewProps) => {
   return (
@@ -30,7 +33,14 @@ const FoodReview = ({
       </TouchableOpacity>
       <View style={{ marginLeft: 16 }}>
         <TouchableOpacity activeOpacity={0.6}>
-          <Text style={styles.heading}>{name}</Text>
+          <Text
+            style={[
+              styles.heading,
+              { color: isDarkMode ? colors.whiteText : "black" },
+            ]}
+          >
+            {name}
+          </Text>
         </TouchableOpacity>
         {/* chip tag */}
         <TouchableOpacity
@@ -41,13 +51,25 @@ const FoodReview = ({
             onTag(tag);
           }}
         >
-          <View style={styles.chipTag}>
+          <View
+            style={[
+              styles.chipTag,
+              { backgroundColor: isDarkMode ? colors.darkBg : "#fff" },
+            ]}
+          >
             <Ionicons
               name="pricetag"
               size={14}
               style={{ marginRight: 4 }}
+              color={isDarkMode ? colors.whiteText : "black"}
             ></Ionicons>
-            <Text style={{ fontSize: 14, fontFamily: baloo2Fonts.semi }}>
+            <Text
+              style={{
+                fontSize: 14,
+                fontFamily: baloo2Fonts.semi,
+                color: isDarkMode ? colors.whiteText : "black",
+              }}
+            >
               {tag}
             </Text>
           </View>
@@ -66,7 +88,14 @@ const FoodReview = ({
               size={20}
               style={{ paddingRight: 4 }}
             ></Ionicons>
-            <Text style={styles.amount}>{like}k</Text>
+            <Text
+              style={[
+                styles.amount,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
+            >
+              {like}k
+            </Text>
           </View>
           <View
             style={{
@@ -81,7 +110,14 @@ const FoodReview = ({
               size={20}
               style={{ paddingRight: 4 }}
             ></Ionicons>
-            <Text style={styles.amount}>{rate}</Text>
+            <Text
+              style={[
+                styles.amount,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
+            >
+              {rate}
+            </Text>
           </View>
         </View>
       </View>

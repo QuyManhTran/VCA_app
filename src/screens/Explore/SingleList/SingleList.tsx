@@ -32,6 +32,7 @@ import ThemeContext from "../../../utilies/theme";
 import Modal from "../../../components/Modal";
 import BackButton from "../../../components/BackButton";
 import NavButton from "../../../components/NavButton";
+import AskModal from "../../../components/AskModal";
 const headerHide = {
   0: { scale: 1, opacity: 1 },
   0.8: { opacity: 0 },
@@ -60,16 +61,17 @@ const SingleList = ({ route, navigation }: RouterProps) => {
     return data.map((value, index) => index);
   });
   const [removeList, setRemoveList] = useState([]);
-  const [isModal, setIsModal] = useState(false);
   const [newName, setNewName] = useState(name);
+  const [isModal, setIsModal] = useState(false);
   const [isAdjustModal, setIsAdjustModal] = useState(false);
+  const [isRemoveListModal, setIsRemoveListModal] = useState(false);
+  const [isRemoveFoodBlog, setisRemoveFoodBlog] = useState(false);
   const [isRemoveMode, setIsRemoveMode] = useState(false);
   const heightOptions = useRef(new Animated.Value(310)).current;
   const headerAnimation = useRef(null);
   const listAnimation = useRef(null);
 
   const onPressOptions = (index: number) => {
-    console.log(index);
     if (index === 0) {
       onCloseModal(400);
       setIsAdjustModal(true);
@@ -77,8 +79,8 @@ const SingleList = ({ route, navigation }: RouterProps) => {
       onCloseModal(400);
       setIsRemoveMode(true);
     } else if (index === 3) {
-      onRemoveList(position);
-      navigation.goBack();
+      onCloseModal(400);
+      setIsRemoveListModal(true);
     }
   };
 
@@ -144,19 +146,26 @@ const SingleList = ({ route, navigation }: RouterProps) => {
     }
   }, [foodList]);
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
       <LinearBackGround
         height={100}
         back={true}
         avatar={false}
         onPress={onBack}
+        isDarkMode={isDarkMode}
       ></LinearBackGround>
       {isRemoveMode && (
         <TouchableOpacity
           style={{ position: "absolute", top: 34, right: 120 }}
           onPress={handleSelectRemove}
         >
-          <Text style={{ fontSize: 20, fontFamily: baloo2Fonts.bold }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: baloo2Fonts.bold,
+              color: isDarkMode ? colors.whiteText : "black",
+            }}
+          >
             {removeList.length === foodList.length ? "Bỏ chọn" : "Chọn tất cả"}
           </Text>
         </TouchableOpacity>
@@ -166,7 +175,13 @@ const SingleList = ({ route, navigation }: RouterProps) => {
           style={{ position: "absolute", top: 34, right: 60 }}
           onPress={() => setIsRemoveMode(false)}
         >
-          <Text style={{ fontSize: 20, fontFamily: baloo2Fonts.bold }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: baloo2Fonts.bold,
+              color: isDarkMode ? colors.whiteText : "black",
+            }}
+          >
             Hủy
           </Text>
         </TouchableOpacity>
@@ -201,6 +216,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                 fontSize: 18,
                 fontFamily: montserratFonts.bold,
                 marginBottom: 4,
+                color: isDarkMode ? colors.whiteText : "black",
               }}
             >
               {realName}
@@ -209,6 +225,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
               style={{
                 fontSize: 16,
                 fontFamily: montserratFonts.semi,
+                color: isDarkMode ? "#fff" : "black",
                 opacity: 0.6,
                 marginBottom: 4,
               }}
@@ -219,7 +236,8 @@ const SingleList = ({ route, navigation }: RouterProps) => {
               style={{
                 fontSize: 14,
                 fontFamily: montserratFonts.medium,
-                color: colors.gray,
+                color: isDarkMode ? colors.whiteText : colors.gray,
+                opacity: isDarkMode ? 0.6 : 1,
               }}
             >
               {foodList.length} bài viết
@@ -239,7 +257,11 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <FoodReview {...food} onTag={onTag}></FoodReview>
+                  <FoodReview
+                    {...food}
+                    onTag={onTag}
+                    isDarkMode={isDarkMode}
+                  ></FoodReview>
                   {isRemoveMode && (
                     <TouchableOpacity
                       activeOpacity={0.7}
@@ -249,14 +271,15 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                         <Ionicons
                           name="ellipse-outline"
                           size={20}
-                          style={{ marginTop: 4 }}
+                          style={{ marginTop: 5 }}
+                          color={isDarkMode ? colors.whiteText : "black"}
                         ></Ionicons>
                       )}
                       {removeList.includes(index) && (
                         <Ionicons
                           name="checkmark-circle"
                           size={20}
-                          style={{ marginTop: 4 }}
+                          style={{ marginTop: 5 }}
                           color={colors.primary}
                         ></Ionicons>
                       )}
@@ -277,7 +300,10 @@ const SingleList = ({ route, navigation }: RouterProps) => {
           <Animated.View
             style={[
               styles.innerModal,
-              { transform: [{ translateY: heightOptions }] },
+              {
+                backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+                transform: [{ translateY: heightOptions }],
+              },
             ]}
           >
             <Pressable>
@@ -300,6 +326,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                     fontSize: 18,
                     fontFamily: montserratFonts.bold,
                     marginLeft: 12,
+                    color: isDarkMode ? colors.whiteText : "black",
                   }}
                 >
                   {realName}
@@ -326,16 +353,17 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                             ? "share-social"
                             : index === 2
                             ? "trash-outline"
-                            : "trash-outline"
+                            : "trash-bin-outline"
                         }
                         size={24}
-                        color="black"
+                        color={isDarkMode ? colors.whiteText : "black"}
                       ></Ionicons>
                       <Text
                         style={{
                           fontSize: 16,
                           fontFamily: montserratFonts.semi,
                           marginLeft: 18,
+                          color: isDarkMode ? colors.whiteText : "black",
                         }}
                       >
                         {item.title}
@@ -349,10 +377,10 @@ const SingleList = ({ route, navigation }: RouterProps) => {
         </TouchableOpacity>
       )}
       {isAdjustModal && (
-        <Modal>
+        <Modal isDarkMode={isDarkMode}>
           <BackButton
             fill
-            color="black"
+            color={isDarkMode ? colors.whiteText : "black"}
             size={32}
             onPress={() => setIsAdjustModal(false)}
             customeStyle={{ marginLeft: 8 }}
@@ -365,8 +393,8 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                 style={{
                   fontSize: 16,
                   fontFamily: fontFamilies.bold,
-                  color: colors.gray,
                   marginBottom: 8,
+                  color: isDarkMode ? colors.whiteText : colors.gray,
                 }}
               >
                 Tên danh sách
@@ -375,8 +403,12 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                 placeholder="Nhập tên danh sách"
                 selectionColor={colors.primary}
                 value={newName}
+                placeholderTextColor={
+                  isDarkMode ? colors.placeHolder : undefined
+                }
                 style={{
-                  backgroundColor: "#fff",
+                  backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+                  color: isDarkMode ? colors.whiteText : "black",
                   paddingVertical: 8,
                   width: "100%",
                   height: 50,
@@ -403,6 +435,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                   width: "100%",
                   borderRadius: 24,
                   paddingHorizontal: 20,
+                  color: isDarkMode ? colors.whiteText : "#fff",
                 }}
               >
                 Xong
@@ -414,9 +447,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
       {isRemoveMode && (
         <TouchableOpacity
           onPress={() => {
-            setFoodList(onRemoveBlogList(position, removeList));
-            setRemoveList([]);
-            setIsRemoveMode(false);
+            setisRemoveFoodBlog(true);
           }}
           disabled={removeList.length === 0 ? true : false}
           activeOpacity={0.6}
@@ -430,16 +461,47 @@ const SingleList = ({ route, navigation }: RouterProps) => {
         >
           <NavButton
             customeStyle={{ width: "100%", borderRadius: 0 }}
-            customeText={{ fontSize: 18 }}
+            customeText={{
+              fontSize: 16,
+              fontFamily: baloo2Fonts.medium,
+            }}
           >
             Xóa
             {removeList.length === 0
               ? undefined
               : removeList.length === foodList.length
-              ? ` tất cả(${removeList.length})`
-              : `(${removeList.length})`}
+              ? ` tất cả (${removeList.length})`
+              : ` (${removeList.length})`}
           </NavButton>
         </TouchableOpacity>
+      )}
+      {isRemoveListModal && (
+        <AskModal
+          isDarkMode={isDarkMode}
+          title={realName}
+          content="Bạn chắc chắn muốn xóa danh sách này?"
+          removeContent="Xóa danh sách"
+          onAccess={() => {
+            onRemoveList(position);
+            setIsRemoveListModal(false);
+            navigation.goBack();
+          }}
+          onDiscard={() => setIsRemoveListModal(false)}
+        ></AskModal>
+      )}
+      {isRemoveFoodBlog && (
+        <AskModal
+          isDarkMode={isDarkMode}
+          content="Bạn chắc chắn muốn xóa các bài viết này?"
+          removeContent="Xóa"
+          onAccess={() => {
+            setFoodList(onRemoveBlogList(position, removeList));
+            setisRemoveFoodBlog(false);
+            setRemoveList([]);
+            setIsRemoveMode(false);
+          }}
+          onDiscard={() => setisRemoveFoodBlog(false)}
+        ></AskModal>
       )}
     </View>
   );

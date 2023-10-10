@@ -6,7 +6,7 @@ import {
   ScrollView,
   Animated,
 } from "react-native";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef, useContext } from "react";
 import styles from "./style";
 import LinearBackGround from "../../components/LinearBackGround";
 import SearchTool from "../../components/SearchTool";
@@ -16,8 +16,10 @@ import { baloo2Fonts } from "../../../constants/fontFamiles";
 import FoodReview from "../../components/FoodReview";
 import { mostlySearch } from "../../../constants/fakeData";
 import BackButton from "../../components/BackButton";
+import ThemeContext from "../../utilies/theme";
+import { colors } from "../../../constants";
 const Search = ({ route, navigation }: RouterProps) => {
-  //console.log("hello");
+  const { isDarkMode } = useContext(ThemeContext);
   const scrollOpacity = useRef(new Animated.Value(0)).current;
   const [keyword, setKeyword] = useState(route.params.keyword || "");
   const [data, setData] = useState(mostlySearch);
@@ -52,17 +54,21 @@ const Search = ({ route, navigation }: RouterProps) => {
     }).start();
   }, [data]);
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
       <LinearBackGround height={140} avatar={false}></LinearBackGround>
       <View style={{ position: "absolute", top: 44, left: 10 }}>
         <BackButton
           onPress={onBack}
           size={28}
-          customeStyle={{ backgroundColor: "#fff" }}
+          color={isDarkMode ? "#fff" : "black"}
+          customeStyle={{
+            backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+          }}
         ></BackButton>
       </View>
       <View style={styles.search}>
         <SearchTool
+          isDarkMode={isDarkMode}
           isHome={false}
           width={300}
           onKeyword={onKeyword}
@@ -83,6 +89,7 @@ const Search = ({ route, navigation }: RouterProps) => {
                 fontSize: 30,
                 fontFamily: baloo2Fonts.extra,
                 paddingVertical: 12,
+                color: isDarkMode ? colors.whiteText : "black",
               }}
             >
               Tìm kiếm nhiều nhất
@@ -96,6 +103,7 @@ const Search = ({ route, navigation }: RouterProps) => {
                 paddingVertical: 12,
                 textAlign: "center",
                 opacity: scrollOpacity,
+                color: isDarkMode ? colors.whiteText : "black",
               }}
             >
               {data.length === 0
@@ -105,7 +113,12 @@ const Search = ({ route, navigation }: RouterProps) => {
           )}
           <View style={{ flex: 1 }}>
             {data.map((food, index) => (
-              <FoodReview {...food} key={index} onTag={onTag}></FoodReview>
+              <FoodReview
+                {...food}
+                key={index}
+                onTag={onTag}
+                isDarkMode={isDarkMode}
+              ></FoodReview>
             ))}
           </View>
         </View>

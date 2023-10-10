@@ -3,7 +3,10 @@ import { useRef, useEffect, useContext } from "react";
 import * as Animatable from "react-native-animatable";
 import NavBarIcon from "../../../assets/icons/NavBarIcon";
 import { LinearGradient } from "expo-linear-gradient";
-import { navbarLinearColors } from "../../../constants/colors";
+import {
+  navbarDarkLinearColors,
+  navbarLinearColors,
+} from "../../../constants/colors";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import ThemeContext from "../../utilies/theme";
 const MyTabBarIcon = ({ focused, route }) => {
@@ -82,7 +85,7 @@ const MyTabBarIcon = ({ focused, route }) => {
           }}
         >
           <LinearGradient
-            colors={navbarLinearColors}
+            colors={isDarkMode ? navbarDarkLinearColors : navbarLinearColors}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={{

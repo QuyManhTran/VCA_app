@@ -40,22 +40,40 @@ const Explore = ({ route, navigation }: RouterProps) => {
     }, [])
   );
   return (
-    <View style={{ flex: 1 }}>
-      <LinearBackGround height={100}></LinearBackGround>
+    <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
+      <LinearBackGround height={100} isDarkMode={isDarkMode}></LinearBackGround>
       <View style={{ position: "absolute", top: 30, left: 12 }}>
-        <Text style={[styles.heading, { fontSize: 30 }]}>Thư viện</Text>
+        <Text
+          style={[
+            styles.heading,
+            { fontSize: 30, color: isDarkMode ? colors.whiteText : "black" },
+          ]}
+        >
+          Thư viện
+        </Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <View style={styles.listWrapper}>
             <View style={styles.header}>
-              <Text style={styles.heading}>Danh sách của bạn</Text>
+              <Text
+                style={[
+                  styles.heading,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Danh sách của bạn
+              </Text>
               <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={() => setIsModal(true)}
                 style={{ marginRight: 8 }}
               >
-                <FontAwesome5 name="plus" size={28} color="black" />
+                <FontAwesome5
+                  name="plus"
+                  size={28}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
               </TouchableOpacity>
             </View>
             <View style={{}}>
@@ -89,6 +107,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
                         style={{
                           fontSize: 20,
                           fontFamily: baloo2Fonts.bold,
+                          color: isDarkMode ? colors.whiteText : "black",
                         }}
                       >
                         {item.name}
@@ -97,7 +116,9 @@ const Explore = ({ route, navigation }: RouterProps) => {
                         style={{
                           fontSize: 14,
                           fontFamily: baloo2Fonts.bold,
-                          color: colors.gray,
+                          color: isDarkMode
+                            ? "rgba(255, 255, 255, 0.6)"
+                            : colors.gray,
                         }}
                       >
                         Andrew
@@ -111,10 +132,10 @@ const Explore = ({ route, navigation }: RouterProps) => {
         </View>
       </ScrollView>
       {isModal && (
-        <Modal>
+        <Modal isDarkMode>
           <BackButton
             fill
-            color="black"
+            color={isDarkMode ? colors.whiteText : "black"}
             size={32}
             onPress={() => setIsModal(false)}
             customeStyle={{ marginLeft: 8 }}
@@ -127,7 +148,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
                 style={{
                   fontSize: 16,
                   fontFamily: fontFamilies.bold,
-                  color: colors.gray,
+                  color: isDarkMode ? colors.whiteText : colors.gray,
                   marginBottom: 8,
                 }}
               >
@@ -137,8 +158,12 @@ const Explore = ({ route, navigation }: RouterProps) => {
                 placeholder="Nhập tên danh sách"
                 selectionColor={colors.primary}
                 value={newList}
+                placeholderTextColor={
+                  isDarkMode ? colors.placeHolder : undefined
+                }
                 style={{
-                  backgroundColor: "#fff",
+                  backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+                  color: isDarkMode ? colors.whiteText : "black",
                   paddingVertical: 8,
                   width: "100%",
                   height: 50,

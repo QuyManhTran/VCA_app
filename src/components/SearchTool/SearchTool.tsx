@@ -8,8 +8,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React from "react";
-import { searchDark } from "../../../assets/img/icons";
+import { useContext, memo } from "react";
+import { searchDark, searchWhite } from "../../../assets/img/icons";
 import { colors } from "../../../constants";
 import fontFamilies, { baloo2Fonts } from "../../../constants/fontFamiles";
 
@@ -19,6 +19,7 @@ interface SearchProps {
   onPress?: any;
   onKeyword?: any;
   keyword?: string;
+  isDarkMode: boolean;
 }
 const fakeData = ["truyền thống", "phổ biến ", "yêu thích", "liên quan"];
 const SearchTool = ({
@@ -27,13 +28,22 @@ const SearchTool = ({
   onPress,
   onKeyword,
   keyword,
+  isDarkMode = false,
 }: SearchProps) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={[styles.container, { width: width }]}>
+      <View
+        style={[
+          styles.container,
+          {
+            width: width,
+            backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+          },
+        ]}
+      >
         <TouchableOpacity>
           <Image
-            source={searchDark}
+            source={isDarkMode ? searchWhite : searchDark}
             style={{ width: 36, height: 36 }}
             resizeMode="contain"
           ></Image>
@@ -42,8 +52,12 @@ const SearchTool = ({
           {!isHome && (
             <TextInput
               value={keyword}
-              style={styles.input}
+              style={[
+                styles.input,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
               onChangeText={(text) => onKeyword(text)}
+              placeholderTextColor={colors.placeHolder}
               placeholder="Tìm kiếm món ăn"
               spellCheck={false}
               selectionColor={colors.primary}
@@ -56,6 +70,7 @@ const SearchTool = ({
                 fontSize: 20,
                 fontFamily: baloo2Fonts.regular,
                 opacity: 0.7,
+                color: isDarkMode ? colors.whiteText : "black",
               }}
             >
               Tìm kiếm món ăn
@@ -99,7 +114,7 @@ const SearchTool = ({
   );
 };
 
-export default React.memo(SearchTool);
+export default memo(SearchTool);
 
 const styles = StyleSheet.create({
   container: {

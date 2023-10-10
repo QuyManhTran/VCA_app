@@ -15,23 +15,30 @@ interface ModalProps {
   content?: string;
   onPress?: any;
   children?: React.ReactNode;
+  isDarkMode: boolean;
 }
-const Modal = ({ title, content, onPress, children }: ModalProps) => {
+const Modal = ({
+  title,
+  content,
+  onPress,
+  children,
+  isDarkMode = false,
+}: ModalProps) => {
   const scaleUp = useRef(new Animated.Value(0.5)).current;
   const onClose = () => {
     Animated.timing(scaleUp, {
       toValue: 0,
-      duration: 300,
+      duration: 400,
       useNativeDriver: false,
     }).start();
     setTimeout(() => {
       onPress();
-    }, 300);
+    }, 400);
   };
   useEffect(() => {
     Animated.timing(scaleUp, {
       toValue: 1,
-      duration: 300,
+      duration: 400,
       useNativeDriver: false,
     }).start();
   }, []);
@@ -41,13 +48,31 @@ const Modal = ({ title, content, onPress, children }: ModalProps) => {
         <Animated.View
           style={[
             styles.wrapper,
-            { opacity: scaleUp, transform: [{ scale: scaleUp }] },
+            {
+              backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+              opacity: scaleUp,
+              transform: [{ scale: scaleUp }],
+            },
           ]}
         >
           {title && (
             <>
-              <Text style={styles.title}>{title}</Text>
-              <Text style={styles.content}>{content}</Text>
+              <Text
+                style={[
+                  styles.title,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                {title}
+              </Text>
+              <Text
+                style={[
+                  styles.content,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                {content}
+              </Text>
               <TouchableOpacity
                 activeOpacity={0.5}
                 style={styles.closeBtn}

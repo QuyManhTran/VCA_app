@@ -18,6 +18,7 @@ import ImageIcon from "../../../assets/icons/ImageIcon";
 import { variousFoods } from "../../../constants/fakeData";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import SearchTool from "../../components/SearchTool";
+import { colors } from "../../../constants";
 const searchUp = {
   0: { translateY: 0 },
   1: { translateY: -60 },
@@ -62,10 +63,18 @@ const Home = ({ route, navigation }: RouterProps) => {
   });
 
   return (
-    <View style={{ flex: 1 }}>
-      <LinearBackGround height={140} title="Chào buổi sáng"></LinearBackGround>
+    <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
+      <LinearBackGround
+        height={140}
+        title="Chào buổi sáng"
+        isDarkMode={isDarkMode}
+      ></LinearBackGround>
       <Animatable.View duration={1000} style={[styles.search]} ref={searchRef}>
-        <SearchTool isHome={true} onPress={onNavigateSearch}></SearchTool>
+        <SearchTool
+          isHome={true}
+          onPress={onNavigateSearch}
+          isDarkMode={isDarkMode}
+        ></SearchTool>
       </Animatable.View>
       <Animated.ScrollView
         disableIntervalMomentum
@@ -89,17 +98,19 @@ const Home = ({ route, navigation }: RouterProps) => {
         <View style={styles.container}>
           <View style={styles.wrapper}>
             <RecommendList
+              isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Khám phá"
               explore
             ></RecommendList>
-            <View style={{ paddingBottom: 24 }}>
+            <View style={{ paddingBottom: 22 }}>
               <Text
                 style={{
                   fontSize: 26,
                   fontFamily: baloo2Fonts.extra,
                   paddingBottom: 8,
                   paddingLeft: 24,
+                  color: isDarkMode ? colors.whiteText : "black",
                 }}
               >
                 Đa dạng món ăn
@@ -107,6 +118,7 @@ const Home = ({ route, navigation }: RouterProps) => {
               <ScrollView showsHorizontalScrollIndicator={false} horizontal>
                 {variousFoods.map((food, index) => (
                   <ChipTag
+                    isDarkmode={isDarkMode}
                     key={index}
                     title={food.title}
                     marginLeft={index === 0 ? 24 : 0}
@@ -117,14 +129,17 @@ const Home = ({ route, navigation }: RouterProps) => {
               </ScrollView>
             </View>
             <RecommendList
+              isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Phổ biến"
             ></RecommendList>
             <RecommendList
+              isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Yêu thích"
             ></RecommendList>
             <RecommendList
+              isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Thêm gần đây"
             ></RecommendList>

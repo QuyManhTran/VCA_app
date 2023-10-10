@@ -3,10 +3,14 @@ import { Animated } from "react-native";
 import { useContext, useEffect, useRef } from "react";
 import ThemeContext from "../../utilies/theme";
 import { LinearGradient } from "expo-linear-gradient";
-import { navbarLinearColors } from "../../../constants/colors";
+import {
+  linearColors,
+  navbarDarkLinearColors,
+  navbarLinearColors,
+} from "../../../constants/colors";
 function MyTabBar({ state, descriptors, navigation }) {
   const focusedOptions = descriptors[state.routes[state.index].key].options;
-  const { isHomeScrollDown } = useContext(ThemeContext);
+  const { isDarkMode, isHomeScrollDown } = useContext(ThemeContext);
   const bottomDownAnimation = useRef(new Animated.Value(0)).current;
 
   const navBarAnimation = useRef(new Animated.Value(-60)).current;
@@ -50,7 +54,7 @@ function MyTabBar({ state, descriptors, navigation }) {
       }}
     >
       <LinearGradient
-        colors={navbarLinearColors}
+        colors={isDarkMode ? navbarDarkLinearColors : navbarLinearColors}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={{

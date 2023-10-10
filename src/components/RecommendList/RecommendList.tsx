@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React, { memo } from "react";
+import { useContext, memo } from "react";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
 import { colors } from "../../../constants";
@@ -16,27 +16,44 @@ interface RecommendListProps {
   heading: string;
   explore?: boolean;
   onNavigateSearch: any;
+  isDarkMode: boolean;
 }
 const RecommendList = ({
   heading,
   explore = false,
   onNavigateSearch,
+  isDarkMode = false,
 }: RecommendListProps) => {
   let data = new Array(5);
   data.fill(6);
   if (explore) {
     data = exploreData;
   }
-
+  console.log("halo");
   return (
     <View style={styles.container}>
       <TouchableOpacity
         activeOpacity={0.6}
-        style={{ paddingBottom: 0, flexDirection: "row", alignItems: "center" }}
+        style={{
+          paddingBottom: 0,
+          flexDirection: "row",
+          alignItems: "center",
+        }}
         onPress={() => onNavigateSearch({ keyword: heading })}
       >
-        <Text style={styles.heading}>{heading}</Text>
-        <Ionicons name="chevron-forward-outline" size={24}></Ionicons>
+        <Text
+          style={[
+            styles.heading,
+            { color: isDarkMode ? colors.whiteText : "black" },
+          ]}
+        >
+          {heading}
+        </Text>
+        <Ionicons
+          name="chevron-forward-outline"
+          size={24}
+          color={isDarkMode ? colors.whiteText : "black"}
+        ></Ionicons>
       </TouchableOpacity>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {data.map((element, index) => {
@@ -62,6 +79,7 @@ const RecommendList = ({
                   fontSize: 20,
                   fontFamily: baloo2Fonts.bold,
                   paddingTop: 4,
+                  color: isDarkMode ? colors.whiteText : "black",
                 }}
               >
                 {explore ? element.name : " Bánh mỳ"}
@@ -83,7 +101,7 @@ const RecommendList = ({
                 height: 50,
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "rgba(255, 255, 255, 1)",
+                backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.5)" : "#fff",
               }}
             ></BackButton>
 
