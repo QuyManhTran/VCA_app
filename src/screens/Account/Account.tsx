@@ -22,7 +22,7 @@ const Account = () => {
           color: darkMode ? darkTheme.color : undefined,
         }}
       >
-        Account
+        ACCOUNT
       </Text>
       <Switch
         value={darkMode}
