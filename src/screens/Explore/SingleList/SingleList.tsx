@@ -8,6 +8,7 @@ import {
   Animated,
   Pressable,
   TextInput,
+  useWindowDimensions,
 } from "react-native";
 import {
   useCallback,
@@ -53,6 +54,7 @@ const listDown = {
 
 const SingleList = ({ route, navigation }: RouterProps) => {
   const { name, data, img, position } = route.params;
+  const { width } = useWindowDimensions();
   const [foodList, setFoodList] = useState(data);
   const { isDarkMode, onRemoveList, onAdjustList, onRemoveBlogList } =
     useContext(ThemeContext);
@@ -148,7 +150,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
   return (
     <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
       <LinearBackGround
-        height={100}
+        height={width < 400 ? 100 : 120}
         back={true}
         avatar={false}
         onPress={onBack}
@@ -156,7 +158,11 @@ const SingleList = ({ route, navigation }: RouterProps) => {
       ></LinearBackGround>
       {isRemoveMode && (
         <TouchableOpacity
-          style={{ position: "absolute", top: 34, right: 120 }}
+          style={{
+            position: "absolute",
+            top: width < 400 ? 34 : 48,
+            right: 120,
+          }}
           onPress={handleSelectRemove}
         >
           <Text
@@ -172,7 +178,11 @@ const SingleList = ({ route, navigation }: RouterProps) => {
       )}
       {isRemoveMode && (
         <TouchableOpacity
-          style={{ position: "absolute", top: 34, right: 60 }}
+          style={{
+            position: "absolute",
+            top: width < 400 ? 34 : 48,
+            right: 60,
+          }}
           onPress={() => setIsRemoveMode(false)}
         >
           <Text
@@ -188,7 +198,11 @@ const SingleList = ({ route, navigation }: RouterProps) => {
       )}
       {!isRemoveMode && (
         <TouchableOpacity
-          style={{ position: "absolute", top: 40, right: 20 }}
+          style={{
+            position: "absolute",
+            top: width < 400 ? 40 : 52,
+            right: 20,
+          }}
           onPress={onModal}
         >
           <Ionicons name="ellipsis-vertical" size={24}></Ionicons>

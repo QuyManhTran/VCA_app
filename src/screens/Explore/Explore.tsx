@@ -21,10 +21,12 @@ import ThemeContext from "../../utilies/theme";
 import { useFocusEffect } from "@react-navigation/native";
 
 const Explore = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, personalLists, onAddList } = useContext(ThemeContext);
+  const { isDarkMode, setHomeNavbar, personalLists, onAddList } =
+    useContext(ThemeContext);
   const [newList, setNewList] = useState<string | null>("");
   const [isModal, setIsModal] = useState(false);
   const [isGoBack, setIsGoBack] = useState(true);
+  const [prevOffSetY, setPrevOffSetY] = useState(0);
   const onSingleList = (name: string, data, img: any, index: number) => {
     navigation.navigate("SingleList", {
       name: name,
@@ -33,12 +35,21 @@ const Explore = ({ route, navigation }: RouterProps) => {
       position: index,
     });
   };
+
+  const onScroll = (scrollY: number) => {
+    if (scrollY > prevOffSetY) {
+      setHomeNavbar(true);
+    } else {
+      setHomeNavbar(false);
+    }
+  };
   // When navigation goBack and set state
   useFocusEffect(
     useCallback(() => {
       setIsGoBack(true);
     }, [])
   );
+
   return (
     <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
       <LinearBackGround height={100} isDarkMode={isDarkMode}></LinearBackGround>
@@ -52,7 +63,11 @@ const Explore = ({ route, navigation }: RouterProps) => {
           Thư viện
         </Text>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={(e) => onScroll(e.nativeEvent.contentOffset.y)}
+        onScrollEndDrag={(e) => setPrevOffSetY(e.nativeEvent.contentOffset.y)}
+      >
         <View style={styles.container}>
           <View style={styles.listWrapper}>
             <View style={styles.header}>
@@ -132,7 +147,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
         </View>
       </ScrollView>
       {isModal && (
-        <Modal isDarkMode>
+        <Modal isDarkMode={isDarkMode}>
           <BackButton
             fill
             color={isDarkMode ? colors.whiteText : "black"}
