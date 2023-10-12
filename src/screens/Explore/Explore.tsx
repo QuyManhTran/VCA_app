@@ -16,7 +16,6 @@ import BackButton from "../../components/BackButton";
 import { colors } from "../../../constants";
 import NavButton from "../../components/NavButton";
 import { RouterProps } from "../Splash/Splash";
-import { mostlySearch } from "../../../constants/fakeData";
 import ThemeContext from "../../utilies/theme";
 import { useFocusEffect } from "@react-navigation/native";
 
