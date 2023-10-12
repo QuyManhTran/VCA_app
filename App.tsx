@@ -22,7 +22,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
-          initialRouteName="Splash"
+          initialRouteName="Video"
         >
           <Stack.Screen name="Splash" component={Splash} />
           <Stack.Screen name="AskAccount" component={AskAccount} />
