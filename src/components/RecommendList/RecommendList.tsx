@@ -17,25 +17,26 @@ interface RecommendListProps {
   explore?: boolean;
   onNavigateSearch: any;
   isDarkMode: boolean;
+  isLibrary?: boolean;
 }
 const RecommendList = ({
   heading,
   explore = false,
   onNavigateSearch,
   isDarkMode = false,
+  isLibrary = false,
 }: RecommendListProps) => {
   let data = new Array(5);
   data.fill(6);
   if (explore) {
     data = exploreData;
   }
-  console.log("halo");
   return (
     <View style={styles.container}>
       <TouchableOpacity
         activeOpacity={0.6}
         style={{
-          paddingBottom: 0,
+          paddingBottom: isLibrary ? 8 : 0,
           flexDirection: "row",
           alignItems: "center",
         }}
@@ -44,7 +45,11 @@ const RecommendList = ({
         <Text
           style={[
             styles.heading,
-            { color: isDarkMode ? colors.whiteText : "black" },
+            {
+              fontSize: isLibrary ? 28 : 26,
+              paddingLeft: isLibrary ? 0 : 24,
+              color: isDarkMode ? colors.whiteText : "black",
+            },
           ]}
         >
           {heading}
@@ -63,7 +68,8 @@ const RecommendList = ({
               activeOpacity={0.6}
               key={index}
               style={{
-                paddingLeft: 24,
+                paddingLeft: isLibrary ? 0 : 24,
+                marginRight: index === data.length - 1 ? 0 : isLibrary ? 24 : 0,
                 paddingRight: index === data.length - 1 ? 24 : 0,
                 justifyContent: "center",
                 alignItems: "center",
@@ -77,7 +83,7 @@ const RecommendList = ({
               <Text
                 style={{
                   fontSize: 20,
-                  fontFamily: baloo2Fonts.bold,
+                  fontFamily: isLibrary ? baloo2Fonts.medium : baloo2Fonts.bold,
                   paddingTop: 4,
                   color: isDarkMode ? colors.whiteText : "black",
                 }}

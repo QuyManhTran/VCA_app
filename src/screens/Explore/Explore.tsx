@@ -10,7 +10,7 @@ import {
 import { useState, useEffect, useContext, useCallback } from "react";
 import LinearBackGround from "../../components/LinearBackGround";
 import fontFamilies, { baloo2Fonts } from "../../../constants/fontFamiles";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import Modal from "../../components/Modal";
 import BackButton from "../../components/BackButton";
 import { colors } from "../../../constants";
@@ -18,6 +18,7 @@ import NavButton from "../../components/NavButton";
 import { RouterProps } from "../Splash/Splash";
 import ThemeContext from "../../utilies/theme";
 import { useFocusEffect } from "@react-navigation/native";
+import RecommendList from "../../components/RecommendList";
 
 const Explore = ({ route, navigation }: RouterProps) => {
   const { isDarkMode, setHomeNavbar, personalLists, onAddList } =
@@ -33,6 +34,14 @@ const Explore = ({ route, navigation }: RouterProps) => {
       img: img,
       position: index,
     });
+  };
+
+  const onNavigateSearch = useCallback((params: object) => {
+    navigation.navigate("Search", params);
+  }, []);
+
+  const onNavigateNotification = () => {
+    navigation.navigate("Notification");
   };
 
   const onScroll = (scrollY: number) => {
@@ -52,11 +61,27 @@ const Explore = ({ route, navigation }: RouterProps) => {
   return (
     <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
       <LinearBackGround height={100} isDarkMode={isDarkMode}></LinearBackGround>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        style={styles.notify}
+        onPress={onNavigateNotification}
+      >
+        <Ionicons
+          name={"notifications"}
+          size={26}
+          color={isDarkMode ? colors.whiteText : "black"}
+        ></Ionicons>
+        <Entypo name="dot-single" size={30} color="red" style={styles.dot} />
+      </TouchableOpacity>
       <View style={{ position: "absolute", top: 30, left: 12 }}>
         <Text
           style={[
             styles.heading,
-            { fontSize: 30, color: isDarkMode ? colors.whiteText : "black" },
+            {
+              fontSize: 32,
+              fontFamily: baloo2Fonts.extra,
+              color: isDarkMode ? colors.whiteText : "black",
+            },
           ]}
         >
           Thư viện
@@ -69,6 +94,12 @@ const Explore = ({ route, navigation }: RouterProps) => {
       >
         <View style={styles.container}>
           <View style={styles.listWrapper}>
+            <RecommendList
+              isLibrary={true}
+              isDarkMode={isDarkMode}
+              onNavigateSearch={onNavigateSearch}
+              heading="Xem gần đây"
+            ></RecommendList>
             <View style={styles.header}>
               <Text
                 style={[
@@ -120,7 +151,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
                       <Text
                         style={{
                           fontSize: 20,
-                          fontFamily: baloo2Fonts.bold,
+                          fontFamily: baloo2Fonts.medium,
                           color: isDarkMode ? colors.whiteText : "black",
                         }}
                       >
@@ -129,7 +160,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
                       <Text
                         style={{
                           fontSize: 14,
-                          fontFamily: baloo2Fonts.bold,
+                          fontFamily: baloo2Fonts.medium,
                           color: isDarkMode
                             ? "rgba(255, 255, 255, 0.6)"
                             : colors.gray,
@@ -218,6 +249,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 12,
+    marginBottom: 36,
   },
   listWrapper: {
     paddingTop: 24,
@@ -234,6 +266,16 @@ const styles = StyleSheet.create({
   },
   newListWrapper: {
     alignItems: "center",
+  },
+  notify: {
+    position: "absolute",
+    top: 44,
+    right: 72,
+  },
+  dot: {
+    position: "absolute",
+    top: -14,
+    right: -6,
   },
 });
 export default Explore;
