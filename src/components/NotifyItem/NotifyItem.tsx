@@ -8,16 +8,39 @@ import {
 } from "../../../assets/img/icons";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 interface NotifyItemProps {
+  name: string;
+  blog: string;
   isComment: boolean;
   isDarkMode: boolean;
+  isRead: boolean;
+  onPress: any;
 }
-const NotifyItem = ({ isComment, isDarkMode }: NotifyItemProps) => {
+const NotifyItem = ({
+  isComment,
+  isDarkMode,
+  isRead,
+  name,
+  blog,
+  onPress,
+}: NotifyItemProps) => {
   return (
-    <TouchableOpacity activeOpacity={0.6} style={{ marginBottom: 12 }}>
+    <TouchableOpacity
+      activeOpacity={0.6}
+      style={{ marginBottom: 12 }}
+      onPress={onPress}
+    >
       <View
         style={[
           styles.container,
-          { backgroundColor: isDarkMode ? colors.darkBg : "#D9D9D9" },
+          {
+            backgroundColor: isDarkMode
+              ? isRead
+                ? "#29292980"
+                : colors.darkBg
+              : isRead
+              ? colors.readNotify
+              : colors.uneadNotify,
+          },
         ]}
       >
         {isComment && (
@@ -38,11 +61,35 @@ const NotifyItem = ({ isComment, isDarkMode }: NotifyItemProps) => {
           <Text
             style={[
               styles.content,
-              { color: isDarkMode ? colors.whiteText : "black" },
+              {
+                color: isDarkMode ? colors.whiteText : "black",
+              },
             ]}
           >
-            Charlie đã {isComment ? "phản hồi" : "thích"} về bình luận của bạn
-            trong bài viết Duy Nến
+            <Text
+              style={[
+                styles.content,
+                {
+                  fontFamily: baloo2Fonts.bold,
+                  color: isDarkMode ? colors.whiteText : "black",
+                },
+              ]}
+            >
+              {name}
+            </Text>{" "}
+            đã {isComment ? "phản hồi" : "thích"} về bình luận của bạn trong bài
+            viết{" "}
+            <Text
+              style={[
+                styles.content,
+                {
+                  fontFamily: baloo2Fonts.bold,
+                  color: isDarkMode ? colors.whiteText : "black",
+                },
+              ]}
+            >
+              {blog}
+            </Text>
           </Text>
         </View>
       </View>
@@ -67,7 +114,7 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 18,
-    fontFamily: baloo2Fonts.semi,
+    fontFamily: baloo2Fonts.medium,
     lineHeight: 26,
   },
 });

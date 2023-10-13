@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import ThemeContext from "./theme";
 import { list } from "../../assets/img/foods";
 import { EventRegister } from "react-native-event-listeners";
-import { mostlySearch } from "../../constants/fakeData";
+import { mostlySearch, notifytions } from "../../constants/fakeData";
 interface GlobalContextProps {
   children: React.ReactNode;
 }
@@ -17,6 +17,7 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isHomeScrollDown, setIsHomeScrollDown] = useState(false);
   const [personalLists, setPersonalLists] = useState(fakeData);
+  const [notifitions, setNotifitions] = useState(notifytions);
   const setHomeNavbar = (isScrollDown: boolean) => {
     if (isScrollDown !== isHomeScrollDown) {
       setIsHomeScrollDown(isScrollDown);
@@ -63,6 +64,34 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
     });
     return result;
   };
+
+  const onRemoveUnread = (type: string, position: number, isRead: boolean) => {
+    if (type === "today") {
+      setNotifitions((prevNotifys) => {
+        return {
+          ...prevNotifys,
+          today: prevNotifys.today.map((item, index) => {
+            if (index === position) {
+              return { ...item, isRead: isRead };
+            }
+            return item;
+          }),
+        };
+      });
+    } else if (type === "before") {
+      setNotifitions((prevNotifys) => {
+        return {
+          ...prevNotifys,
+          before: prevNotifys.before.map((item, index) => {
+            if (index === position) {
+              return { ...item, isRead: isRead };
+            }
+            return item;
+          }),
+        };
+      });
+    }
+  };
   useEffect(() => {
     LogBox.ignoreLogs([
       "new NativeEventEmitter()",
@@ -84,11 +113,13 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
         isDarkMode,
         isHomeScrollDown,
         personalLists,
+        notifitions,
         setHomeNavbar,
         onAddList,
         onRemoveList,
         onAdjustList,
         onRemoveBlogList,
+        onRemoveUnread,
       }}
     >
       {children}

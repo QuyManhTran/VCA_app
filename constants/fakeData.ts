@@ -52,3 +52,18 @@ export const listOptions = [
   { icon: "trash-outline", title: "Xóa món ăn trong danh sách" },
   { icon: "trash-outline", title: "Xóa danh sách" },
 ];
+
+export const notifytions = {
+  today: [
+    { name: "Thùy Linh", blog: "Duy nến", isComment: false, isRead: false },
+    { name: "Trâm Anh", blog: "Duy nến", isComment: false, isRead: true },
+    { name: "Ngọc", blog: "Duy nến", isComment: true, isRead: true },
+    { name: "Thảo cute", blog: "Duy nến", isComment: false, isRead: false },
+  ],
+  before: [
+    { name: "Quỳnh Nga", blog: "Duy nến", isComment: false, isRead: false },
+    { name: "Quỳnh", blog: "Duy nến", isComment: true, isRead: false },
+    { name: "My sói", blog: "Duy nến", isComment: true, isRead: true },
+    { name: "Ngân lonely", blog: "Duy nến", isComment: false, isRead: false },
+  ],
+};

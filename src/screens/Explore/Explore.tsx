@@ -26,6 +26,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
   const [newList, setNewList] = useState<string | null>("");
   const [isModal, setIsModal] = useState(false);
   const [isGoBack, setIsGoBack] = useState(true);
+  const [isNotify, setIsNotify] = useState(true);
   const [prevOffSetY, setPrevOffSetY] = useState(0);
   const onSingleList = (name: string, data, img: any, index: number) => {
     navigation.navigate("SingleList", {
@@ -41,6 +42,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
   }, []);
 
   const onNavigateNotification = () => {
+    setIsNotify(false);
     navigation.navigate("Notification");
   };
 
@@ -71,7 +73,9 @@ const Explore = ({ route, navigation }: RouterProps) => {
           size={26}
           color={isDarkMode ? colors.whiteText : "black"}
         ></Ionicons>
-        <Entypo name="dot-single" size={30} color="red" style={styles.dot} />
+        {isNotify && (
+          <Entypo name="dot-single" size={30} color="red" style={styles.dot} />
+        )}
       </TouchableOpacity>
       <View style={{ position: "absolute", top: 30, left: 12 }}>
         <Text
