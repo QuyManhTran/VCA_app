@@ -123,6 +123,10 @@ const SingleList = ({ route, navigation }: RouterProps) => {
     });
   }, []);
 
+  const onBlog = useCallback((name: string) => {
+    navigation.navigate("Blog", { name: name });
+  }, []);
+
   useEffect(() => {
     if (isModal) {
       Animated.timing(heightOptions, {
@@ -278,8 +282,9 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                 >
                   <FoodReview
                     {...food}
-                    onTag={onTag}
                     isDarkMode={isDarkMode}
+                    onTag={onTag}
+                    onBlog={onBlog}
                   ></FoodReview>
                   {isRemoveMode && (
                     <TouchableOpacity

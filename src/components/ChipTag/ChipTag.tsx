@@ -2,18 +2,21 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import { colors } from "../../../constants";
+import ImageIcon from "../../../assets/icons/ImageIcon";
 
 interface ChipTagProps {
-  children?: React.ReactNode;
   title: string;
   marginLeft?: number;
   isDarkmode: boolean;
+  onPress: any;
+  img: any;
 }
 const ChipTag = ({
-  children,
   title,
   marginLeft = 0,
   isDarkmode = false,
+  onPress,
+  img,
 }: ChipTagProps) => {
   return (
     <TouchableOpacity
@@ -25,8 +28,9 @@ const ChipTag = ({
           marginLeft: marginLeft,
         },
       ]}
+      onPress={() => onPress(title)}
     >
-      {children}
+      <ImageIcon img={img}></ImageIcon>
       <Text
         style={[
           styles.title,

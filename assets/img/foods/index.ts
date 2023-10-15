@@ -14,6 +14,11 @@ export const list = require("./list.jpg");
 export const Tet = require("./Tet.jpg");
 export const TayNamBo = require("./TayNamBo.jpg");
 export const Hue = require("./Hue.jpg");
+export const HaNoi = require("./HaNoi.jpg");
+export const PhoBo = require("./PhoBo.jpg");
+export const BunBo = require("./BunBo.jpg");
+export const Com = require("./Com.jpg");
+export const BanhXeo = require("./BanhXeo.jpg");
 export const banners = [
   {
     img: Tet,
@@ -39,19 +44,50 @@ export const banners = [
       { content: "Miền Tây", color: "#88ec90" },
     ],
   },
+  {
+    img: HaNoi,
+    keyword: "Hà Nội",
+    content: [
+      { content: "Mùa Thu", color: "#fff" },
+      { content: "Hà Nội", color: "#88ec90" },
+    ],
+  },
+];
+export const recommendLists = [
+  {
+    name: "Bánh mỳ",
+    img: banhmy,
+  },
+  {
+    name: "Phở bò",
+    img: PhoBo,
+  },
+  {
+    name: "Bún bò",
+    img: BunBo,
+  },
+  {
+    name: "Bánh cốm",
+    img: Com,
+  },
+  {
+    name: "Bánh xèo",
+    img: BanhXeo,
+  },
 ];
 const exploreData = [
   {
     name: "Miền Bắc",
-    image: northern,
+    img: northern,
   },
   {
     name: "Miền Trung",
-    image: middle,
+    img: middle,
   },
   {
     name: "Miền Nam",
-    image: southern,
+    img: southern,
   },
 ];
+
 export default exploreData;

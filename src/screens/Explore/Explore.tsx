@@ -19,6 +19,7 @@ import { RouterProps } from "../Splash/Splash";
 import ThemeContext from "../../utilies/theme";
 import { useFocusEffect } from "@react-navigation/native";
 import RecommendList from "../../components/RecommendList";
+import { recommendLists } from "../../../assets/img/foods";
 
 const Explore = ({ route, navigation }: RouterProps) => {
   const { isDarkMode, setHomeNavbar, personalLists, onAddList } =
@@ -39,6 +40,10 @@ const Explore = ({ route, navigation }: RouterProps) => {
 
   const onNavigateSearch = useCallback((params: object) => {
     navigation.navigate("Search", params);
+  }, []);
+
+  const onBlog = useCallback((name: string) => {
+    navigation.navigate("Blog", { name: name });
   }, []);
 
   const onNavigateNotification = () => {
@@ -108,6 +113,8 @@ const Explore = ({ route, navigation }: RouterProps) => {
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Xem gần đây"
+              onBlog={onBlog}
+              data={recommendLists}
             ></RecommendList>
             <View style={styles.header}>
               <Text

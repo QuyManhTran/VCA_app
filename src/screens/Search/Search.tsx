@@ -32,6 +32,10 @@ const Search = ({ route, navigation }: RouterProps) => {
     setKeyword(tag);
   }, []);
 
+  const onBlog = useCallback((name: string) => {
+    navigation.navigate("Blog", { name: name });
+  }, []);
+
   const onBack = useCallback(() => {
     navigation.goBack();
   }, []);
@@ -123,6 +127,7 @@ const Search = ({ route, navigation }: RouterProps) => {
                 key={index}
                 onTag={onTag}
                 isDarkMode={isDarkMode}
+                onBlog={onBlog}
               ></FoodReview>
             ))}
           </View>

@@ -12,6 +12,7 @@ interface FoodReviewProps {
   img: any;
   isDarkMode: boolean;
   onTag?: any;
+  onBlog: any;
 }
 const FoodReview = ({
   name,
@@ -21,10 +22,17 @@ const FoodReview = ({
   img,
   isDarkMode = false,
   onTag = () => {},
+  onBlog = () => {},
 }: FoodReviewProps) => {
+  const onNavigateBlog = (name: string) => {
+    onBlog(name);
+  };
   return (
     <View style={styles.container}>
-      <TouchableOpacity activeOpacity={0.6} onPress={() => alert("touch")}>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        onPress={() => onNavigateBlog(name)}
+      >
         <Image
           source={img}
           style={{ width: 150, height: 100, borderRadius: 12 }}
@@ -32,7 +40,10 @@ const FoodReview = ({
         ></Image>
       </TouchableOpacity>
       <View style={{ marginLeft: 16 }}>
-        <TouchableOpacity activeOpacity={0.6}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => onNavigateBlog(name)}
+        >
           <Text
             style={[
               styles.heading,

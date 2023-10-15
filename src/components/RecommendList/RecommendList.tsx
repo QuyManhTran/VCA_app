@@ -10,14 +10,16 @@ import { useContext, memo } from "react";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
 import { colors } from "../../../constants";
-import exploreData, { banhmy } from "../../../assets/img/foods";
+import exploreData, { banhmy, recommendLists } from "../../../assets/img/foods";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 interface RecommendListProps {
   heading: string;
   explore?: boolean;
-  onNavigateSearch: any;
   isDarkMode: boolean;
   isLibrary?: boolean;
+  onNavigateSearch: any;
+  onBlog: any;
+  data: { name: string; img: any }[];
 }
 const RecommendList = ({
   heading,
@@ -25,12 +27,12 @@ const RecommendList = ({
   onNavigateSearch,
   isDarkMode = false,
   isLibrary = false,
+  onBlog = () => {},
+  data = recommendLists,
 }: RecommendListProps) => {
-  let data = new Array(5);
-  data.fill(6);
-  if (explore) {
-    data = exploreData;
-  }
+  const onNavigateBlog = (name: string) => {
+    onBlog(name);
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -64,14 +66,14 @@ const RecommendList = ({
         )}
       </TouchableOpacity>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {data.map((element, index) => {
+        {data.map((blog, index) => {
           return (
             <TouchableOpacity
               onPress={() => {
                 if (explore) {
-                  onNavigateSearch({ keyword: element.name });
+                  onNavigateSearch({ keyword: blog.name });
                 } else {
-                  alert(explore ? element.name : "Bánh mỳ");
+                  onNavigateBlog(blog.name);
                 }
               }}
               activeOpacity={0.6}
@@ -85,8 +87,8 @@ const RecommendList = ({
               }}
             >
               <Image
-                source={explore ? element.image : banhmy}
-                resizeMode="contain"
+                source={blog.img}
+                resizeMode="cover"
                 style={{ borderRadius: 12, width: 150, height: 90 }}
               ></Image>
               <Text
@@ -97,7 +99,7 @@ const RecommendList = ({
                   color: isDarkMode ? colors.whiteText : "black",
                 }}
               >
-                {explore ? element.name : " Bánh mỳ"}
+                {blog.name}
               </Text>
             </TouchableOpacity>
           );

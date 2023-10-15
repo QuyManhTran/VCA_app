@@ -8,12 +8,12 @@ import { RouterProps } from "../Splash/Splash";
 import LinearBackGround from "../../components/LinearBackGround";
 import RecommendList from "../../components/RecommendList";
 import ChipTag from "../../components/ChipTag";
-import ImageIcon from "../../../assets/icons/ImageIcon";
 import { mostlySearch, variousFoods } from "../../../constants/fakeData";
 import SearchTool from "../../components/SearchTool";
 import { colors } from "../../../constants";
 import FoodReview from "../../components/FoodReview";
 import Banner from "../../components/Banner";
+import exploreData, { recommendLists } from "../../../assets/img/foods";
 const searchUp = {
   0: { translateY: 0 },
   1: { translateY: -60 },
@@ -45,6 +45,14 @@ const Home = ({ route, navigation }: RouterProps) => {
 
   const onBanner = useCallback((keyword: string) => {
     navigation.navigate("Search", { keyword: keyword });
+  }, []);
+
+  const onChipTab = useCallback((keyword: string) => {
+    navigation.navigate("Search", { keyword: keyword });
+  }, []);
+
+  const onBlog = useCallback((name: string) => {
+    navigation.navigate("Blog", { name: name });
   }, []);
 
   useEffect(() => {
@@ -126,6 +134,7 @@ const Home = ({ route, navigation }: RouterProps) => {
                     key={index}
                     isDarkMode={isDarkMode}
                     onTag={onTag}
+                    onBlog={onBlog}
                   ></FoodReview>
                 ))}
             </View>
@@ -134,6 +143,8 @@ const Home = ({ route, navigation }: RouterProps) => {
               onNavigateSearch={onNavigateSearch}
               heading="Khám phá"
               explore
+              data={exploreData}
+              onBlog={onBlog}
             ></RecommendList>
             <View style={{ paddingBottom: 22 }}>
               <Text
@@ -153,9 +164,9 @@ const Home = ({ route, navigation }: RouterProps) => {
                     key={index}
                     title={food.title}
                     marginLeft={index === 0 ? 24 : 0}
-                  >
-                    <ImageIcon img={food.img}></ImageIcon>
-                  </ChipTag>
+                    onPress={onChipTab}
+                    img={food.img}
+                  ></ChipTag>
                 ))}
               </ScrollView>
             </View>
@@ -163,16 +174,22 @@ const Home = ({ route, navigation }: RouterProps) => {
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Phổ biến"
+              data={recommendLists}
+              onBlog={onBlog}
             ></RecommendList>
             <RecommendList
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Yêu thích"
+              data={recommendLists}
+              onBlog={onBlog}
             ></RecommendList>
             <RecommendList
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Thêm gần đây"
+              data={recommendLists}
+              onBlog={onBlog}
             ></RecommendList>
           </View>
         </View>
