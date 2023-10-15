@@ -2,6 +2,7 @@ import { View, Text, Switch } from "react-native";
 import React, { useState, useContext } from "react";
 import ThemeContext, { darkTheme } from "../../utilies/theme";
 import { EventRegister } from "react-native-event-listeners";
+import { colors } from "../../../constants";
 
 const Account = () => {
   const { isDarkMode } = useContext(ThemeContext);
@@ -12,7 +13,7 @@ const Account = () => {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: darkMode ? darkTheme.backGroundColor : undefined,
+        backgroundColor: darkMode ? colors.darkTheme : undefined,
       }}
     >
       <Text
@@ -22,7 +23,7 @@ const Account = () => {
           color: darkMode ? darkTheme.color : undefined,
         }}
       >
-        ACCOUNT
+        Account
       </Text>
       <Switch
         value={darkMode}

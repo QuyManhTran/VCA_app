@@ -54,7 +54,12 @@ const Search = ({ route, navigation }: RouterProps) => {
     }).start();
   }, [data]);
   return (
-    <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+      }}
+    >
       <LinearBackGround height={140} avatar={false}></LinearBackGround>
       <View style={{ position: "absolute", top: 44, left: 10 }}>
         <BackButton

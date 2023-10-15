@@ -148,7 +148,12 @@ const SingleList = ({ route, navigation }: RouterProps) => {
     }
   }, [foodList]);
   return (
-    <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+      }}
+    >
       <LinearBackGround
         height={width < 400 ? 100 : 120}
         back={true}

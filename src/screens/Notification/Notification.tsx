@@ -125,7 +125,7 @@ const Notification = ({ route, navigation }: RouterProps) => {
                 Thông báo của tôi
               </Text>
               <TouchableOpacity
-                activeOpacity={0.7}
+                activeOpacity={0.5}
                 onPress={() => setIsOptions(true)}
               >
                 <Ionicons
@@ -145,8 +145,14 @@ const Notification = ({ route, navigation }: RouterProps) => {
                   ]}
                 >
                   <TouchableOpacity
-                    activeOpacity={0.7}
+                    activeOpacity={0.5}
                     style={styles.optionItem}
+                    onPress={() => {
+                      setIsOptions(false);
+                      if (isUnreadToday || isUnreadBefore) {
+                        onRemoveUnread("read_all", 0, true);
+                      }
+                    }}
                   >
                     <Ionicons
                       name="checkmark-done"

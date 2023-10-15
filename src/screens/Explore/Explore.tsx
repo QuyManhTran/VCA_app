@@ -61,7 +61,12 @@ const Explore = ({ route, navigation }: RouterProps) => {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+      }}
+    >
       <LinearBackGround height={100} isDarkMode={isDarkMode}></LinearBackGround>
       <TouchableOpacity
         activeOpacity={0.6}

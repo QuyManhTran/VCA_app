@@ -90,6 +90,23 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
           }),
         };
       });
+    } else if (type === "read_all") {
+      setNotifitions((prevNotifys) => {
+        return {
+          today: prevNotifys.today.map((item, index) => {
+            if (!item.isRead) {
+              return { ...item, isRead: true };
+            }
+            return item;
+          }),
+          before: prevNotifys.before.map((item, index) => {
+            if (!item.isRead) {
+              return { ...item, isRead: true };
+            }
+            return item;
+          }),
+        };
+      });
     }
   };
   useEffect(() => {

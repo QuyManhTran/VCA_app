@@ -34,6 +34,7 @@ const RecommendList = ({
   return (
     <View style={styles.container}>
       <TouchableOpacity
+        disabled={explore ? true : false}
         activeOpacity={0.6}
         style={{
           paddingBottom: isLibrary ? 8 : 0,
@@ -54,17 +55,25 @@ const RecommendList = ({
         >
           {heading}
         </Text>
-        <Ionicons
-          name="chevron-forward-outline"
-          size={24}
-          color={isDarkMode ? colors.whiteText : "black"}
-        ></Ionicons>
+        {!explore && (
+          <Ionicons
+            name="chevron-forward-outline"
+            size={24}
+            color={isDarkMode ? colors.whiteText : "black"}
+          ></Ionicons>
+        )}
       </TouchableOpacity>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {data.map((element, index) => {
           return (
             <TouchableOpacity
-              onPress={() => alert(explore ? element.name : "Bánh mỳ")}
+              onPress={() => {
+                if (explore) {
+                  onNavigateSearch({ keyword: element.name });
+                } else {
+                  alert(explore ? element.name : "Bánh mỳ");
+                }
+              }}
               activeOpacity={0.6}
               key={index}
               style={{
