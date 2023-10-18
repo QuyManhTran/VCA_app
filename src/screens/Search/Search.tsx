@@ -5,6 +5,8 @@ import {
   Keyboard,
   ScrollView,
   Animated,
+  FlatList,
+  TouchableOpacity,
 } from "react-native";
 import { useCallback, useEffect, useState, useRef, useContext } from "react";
 import styles from "./style";
@@ -14,16 +16,19 @@ import { RouterProps } from "../Splash/Splash";
 import useDebounce from "../../../hooks/useDebounce";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import FoodReview from "../../components/FoodReview";
-import { mostlySearch } from "../../../constants/fakeData";
+import { mostlySearch, viralSearchs } from "../../../constants/fakeData";
 import BackButton from "../../components/BackButton";
 import ThemeContext from "../../utilies/theme";
 import { colors } from "../../../constants";
+import { act } from "react-test-renderer";
 const Search = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode } = useContext(ThemeContext);
+  const flatRef = useRef<FlatList>(null);
   const scrollOpacity = useRef(new Animated.Value(0)).current;
+  const { isDarkMode } = useContext(ThemeContext);
   const [keyword, setKeyword] = useState(route.params.keyword || "");
   const [data, setData] = useState(mostlySearch);
   const debounceKeyword = useDebounce(keyword, 300);
+  const [activeTag, setActiveTag] = useState(0);
   const onKeyword = useCallback((text: string) => {
     setKeyword(text);
   }, []);
@@ -57,6 +62,16 @@ const Search = ({ route, navigation }: RouterProps) => {
       useNativeDriver: false,
     }).start();
   }, [data]);
+
+  useEffect(() => {
+    if (flatRef.current) {
+      flatRef.current.scrollToIndex({
+        index: activeTag,
+        animated: true,
+        viewPosition: 0.3,
+      });
+    }
+  }, [activeTag]);
   return (
     <View
       style={{
@@ -85,6 +100,55 @@ const Search = ({ route, navigation }: RouterProps) => {
         ></SearchTool>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
+        {debounceKeyword === "" && (
+          <FlatList
+            ref={flatRef}
+            data={viralSearchs}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => setActiveTag(index)}
+                  activeOpacity={0.6}
+                  style={[
+                    styles.chiptag,
+                    {
+                      backgroundColor: isDarkMode
+                        ? index === activeTag
+                          ? colors.primary
+                          : "transparent"
+                        : index === activeTag
+                        ? "#ff5c0033"
+                        : colors.grayBg,
+                      marginLeft: index === 0 ? 24 : 0,
+                      borderColor: isDarkMode
+                        ? index === activeTag
+                          ? "transparent"
+                          : "gray"
+                        : "transparent",
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.chipTagText,
+                      {
+                        color: isDarkMode
+                          ? colors.whiteText
+                          : index === activeTag
+                          ? colors.primary
+                          : "black",
+                      },
+                    ]}
+                  >
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+          ></FlatList>
+        )}
         <View
           style={{
             flex: 1,
@@ -92,7 +156,7 @@ const Search = ({ route, navigation }: RouterProps) => {
             paddingBottom: 24,
           }}
         >
-          {debounceKeyword === "" && (
+          {/* {debounceKeyword === "" && (
             <Text
               style={{
                 fontSize: 30,
@@ -101,9 +165,9 @@ const Search = ({ route, navigation }: RouterProps) => {
                 color: isDarkMode ? colors.whiteText : "black",
               }}
             >
-              Tìm kiếm nhiều nhất
+              {viralSearchs[activeTag]}
             </Text>
-          )}
+          )} */}
           {debounceKeyword !== "" && (
             <Animated.Text
               style={{

@@ -67,3 +67,12 @@ export const notifytions = {
     { name: "Ngân lonely", blog: "Duy nến", isComment: false, isRead: false },
   ],
 };
+
+export const viralSearchs = [
+  "Phổ biến",
+  "Truyền thống",
+  "Mới",
+  "Yêu thích",
+  "Bánh",
+  "Cơm",
+];
