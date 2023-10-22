@@ -57,22 +57,42 @@ export const recommendLists = [
   {
     name: "Bánh mỳ",
     img: banhmy,
+    like: 3.0,
+    rate: 4.4,
+    tag: "Truyền thống",
+    isLiked: false,
   },
   {
     name: "Phở bò",
     img: PhoBo,
+    like: 3.0,
+    rate: 4.4,
+    tag: "Truyền thống",
+    isLiked: true,
   },
   {
     name: "Bún bò",
     img: BunBo,
+    like: 3.0,
+    rate: 4.4,
+    tag: "Truyền thống",
+    isLiked: false,
   },
   {
     name: "Bánh cốm",
     img: Com,
+    like: 3.0,
+    rate: 4.4,
+    tag: "Truyền thống",
+    isLiked: true,
   },
   {
     name: "Bánh xèo",
     img: BanhXeo,
+    like: 3.0,
+    rate: 4.4,
+    tag: "Truyền thống",
+    isLiked: true,
   },
 ];
 const exploreData = [

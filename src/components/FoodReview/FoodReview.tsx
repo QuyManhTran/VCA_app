@@ -11,6 +11,7 @@ interface FoodReviewProps {
   tag: string;
   img: any;
   isDarkMode: boolean;
+  isLiked: boolean;
   onTag?: any;
   onBlog: any;
 }
@@ -23,15 +24,16 @@ const FoodReview = ({
   isDarkMode = false,
   onTag = () => {},
   onBlog = () => {},
+  isLiked = false,
 }: FoodReviewProps) => {
-  const onNavigateBlog = (name: string) => {
-    onBlog(name);
+  const onNavigateBlog = ({ ...props }) => {
+    onBlog({ ...props });
   };
   return (
     <View style={styles.container}>
       <TouchableOpacity
         activeOpacity={0.6}
-        onPress={() => onNavigateBlog(name)}
+        onPress={() => onNavigateBlog({ name, like, rate, tag, img, isLiked })}
       >
         <Image
           source={img}
@@ -42,7 +44,9 @@ const FoodReview = ({
       <View style={{ marginLeft: 16 }}>
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={() => onNavigateBlog(name)}
+          onPress={() =>
+            onNavigateBlog({ name, like, rate, img, tag, isLiked })
+          }
         >
           <Text
             style={[

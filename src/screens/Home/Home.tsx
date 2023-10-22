@@ -51,8 +51,8 @@ const Home = ({ route, navigation }: RouterProps) => {
     navigation.navigate("Search", { keyword: keyword });
   }, []);
 
-  const onBlog = useCallback((name: string) => {
-    navigation.navigate("Blog", { name: name });
+  const onBlog = useCallback(({ ...props }) => {
+    navigation.navigate("Blog", { ...props });
   }, []);
 
   useEffect(() => {

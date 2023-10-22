@@ -15,7 +15,6 @@ interface BannerProps {
   onPress: any;
 }
 const Banner = ({ onPress }: BannerProps) => {
-  console.log("banner");
   const onBanner = (keyword: string) => {
     onPress(keyword);
   };

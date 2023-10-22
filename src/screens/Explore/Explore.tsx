@@ -42,8 +42,8 @@ const Explore = ({ route, navigation }: RouterProps) => {
     navigation.navigate("Search", params);
   }, []);
 
-  const onBlog = useCallback((name: string) => {
-    navigation.navigate("Blog", { name: name });
+  const onBlog = useCallback(({ ...props }) => {
+    navigation.navigate("Blog", { ...props });
   }, []);
 
   const onNavigateNotification = () => {

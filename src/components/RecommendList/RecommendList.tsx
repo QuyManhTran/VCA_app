@@ -19,7 +19,14 @@ interface RecommendListProps {
   isLibrary?: boolean;
   onNavigateSearch: any;
   onBlog: any;
-  data: { name: string; img: any }[];
+  data: {
+    name: string;
+    img: any;
+    like?: number;
+    rate?: number;
+    tag?: string;
+    isLiked?: boolean;
+  }[];
 }
 const RecommendList = ({
   heading,
@@ -30,8 +37,8 @@ const RecommendList = ({
   onBlog = () => {},
   data = recommendLists,
 }: RecommendListProps) => {
-  const onNavigateBlog = (name: string) => {
-    onBlog(name);
+  const onNavigateBlog = (data: any) => {
+    onBlog(data);
   };
   return (
     <View style={styles.container}>
@@ -73,7 +80,7 @@ const RecommendList = ({
                 if (explore) {
                   onNavigateSearch({ keyword: blog.name });
                 } else {
-                  onNavigateBlog(blog.name);
+                  onNavigateBlog({ ...blog });
                 }
               }}
               activeOpacity={0.6}
