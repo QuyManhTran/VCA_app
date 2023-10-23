@@ -26,6 +26,8 @@ interface RecommendListProps {
     rate?: number;
     tag?: string;
     isLiked?: boolean;
+    isRate?: boolean;
+    isFavorite?: boolean;
   }[];
 }
 const RecommendList = ({

@@ -23,6 +23,8 @@ export const mostlySearch = [
     rate: 4.5,
     tag: "Truyền thống",
     isLiked: false,
+    isRate: false,
+    isFavorite: false,
   },
   {
     img: springRoll,
@@ -31,6 +33,8 @@ export const mostlySearch = [
     rate: 4.4,
     tag: "Truyền thống",
     isLiked: true,
+    isRate: false,
+    isFavorite: false,
   },
   {
     img: nemRan,
@@ -39,6 +43,8 @@ export const mostlySearch = [
     rate: 4.2,
     tag: "Truyền thống",
     isLiked: true,
+    isRate: false,
+    isFavorite: false,
   },
   {
     img: ocNoodle,
@@ -47,6 +53,8 @@ export const mostlySearch = [
     rate: 4.9,
     tag: "Truyền thống",
     isLiked: false,
+    isRate: false,
+    isFavorite: false,
   },
 ];
 

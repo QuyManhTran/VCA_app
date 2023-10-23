@@ -61,6 +61,8 @@ export const recommendLists = [
     rate: 4.4,
     tag: "Truyền thống",
     isLiked: false,
+    isRate: false,
+    isFavorite: false,
   },
   {
     name: "Phở bò",
@@ -69,6 +71,8 @@ export const recommendLists = [
     rate: 4.4,
     tag: "Truyền thống",
     isLiked: true,
+    isRate: false,
+    isFavorite: false,
   },
   {
     name: "Bún bò",
@@ -77,6 +81,8 @@ export const recommendLists = [
     rate: 4.4,
     tag: "Truyền thống",
     isLiked: false,
+    isRate: false,
+    isFavorite: false,
   },
   {
     name: "Bánh cốm",
@@ -85,6 +91,8 @@ export const recommendLists = [
     rate: 4.4,
     tag: "Truyền thống",
     isLiked: true,
+    isRate: false,
+    isFavorite: false,
   },
   {
     name: "Bánh xèo",
@@ -93,6 +101,8 @@ export const recommendLists = [
     rate: 4.4,
     tag: "Truyền thống",
     isLiked: true,
+    isRate: false,
+    isFavorite: false,
   },
 ];
 const exploreData = [

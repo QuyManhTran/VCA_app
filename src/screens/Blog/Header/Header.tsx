@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
-import { banhmy } from "../../../../assets/img/foods";
+import { useEffect, useRef, useState } from "react";
+import * as Animatable from "react-native-animatable";
 import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../../constants";
@@ -11,15 +11,53 @@ interface HeaderBlogProps {
   img: any;
   isDarkMode: boolean;
   isLiked: boolean;
+  isFavorite: boolean;
+  isRate: boolean;
 }
+const interactAnimation = {
+  0: { scale: 1 },
+  0.3: { scale: 1.3 },
+  0.8: { scale: 0.8 },
+  1: { scale: 1 },
+};
 const Header = ({
   name,
   like,
   rate,
   img,
   isDarkMode,
-  isLiked = false,
+  ...props
 }: HeaderBlogProps) => {
+  const heartRef = useRef(null);
+  const rateRef = useRef(null);
+  const favoriteRef = useRef(null);
+  const [isLiked, setIsLiked] = useState(props.isLiked);
+  const [isFavorite, setIsFavorite] = useState(props.isFavorite);
+  const [isRate, setIsRate] = useState(props.isRate);
+  useEffect(() => {
+    if (heartRef.current) {
+      if (isLiked) {
+        heartRef.current.animate(interactAnimation);
+      }
+    }
+  }, [isLiked]);
+
+  useEffect(() => {
+    if (rateRef.current) {
+      if (isRate) {
+        rateRef.current.animate(interactAnimation);
+      }
+    }
+  }, [isRate]);
+
+  useEffect(() => {
+    if (favoriteRef.current) {
+      if (isFavorite) {
+        favoriteRef.current.animate(interactAnimation);
+      }
+    }
+  }, [isFavorite]);
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
@@ -41,12 +79,15 @@ const Header = ({
                 marginRight: 16,
               }}
             >
-              <Ionicons
-                name={isLiked ? "heart" : "heart-outline"}
-                color={isLiked ? "red" : "black"}
-                size={36}
-                style={{ paddingRight: 4 }}
-              ></Ionicons>
+              <Animatable.View ref={heartRef}>
+                <Ionicons
+                  name={isLiked ? "heart" : "heart-outline"}
+                  color={isLiked ? "#fe2c55" : "black"}
+                  size={36}
+                  style={{ paddingRight: 4 }}
+                  onPress={() => setIsLiked(!isLiked)}
+                ></Ionicons>
+              </Animatable.View>
               <Text
                 style={[
                   styles.amount,
@@ -63,13 +104,15 @@ const Header = ({
                 marginRight: 24,
               }}
             >
-              <AntDesign
-                name={isLiked ? "star" : "staro"}
-                // color={"#ffad27"}
-                color={isLiked ? "#ffad27" : "black"}
-                size={32}
-                style={{ paddingRight: 4 }}
-              ></AntDesign>
+              <Animatable.View ref={rateRef}>
+                <AntDesign
+                  name={isRate ? "star" : "staro"}
+                  color={isRate ? "#face15" : "black"}
+                  size={32}
+                  style={{ paddingRight: 4 }}
+                  onPress={() => setIsRate(!isRate)}
+                ></AntDesign>
+              </Animatable.View>
               <Text
                 style={[
                   styles.amount,
@@ -108,12 +151,15 @@ const Header = ({
                 marginRight: 24,
               }}
             >
-              <Ionicons
-                name="bookmark-outline"
-                color={"black"}
-                size={32}
-                style={{ paddingRight: 4 }}
-              ></Ionicons>
+              <Animatable.View ref={favoriteRef}>
+                <Ionicons
+                  name={isFavorite ? "bookmark" : "bookmark-outline"}
+                  color={isFavorite ? "#face15" : "black"}
+                  size={32}
+                  style={{ paddingRight: 4 }}
+                  onPress={() => setIsFavorite(!isFavorite)}
+                ></Ionicons>
+              </Animatable.View>
               <Text
                 style={[
                   styles.amount,

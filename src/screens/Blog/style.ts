@@ -9,5 +9,23 @@ const styles = StyleSheet.create({
     top: 24,
     left: 12,
   },
+  wrapperNav: {
+    marginTop: 12,
+    marginHorizontal: 12,
+    padding: 4,
+    borderRadius: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  navItem: {
+    borderRadius: 12,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  navItemText: {
+    fontFamily: baloo2Fonts.semi,
+    fontSize: 20,
+  },
 });
 export default styles;
