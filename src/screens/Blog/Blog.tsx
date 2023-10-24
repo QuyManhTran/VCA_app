@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   FlatList,
+  Animated,
 } from "react-native";
 import { useCallback, useState, useContext, useRef, useEffect } from "react";
 import { RouterProps } from "../Splash/Splash";
@@ -14,20 +15,22 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import Header from "./Header";
 import ThemeContext from "../../utilies/theme";
 import { colors } from "../../../constants";
-const navItems = [
-  { title: "Mô tả" },
-  { title: "Ý nghĩa" },
-  { title: "Công thức" },
-];
+import Description from "./Description/Description";
+import Meaning from "./Meaning/Meaning";
+import { navItems } from "../../../constants/fakeData";
+import Recipe from "./Recipe/Recipe";
 const Blog = ({ route, navigation }: RouterProps) => {
-  const { width } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const { isDarkMode } = useContext(ThemeContext);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { name, img, like, rate, tag, isLiked, isRate, isFavorite } =
     route.params;
   const [activeNav, setActiveNav] = useState(0);
+  const [contentY, setContentY] = useState(0);
   const NavRef = useRef<FlatList>(null);
   const pageRef = useRef<FlatList>(null);
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const contentRef = useRef<View>(null);
   const onBack = () => {
     navigation.goBack();
   };
@@ -46,6 +49,23 @@ const Blog = ({ route, navigation }: RouterProps) => {
     }
     setIsFullscreen(!isFullscreen);
   }, [isFullscreen]);
+
+  const onHorizontalScroll = (value: number) => {
+    const offSetX = Math.round(value);
+    const mode = offSetX % Math.round(width - 24);
+    if (mode === 0) {
+      setActiveNav(Math.round(offSetX / Math.round(width - 24)));
+    }
+  };
+
+  useEffect(() => {
+    scrollX.addListener(({ value }) => {
+      if (!isFullscreen) {
+        onHorizontalScroll(value);
+      }
+    });
+    return () => scrollX.removeAllListeners();
+  }, [scrollX]);
 
   useEffect(() => {
     if (NavRef.current) {
@@ -128,32 +148,99 @@ const Blog = ({ route, navigation }: RouterProps) => {
             horizontal
           ></FlatList>
         </View>
-        <View style={{ marginHorizontal: 12 }}>
+        <View
+          style={{
+            paddingTop: 12,
+            marginHorizontal: 12,
+            height: height - contentY + 30,
+          }}
+          ref={contentRef}
+          onLayout={(e) => {
+            if (contentRef.current) {
+              contentRef.current.measure(
+                (x, y, width, height, pageX, pageY) => {
+                  setContentY(Math.round(pageY));
+                }
+              );
+            }
+          }}
+        >
           <FlatList
             ref={pageRef}
             data={navItems}
             renderItem={({ item, index }) => {
-              return (
-                <View
-                  key={index}
-                  style={{
-                    width: width - 24,
-                    height: 300,
-                  }}
-                >
-                  <Text style={{ fontSize: 30 }}>{item.title}</Text>
-                </View>
-              );
+              const inputRange = [
+                (index - 1) * (width - 24),
+                index * (width - 24),
+                (index + 1) * (width - 24),
+              ];
+              const opacity = scrollX.interpolate({
+                inputRange,
+                outputRange: [0, 1, 0],
+                extrapolate: "clamp",
+              });
+              if (index === 0) {
+                return (
+                  <Animated.View
+                    key={index}
+                    style={{
+                      width: width - 24,
+                      opacity: opacity,
+                    }}
+                  >
+                    <Description
+                      content={item.content}
+                      isDarkMode={isDarkMode}
+                    ></Description>
+                  </Animated.View>
+                );
+              } else if (index === 1) {
+                return (
+                  <Animated.ScrollView
+                    showsVerticalScrollIndicator={false}
+                    key={index}
+                    style={{
+                      width: width - 24,
+                      opacity: opacity,
+                      // maxHeight: 500,
+                    }}
+                  >
+                    <Meaning
+                      content={item.content}
+                      isDarkMode={isDarkMode}
+                    ></Meaning>
+                  </Animated.ScrollView>
+                );
+              } else {
+                return (
+                  <Animated.ScrollView
+                    showsVerticalScrollIndicator={false}
+                    key={index}
+                    style={{
+                      width: width - 24,
+                      opacity: opacity,
+                    }}
+                  >
+                    <Recipe isDarkMode={isDarkMode}></Recipe>
+                  </Animated.ScrollView>
+                );
+              }
             }}
             horizontal
             pagingEnabled={true}
             showsHorizontalScrollIndicator={false}
-            onScroll={(e) => {
-              const offSetX = Math.round(e.nativeEvent.contentOffset.x);
-              if (offSetX % Math.round(width - 24) === 0) {
-                setActiveNav(offSetX / Math.round(width - 24));
+            onScroll={Animated.event(
+              [
+                {
+                  nativeEvent: {
+                    contentOffset: { x: scrollX },
+                  },
+                },
+              ],
+              {
+                useNativeDriver: false,
               }
-            }}
+            )}
           ></FlatList>
         </View>
       </View>

@@ -19,6 +19,12 @@ export const PhoBo = require("./PhoBo.jpg");
 export const BunBo = require("./BunBo.jpg");
 export const Com = require("./Com.jpg");
 export const BanhXeo = require("./BanhXeo.jpg");
+export const BanhMyRaw = require("./banhmyraw.png");
+export const Toi = require("./Toi.png");
+export const ThitBaChi = require("./ThitBaChi.png");
+export const RauMui = require("./RauMui.png");
+export const Pate = require("./pate.png");
+export const Cucumber = require("./DuaChuot.png");
 export const banners = [
   {
     img: Tet,

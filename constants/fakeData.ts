@@ -88,3 +88,17 @@ export const viralSearchs = [
   "Bánh",
   "Cơm",
 ];
+
+export const navItems = [
+  {
+    title: "Mô tả",
+    content:
+      "Bánh mì là một món ăn Việt Nam, với lớp vỏ ngoài là một ổ bánh mì nướng có da giòn, ruột mềm, còn bên trong là phần nhân. Tùy theo văn hóa vùng miền hoặc sở thích cá nhân, người ta có thể chọn nhiều nhân bánh mì khác nhau.",
+  },
+  {
+    title: "Ý nghĩa",
+    content:
+      "Đầu thế kỷ 19, người Pháp trong cuộc viễn chinh chiếm thành Gia Định (Sài Gòn) đã mang theo baguette để thỏa thú ẩm thực phong lưu của mình. Ban đầu, loại thức ăn này được dân ta nhìn nhận như một món ăn chơi dành cho giới thượng lưu, không được coi là món ăn chính. Chiếc bánh mì “baguette” theo chân lính Pháp vào nước ta vẫn còn chuẩn phong cách Pháp: dài khoảng 80 cm, mềm hơn và đặc ruột. Bột mì ít đi, giá cũng mềm hơn, bánh mì đã không chỉ còn dành cho giới thượng lưu. Thời ấy, một chủ tiệm bánh mì ở Sài Gòn cảm thấy việc ăn bánh mì cùng bơ, thịt nguội, pate trên đĩa quá “cồng kềnh” và mất thời gian, bèn nghĩ ra cách kẹp vào bánh để có thể thuận tiện mang theo. Cứ như thế, những chiếc bánh mì kẹp có mặt khắp các ngõ ngách Sài Gòn, trở thành món ăn chính, là “cơm cầm tay” xuất hiện tại hầu khắp các đô thị cho tới vùng thôn quê VN.",
+  },
+  { title: "Công thức" },
+];
