@@ -124,9 +124,11 @@ const Video = ({ toggleFullscreen, isFullscreen }: VideoProps) => {
   //   // auto play
   //   (async () => {
   //     if (vidRef.current) {
-  //       await vidRef.current.playAsync();
-  //       await vidRef.current.pauseAsync();
-  //       setIsPlaying(false);
+  //       try {
+  //         await vidRef.current.playAsync();
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
   //     }
   //   })();
   // }, []);

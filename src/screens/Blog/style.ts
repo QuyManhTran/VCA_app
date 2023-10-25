@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     flexDirection: "row",
     justifyContent: "space-between",
+    borderWidth: 1,
   },
   navItem: {
     borderRadius: 12,

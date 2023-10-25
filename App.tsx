@@ -9,7 +9,6 @@ import ResetPassword from "./src/screens/ForgotPassword/ResetPassword";
 import SuccessfullyChange from "./src/screens/ForgotPassword/SuccessfullyChange";
 import Register from "./src/screens/Register";
 import Navbar from "./src/screens/Navbar";
-import ThemeContext from "./src/utilies/theme";
 import Video from "./src/screens/Video";
 import Search from "./src/screens/Search";
 import SingleList from "./src/screens/Explore/SingleList";
