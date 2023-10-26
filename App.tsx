@@ -13,6 +13,8 @@ import Video from "./src/screens/Video";
 import Search from "./src/screens/Search";
 import SingleList from "./src/screens/Explore/SingleList";
 import GlobalContext from "./src/utilies/GlobalContext";
+import Setting from "./src/screens/Account/Setting/Setting";
+import EditInfo from "./src/screens/Account/Setting/EditInfo";
 import Notification from "./src/screens/Notification";
 import Blog from "./src/screens/Blog";
 const Stack = createNativeStackNavigator();
@@ -41,6 +43,9 @@ export default function App() {
           <Stack.Screen name="SingleList" component={SingleList} />
           <Stack.Screen name="Notification" component={Notification} />
           <Stack.Screen name="Video" component={Video} />
+
+          <Stack.Screen name="Setting" component={Setting} />
+          <Stack.Screen name="EditInfo" component={EditInfo} />
           <Stack.Screen name="Blog" component={Blog} />
         </Stack.Navigator>
       </NavigationContainer>
