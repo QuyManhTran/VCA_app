@@ -8,10 +8,9 @@ import {
   Animated,
   ActivityIndicator,
 } from "react-native";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import styles from "./style";
 import { Video as VideoPlayer, ResizeMode, AVPlaybackStatus } from "expo-av";
-import * as ScreenOrientation from "expo-screen-orientation";
 import FullScreen from "../../../assets/icons/FullScreen";
 import PlayIcon from "../../../assets/icons/PlayIcon";
 import PauseIcon from "../../../assets/icons/PauseIcon";
@@ -35,35 +34,24 @@ const fakeData = [
     time: 200,
   },
 ];
-const Video = () => {
+interface VideoProps {
+  toggleFullscreen: any;
+  isFullscreen: boolean;
+}
+const Video = ({ toggleFullscreen, isFullscreen }: VideoProps) => {
   const { width, height } = useWindowDimensions();
   const vidRef = useRef<VideoPlayer>(null);
   const [status, setStatus] = useState(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [isTouchStart, setIsTouchStart] = useState(false);
   const [isTouchEnd, setIsTouchEnd] = useState(false);
   const [isChapters, setIsChapters] = useState(true);
   const timeOutRef: { current: NodeJS.Timeout | null } = useRef(null);
   const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
-
-  const toggleFullscreen = async () => {
-    if (isFullscreen) {
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
-      setIsFullscreen(false);
-    } else {
-      // Enter fullscreen mode
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.LANDSCAPE
-      );
-      setIsFullscreen(true);
-    }
-    setIsFullscreen(!isFullscreen);
-  };
 
   const onLoad = () => {
     if (status) {
@@ -132,15 +120,18 @@ const Video = () => {
     }
   }, [status]);
 
-  useEffect(() => {
-    // auto play
-    (async () => {
-      if (vidRef.current) {
-        await vidRef.current.playAsync();
-        setIsPlaying(true);
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   // auto play
+  //   (async () => {
+  //     if (vidRef.current) {
+  //       try {
+  //         await vidRef.current.playAsync();
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
+  //   })();
+  // }, []);
 
   useEffect(() => {
     const updateCurrentTime = async () => {
@@ -164,14 +155,20 @@ const Video = () => {
     return () => clearTimeout(timeOutRef.current as NodeJS.Timeout);
   }, [isTouchEnd]);
   return (
-    <SafeAreaView style={styles.container}>
+    <>
       <View
         style={[
           styles.vidWarpper,
           {
             flex: isFullscreen ? 1 : 0,
+            marginTop: isFullscreen ? 0 : 64,
           },
         ]}
+        onTouchStart={() => {
+          setIsTouchStart(true);
+          setIsTouchEnd(false);
+        }}
+        onTouchEnd={() => setIsTouchEnd(true)}
       >
         <VideoPlayer
           ref={vidRef}
@@ -187,11 +184,6 @@ const Video = () => {
           }}
           isLooping
           onLoad={onLoad}
-          onTouchStart={() => {
-            setIsTouchStart(true);
-            setIsTouchEnd(false);
-          }}
-          onTouchEnd={() => setIsTouchEnd(true)}
           onPlaybackStatusUpdate={(status) => {
             setStatus(() => status);
           }}
@@ -257,7 +249,7 @@ const Video = () => {
           </Pressable>
         )}
       </View>
-      {!isFullscreen && (
+      {/* {!isFullscreen && (
         <View style={[styles.contentWrapper]}>
           <View style={styles.navBar}>
             <TouchableOpacity
@@ -309,9 +301,9 @@ const Video = () => {
             )}
           </View>
         </View>
-      )}
-    </SafeAreaView>
+      )} */}
+    </>
   );
 };
 
-export default Video;
+export default memo(Video);

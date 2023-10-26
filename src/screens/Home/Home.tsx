@@ -1,24 +1,19 @@
 import { View, Text, ScrollView, useWindowDimensions } from "react-native";
-import React, {
-  useState,
-  useContext,
-  useRef,
-  useEffect,
-  useCallback,
-} from "react";
+import { useState, useContext, useRef, useEffect, useCallback } from "react";
 import styles from "./style";
-import ThemeContext, { darkTheme } from "../../utilies/theme";
+import ThemeContext from "../../utilies/theme";
 import { Animated } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { RouterProps } from "../Splash/Splash";
 import LinearBackGround from "../../components/LinearBackGround";
 import RecommendList from "../../components/RecommendList";
 import ChipTag from "../../components/ChipTag";
-import ImageIcon from "../../../assets/icons/ImageIcon";
-import { variousFoods } from "../../../constants/fakeData";
-import { baloo2Fonts } from "../../../constants/fontFamiles";
+import { mostlySearch, variousFoods } from "../../../constants/fakeData";
 import SearchTool from "../../components/SearchTool";
 import { colors } from "../../../constants";
+import FoodReview from "../../components/FoodReview";
+import Banner from "../../components/Banner";
+import exploreData, { recommendLists } from "../../../assets/img/foods";
 const searchUp = {
   0: { translateY: 0 },
   1: { translateY: -60 },
@@ -44,6 +39,22 @@ const Home = ({ route, navigation }: RouterProps) => {
     navigation.navigate("Search", params);
   }, []);
 
+  const onTag = useCallback((keyword: string) => {
+    navigation.navigate("Search", { keyword: keyword });
+  }, []);
+
+  const onBanner = useCallback((keyword: string) => {
+    navigation.navigate("Search", { keyword: keyword });
+  }, []);
+
+  const onChipTab = useCallback((keyword: string) => {
+    navigation.navigate("Search", { keyword: keyword });
+  }, []);
+
+  const onBlog = useCallback(({ ...props }) => {
+    navigation.navigate("Blog", { ...props });
+  }, []);
+
   useEffect(() => {
     scrollY.addListener(({ value }) => {
       if (value > prevOffSetY) {
@@ -63,7 +74,12 @@ const Home = ({ route, navigation }: RouterProps) => {
   });
 
   return (
-    <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+      }}
+    >
       <LinearBackGround
         height={140}
         title="Chào buổi sáng"
@@ -97,21 +113,47 @@ const Home = ({ route, navigation }: RouterProps) => {
       >
         <View style={styles.container}>
           <View style={styles.wrapper}>
+            <Banner onPress={onBanner}></Banner>
+            <View style={{ paddingLeft: 24 }}>
+              <Text
+                style={[
+                  styles.otherHeading,
+                  {
+                    paddingLeft: 0,
+                    color: isDarkMode ? colors.whiteText : "black",
+                  },
+                ]}
+              >
+                Đề xuất cho bạn
+              </Text>
+              {mostlySearch
+                .filter((food, index) => index < 3)
+                .map((food, index) => (
+                  <FoodReview
+                    {...food}
+                    key={index}
+                    isDarkMode={isDarkMode}
+                    onTag={onTag}
+                    onBlog={onBlog}
+                  ></FoodReview>
+                ))}
+            </View>
             <RecommendList
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Khám phá"
               explore
+              data={exploreData}
+              onBlog={onBlog}
             ></RecommendList>
             <View style={{ paddingBottom: 22 }}>
               <Text
-                style={{
-                  fontSize: 26,
-                  fontFamily: baloo2Fonts.extra,
-                  paddingBottom: 8,
-                  paddingLeft: 24,
-                  color: isDarkMode ? colors.whiteText : "black",
-                }}
+                style={[
+                  styles.otherHeading,
+                  {
+                    color: isDarkMode ? colors.whiteText : "black",
+                  },
+                ]}
               >
                 Đa dạng món ăn
               </Text>
@@ -122,9 +164,9 @@ const Home = ({ route, navigation }: RouterProps) => {
                     key={index}
                     title={food.title}
                     marginLeft={index === 0 ? 24 : 0}
-                  >
-                    <ImageIcon img={food.img}></ImageIcon>
-                  </ChipTag>
+                    onPress={onChipTab}
+                    img={food.img}
+                  ></ChipTag>
                 ))}
               </ScrollView>
             </View>
@@ -132,16 +174,22 @@ const Home = ({ route, navigation }: RouterProps) => {
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Phổ biến"
+              data={recommendLists}
+              onBlog={onBlog}
             ></RecommendList>
             <RecommendList
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Yêu thích"
+              data={recommendLists}
+              onBlog={onBlog}
             ></RecommendList>
             <RecommendList
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Thêm gần đây"
+              data={recommendLists}
+              onBlog={onBlog}
             ></RecommendList>
           </View>
         </View>

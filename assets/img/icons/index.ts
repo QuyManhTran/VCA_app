@@ -15,3 +15,7 @@ export const userWhiteOutline = require("./user-white-outline.png");
 export const searchDark = require("./search-dark.png");
 export const searchWhite = require("./search-white.png");
 export const userAvatar = require("./avatar.png");
+export const darkComment = require("./dark-comment.png");
+export const whiteComment = require("./white-comment.png");
+export const darkReaction = require("./dark-reaction.png");
+export const whiteReaction = require("./white-reaction.png");

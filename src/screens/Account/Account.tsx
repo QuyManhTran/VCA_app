@@ -9,6 +9,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { colors } from "../../../constants";
 
 const Account = ({ navigation }) => {
   const { isDarkMode } = useContext(ThemeContext);
@@ -16,10 +17,7 @@ const Account = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <SafeAreaView>
-
         <ScrollView>
-
-
           <View style={styles.header}>
 
             <View style={styles.headerImage}>
@@ -36,9 +34,6 @@ const Account = ({ navigation }) => {
                 <Image style={{ width: '100%', height: '100%' }} source={require('../../../assets/img/accounts/anhDaiDienAccount.png')} />
               </View>
             </View>
-
-
-
             <View style={styles.headerText}>
               <Text style={styles.headerTextName}>Charlie Puth</Text>
               <Text style={styles.headerTextEmail}>user12345@gmail.com</Text>
@@ -48,8 +43,6 @@ const Account = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
             </View>
-
-
           </View>
 
           <View style={styles.menuContainer}>
@@ -102,7 +95,7 @@ const Account = ({ navigation }) => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </View>
+      </View>
   )
 
 };

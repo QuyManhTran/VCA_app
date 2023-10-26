@@ -10,21 +10,25 @@ import {
 import { useState, useEffect, useContext, useCallback } from "react";
 import LinearBackGround from "../../components/LinearBackGround";
 import fontFamilies, { baloo2Fonts } from "../../../constants/fontFamiles";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import Modal from "../../components/Modal";
 import BackButton from "../../components/BackButton";
 import { colors } from "../../../constants";
 import NavButton from "../../components/NavButton";
 import { RouterProps } from "../Splash/Splash";
-import { mostlySearch } from "../../../constants/fakeData";
 import ThemeContext from "../../utilies/theme";
 import { useFocusEffect } from "@react-navigation/native";
+import RecommendList from "../../components/RecommendList";
+import { recommendLists } from "../../../assets/img/foods";
 
 const Explore = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, personalLists, onAddList } = useContext(ThemeContext);
+  const { isDarkMode, setHomeNavbar, personalLists, onAddList } =
+    useContext(ThemeContext);
   const [newList, setNewList] = useState<string | null>("");
   const [isModal, setIsModal] = useState(false);
   const [isGoBack, setIsGoBack] = useState(true);
+  const [isNotify, setIsNotify] = useState(true);
+  const [prevOffSetY, setPrevOffSetY] = useState(0);
   const onSingleList = (name: string, data, img: any, index: number) => {
     navigation.navigate("SingleList", {
       name: name,
@@ -33,28 +37,85 @@ const Explore = ({ route, navigation }: RouterProps) => {
       position: index,
     });
   };
+
+  const onNavigateSearch = useCallback((params: object) => {
+    navigation.navigate("Search", params);
+  }, []);
+
+  const onBlog = useCallback(({ ...props }) => {
+    navigation.navigate("Blog", { ...props });
+  }, []);
+
+  const onNavigateNotification = () => {
+    setIsNotify(false);
+    navigation.navigate("Notification");
+  };
+
+  const onScroll = (scrollY: number) => {
+    if (scrollY > prevOffSetY) {
+      setHomeNavbar(true);
+    } else {
+      setHomeNavbar(false);
+    }
+  };
   // When navigation goBack and set state
   useFocusEffect(
     useCallback(() => {
       setIsGoBack(true);
     }, [])
   );
+
   return (
-    <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+      }}
+    >
       <LinearBackGround height={100} isDarkMode={isDarkMode}></LinearBackGround>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        style={styles.notify}
+        onPress={onNavigateNotification}
+      >
+        <Ionicons
+          name={"notifications"}
+          size={26}
+          color={isDarkMode ? colors.whiteText : "black"}
+        ></Ionicons>
+        {isNotify && (
+          <Entypo name="dot-single" size={30} color="red" style={styles.dot} />
+        )}
+      </TouchableOpacity>
       <View style={{ position: "absolute", top: 30, left: 12 }}>
         <Text
           style={[
             styles.heading,
-            { fontSize: 30, color: isDarkMode ? colors.whiteText : "black" },
+            {
+              fontSize: 32,
+              fontFamily: baloo2Fonts.extra,
+              color: isDarkMode ? colors.whiteText : "black",
+            },
           ]}
         >
           Thư viện
         </Text>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={(e) => onScroll(e.nativeEvent.contentOffset.y)}
+        onScrollEndDrag={(e) => setPrevOffSetY(e.nativeEvent.contentOffset.y)}
+      >
         <View style={styles.container}>
           <View style={styles.listWrapper}>
+            <RecommendList
+              isLibrary={true}
+              isDarkMode={isDarkMode}
+              onNavigateSearch={onNavigateSearch}
+              heading="Xem gần đây"
+              onBlog={onBlog}
+              data={recommendLists}
+            ></RecommendList>
             <View style={styles.header}>
               <Text
                 style={[
@@ -106,7 +167,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
                       <Text
                         style={{
                           fontSize: 20,
-                          fontFamily: baloo2Fonts.bold,
+                          fontFamily: baloo2Fonts.medium,
                           color: isDarkMode ? colors.whiteText : "black",
                         }}
                       >
@@ -115,7 +176,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
                       <Text
                         style={{
                           fontSize: 14,
-                          fontFamily: baloo2Fonts.bold,
+                          fontFamily: baloo2Fonts.medium,
                           color: isDarkMode
                             ? "rgba(255, 255, 255, 0.6)"
                             : colors.gray,
@@ -132,7 +193,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
         </View>
       </ScrollView>
       {isModal && (
-        <Modal isDarkMode>
+        <Modal isDarkMode={isDarkMode}>
           <BackButton
             fill
             color={isDarkMode ? colors.whiteText : "black"}
@@ -204,6 +265,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 12,
+    marginBottom: 36,
   },
   listWrapper: {
     paddingTop: 24,
@@ -220,6 +282,16 @@ const styles = StyleSheet.create({
   },
   newListWrapper: {
     alignItems: "center",
+  },
+  notify: {
+    position: "absolute",
+    top: 44,
+    right: 72,
+  },
+  dot: {
+    position: "absolute",
+    top: -14,
+    right: -6,
   },
 });
 export default Explore;

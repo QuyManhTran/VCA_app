@@ -10,32 +10,45 @@ import { useContext, memo } from "react";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
 import { colors } from "../../../constants";
-import exploreData, { banhmy } from "../../../assets/img/foods";
+import exploreData, { banhmy, recommendLists } from "../../../assets/img/foods";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 interface RecommendListProps {
   heading: string;
   explore?: boolean;
-  onNavigateSearch: any;
   isDarkMode: boolean;
+  isLibrary?: boolean;
+  onNavigateSearch: any;
+  onBlog: any;
+  data: {
+    name: string;
+    img: any;
+    like?: number;
+    rate?: number;
+    tag?: string;
+    isLiked?: boolean;
+    isRate?: boolean;
+    isFavorite?: boolean;
+  }[];
 }
 const RecommendList = ({
   heading,
   explore = false,
   onNavigateSearch,
   isDarkMode = false,
+  isLibrary = false,
+  onBlog = () => {},
+  data = recommendLists,
 }: RecommendListProps) => {
-  let data = new Array(5);
-  data.fill(6);
-  if (explore) {
-    data = exploreData;
-  }
-  console.log("halo");
+  const onNavigateBlog = (data: any) => {
+    onBlog(data);
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity
+        disabled={explore ? true : false}
         activeOpacity={0.6}
         style={{
-          paddingBottom: 0,
+          paddingBottom: isLibrary ? 8 : 0,
           flexDirection: "row",
           alignItems: "center",
         }}
@@ -44,45 +57,58 @@ const RecommendList = ({
         <Text
           style={[
             styles.heading,
-            { color: isDarkMode ? colors.whiteText : "black" },
+            {
+              fontSize: isLibrary ? 28 : 26,
+              paddingLeft: isLibrary ? 0 : 24,
+              color: isDarkMode ? colors.whiteText : "black",
+            },
           ]}
         >
           {heading}
         </Text>
-        <Ionicons
-          name="chevron-forward-outline"
-          size={24}
-          color={isDarkMode ? colors.whiteText : "black"}
-        ></Ionicons>
+        {!explore && (
+          <Ionicons
+            name="chevron-forward-outline"
+            size={24}
+            color={isDarkMode ? colors.whiteText : "black"}
+          ></Ionicons>
+        )}
       </TouchableOpacity>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {data.map((element, index) => {
+        {data.map((blog, index) => {
           return (
             <TouchableOpacity
-              onPress={() => alert(explore ? element.name : "Bánh mỳ")}
+              onPress={() => {
+                if (explore) {
+                  onNavigateSearch({ keyword: blog.name });
+                } else {
+                  onNavigateBlog({ ...blog });
+                }
+              }}
               activeOpacity={0.6}
               key={index}
               style={{
-                paddingLeft: 24,
+                paddingLeft: isLibrary ? 0 : 24,
+                marginRight: index === data.length - 1 ? 0 : isLibrary ? 24 : 0,
                 paddingRight: index === data.length - 1 ? 24 : 0,
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
               <Image
-                source={explore ? element.image : banhmy}
-                resizeMode="contain"
+                source={blog.img}
+                resizeMode="cover"
                 style={{ borderRadius: 12, width: 150, height: 90 }}
               ></Image>
               <Text
                 style={{
                   fontSize: 20,
-                  fontFamily: baloo2Fonts.bold,
+                  fontFamily: isLibrary ? baloo2Fonts.medium : baloo2Fonts.bold,
                   paddingTop: 4,
                   color: isDarkMode ? colors.whiteText : "black",
                 }}
               >
-                {explore ? element.name : " Bánh mỳ"}
+                {blog.name}
               </Text>
             </TouchableOpacity>
           );
