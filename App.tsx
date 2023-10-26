@@ -14,6 +14,9 @@ import Video from "./src/screens/Video";
 import Search from "./src/screens/Search";
 import SingleList from "./src/screens/Explore/SingleList";
 import GlobalContext from "./src/utilies/GlobalContext";
+import Setting from "./src/screens/Account/Setting/Setting";
+import EditInfo from "./src/screens/Account/Setting/EditInfo";
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -22,7 +25,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
-          initialRouteName="Video"
+          initialRouteName="Splash"
         >
           <Stack.Screen name="Splash" component={Splash} />
           <Stack.Screen name="AskAccount" component={AskAccount} />
@@ -39,6 +42,8 @@ export default function App() {
           <Stack.Screen name="Search" component={Search} />
           <Stack.Screen name="SingleList" component={SingleList} />
           <Stack.Screen name="Video" component={Video} />
+          <Stack.Screen name="Setting" component={Setting} />
+          <Stack.Screen name="EditInfo" component={EditInfo} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>
