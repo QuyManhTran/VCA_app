@@ -20,9 +20,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   fullScreenIcon: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
+    marginLeft: 12,
   },
   btnPlay: {
     flexDirection: "row",
@@ -31,12 +29,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    borderColor: "#fff",
-    borderWidth: 1,
   },
   progressBar: {
     position: "absolute",
-    bottom: 40,
+    bottom: 30,
     left: 0,
     width: "100%",
     flexDirection: "row",
