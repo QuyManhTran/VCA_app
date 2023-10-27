@@ -135,7 +135,7 @@ const EditInfo = ({ navigation }) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView>
-          <SafeAreaView style={styles.contaier}>
+          <View style={styles.contaier}>
             <LinearBackGround
               height={100}
               back={true}
@@ -216,7 +216,7 @@ const EditInfo = ({ navigation }) => {
             <TouchableOpacity style={styles.summitWapper} onPress={saveData}>
               <Text style={styles.summitText}>Lưu thay đổi </Text>
             </TouchableOpacity>
-          </SafeAreaView>
+          </View>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

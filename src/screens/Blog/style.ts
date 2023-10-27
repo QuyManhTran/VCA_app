@@ -28,5 +28,12 @@ const styles = StyleSheet.create({
     fontFamily: baloo2Fonts.semi,
     fontSize: 20,
   },
+  cmtWrapper: {
+    position: "absolute",
+    top: 1000,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
 });
 export default styles;

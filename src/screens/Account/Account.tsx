@@ -24,7 +24,7 @@ const Account = ({ navigation }) => {
   const [darkMode, setDarkMode] = useState(isDarkMode);
   return (
     <View style={styles.container}>
-      <SafeAreaView>
+      <>
         <ScrollView>
           <View style={styles.header}>
             <View style={styles.headerImage}>
@@ -130,7 +130,7 @@ const Account = ({ navigation }) => {
             </View>
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </>
     </View>
   );
 };

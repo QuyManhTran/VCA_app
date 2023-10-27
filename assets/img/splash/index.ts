@@ -4,7 +4,7 @@ const splash3 = require("./demo5.jpg");
 const splash4 = require("./demo6.jpg");
 
 const splashes = [
-  { splash: splash1, heading: null, description: null },
+  // { splash: splash1, heading: null, description: null },
   {
     splash: splash2,
     heading: "Food",
