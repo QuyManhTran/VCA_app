@@ -1,4 +1,4 @@
-import { View, Platform, Text, KeyboardAvoidingView, StyleSheet, Switch, Image, TouchableOpacity, TextInput, ScrollView, TouchableWithoutFeedback, Keyboard, Modal, Pressable } from "react-native";
+import { View, Platform, Text, KeyboardAvoidingView, StyleSheet, Switch, Image, TouchableOpacity, TextInput, ScrollView, TouchableWithoutFeedback, Keyboard, Modal, Pressable, Button } from "react-native";
 import LinearBackGround from "../../../components/LinearBackGround";
 import * as ImagePicker from 'expo-image-picker';
 import { useHeaderHeight } from '@react-navigation/elements'
@@ -8,12 +8,14 @@ import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+
 import { colors } from "../../../../constants";
 
 const EditInfo = ({ navigation }) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-    const [selectImage, setSelectImage] = useState('');
+    const [dataImage, setDataImage] = useState(null);
+    const [selectImage, setSelectImage] = useState(null);
     const [fullName, setFullName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [date, setDate] = useState(new Date())
@@ -49,29 +51,48 @@ const EditInfo = ({ navigation }) => {
     }
 
     // Post all data to api
-    const saveData = () => {
-        // Check if all necessary data is available
-        if (fullName && phoneNumber && selectedStartDate && selectImage) {
-          const data = new FormData();
-      
-          // Append the image data to the FormDat
-      
-          // Append other data to the FormData
-          data.append('fullName', fullName);
-          data.append('phoneNumber', phoneNumber);
-          data.append('selectedStartDate', selectedStartDate);
-      
-          // Now, make the HTTP POST request to your API
-          
-        } else {
-          console.warn('Missing data. Cannot save.');
-        }
-      };
+    const onSaveData = () => {
+
+
+        const formData = new FormData();
+
+
+
+        formData.append('name', fullName);
+        formData.append('phone', phoneNumber);
+        formData.append('birthdate', selectedStartDate);
+        formData.append('images', JSON.stringify(dataImage));
+
+        console.log(formData);
+
+
+
+
+        fetch('http://192.147.66.100:4000/edit-list-user', {
+            method: 'POST',
+            // headers: {
+            //     'Content-Type': 'multipart/form-data',
+            // },
+            body: JSON.stringify({
+                data: dataImage,
+            }),
+        })
+            .then(response => response.json()) // Parse the response as JSON
+            .then(data => {
+                console.log('Response data:', data);
+            })
+            .catch(error => {
+                console.log('Error:', error);
+            });
+    }
+
+
+
 
     // fetch
     const getListUser = async () => {
         try {
-            const response = await fetch('http://192.168.0.64:4000/list-user');
+            const response = await fetch('http://192.147.66.100:4000/list-user');
             const json = await response.json();
             setData(json);
             setFullName(json[0].name);
@@ -90,24 +111,9 @@ const EditInfo = ({ navigation }) => {
     }, []);
 
     // avatar
-    const handleImageSelection = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        console.log(result);
-
-        if (!result.canceled) {
-            setSelectImage(result.assets[0].uri);
-        }
-    };
+    
 
 
-
-    console.log(selectImage);
 
     // goback
     const onBack = () => {
@@ -119,12 +125,15 @@ const EditInfo = ({ navigation }) => {
 
 
     return (
+
         <KeyboardAvoidingView
             keyboardVerticalOffset={height + 100}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+
         >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <ScrollView>
+            <ScrollView>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
                     <SafeAreaView style={styles.contaier}>
                         <LinearBackGround
                             height={100}
@@ -135,25 +144,7 @@ const EditInfo = ({ navigation }) => {
                         ></LinearBackGround>
 
 
-                        <View style={{ alignItems: "center", marginVertical: 22 }}>
-                            <TouchableOpacity onPress={handleImageSelection}>
-                                <Image source={{ uri: selectImage }}
-                                    style={{
-                                        height: 170,
-                                        width: 170,
-                                        borderRadius: 85,
-                                        borderWidth: 2,
-                                        borderColor: colors.gray,
-                                    }}
-                                ></Image>
-                                <View style={{
-                                    position: 'absolute', bottom: 0, right: 15, zIndex: 9999,
-                                    borderRadius: 50, borderColor: 'white', borderWidth: 2, backgroundColor: colors.whiteText
-                                }}>
-                                    <MaterialIcons name="photo-camera" size={25}></MaterialIcons>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
+                        
                         <Text style={styles.title}>Thông tin cá nhân </Text>
                         <Text style={styles.textLable}>Tên</Text>
                         <View style={styles.wapperEdit}>
@@ -190,14 +181,17 @@ const EditInfo = ({ navigation }) => {
                         }
 
 
-                        <TouchableOpacity style={styles.summitWapper} onPress={saveData}>
-                            <Text style={styles.summitText}>Lưu thay đổi </Text>
-                        </TouchableOpacity>
+                        <View style={styles.summitWapper} >
+                            <TouchableOpacity onPress={onSaveData}>
+                                <Text style={styles.summitText} >Lưu thay đổi</Text>
+                            </TouchableOpacity>
+                        </View>
 
 
                     </SafeAreaView>
-                </ScrollView>
-            </TouchableWithoutFeedback>
+
+                </TouchableWithoutFeedback>
+            </ScrollView>
         </KeyboardAvoidingView>
     )
 }

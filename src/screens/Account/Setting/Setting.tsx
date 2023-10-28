@@ -140,8 +140,9 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     footer: {
+        paddingHorizontal: 10,
         backgroundColor: '#FF0701',
-        width: 150,
+        minWidth: 150,
         borderRadius: 15,
         alignSelf: 'center',
         marginTop: 90,

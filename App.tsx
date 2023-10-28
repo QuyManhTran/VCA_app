@@ -17,6 +17,8 @@ import Setting from "./src/screens/Account/Setting/Setting";
 import EditInfo from "./src/screens/Account/Setting/EditInfo";
 import Notification from "./src/screens/Notification";
 import Blog from "./src/screens/Blog";
+import showFullImage from "./src/screens/Account/showFullImage";
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -47,6 +49,7 @@ export default function App() {
           <Stack.Screen name="Setting" component={Setting} />
           <Stack.Screen name="EditInfo" component={EditInfo} />
           <Stack.Screen name="Blog" component={Blog} />
+          <Stack.Screen name="showImage" component={showFullImage} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>
