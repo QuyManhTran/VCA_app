@@ -336,6 +336,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
           <Comment
             isDarkMode={isDarkMode}
             closeComment={closeComment}
+            name={name}
           ></Comment>
         </Animatable.View>
       </View>

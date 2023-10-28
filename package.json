@@ -37,7 +37,8 @@
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.9.0",
     "react-native-vector-icons": "^10.0.0",
-    "react-native-video": "^5.2.0-alpha1"
+    "react-native-video": "^5.2.0-alpha1",
+    "socket.io-client": "^4.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

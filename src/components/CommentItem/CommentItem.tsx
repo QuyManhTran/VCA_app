@@ -14,7 +14,11 @@ interface CommentItemProps {
 const CommentItem = ({ ...props }: CommentItemProps) => {
   return (
     <View style={styles.container}>
-      <Image source={props.img} resizeMode="cover" style={styles.img}></Image>
+      <Image
+        source={{ uri: props.img }}
+        resizeMode="cover"
+        style={styles.img}
+      ></Image>
       <View
         style={[
           styles.contentWrapper,
