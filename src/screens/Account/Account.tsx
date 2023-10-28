@@ -26,8 +26,6 @@ const Account = ({ navigation, ...props }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [pressAvatar, setPressAvatar] = useState(false);
   const [pressCoverPhoto, setPressCoverPhoto] = useState(false);
-  const [modalImageVisible, setModalImageVisible] = useState(false);
-
 
 
   const windowWidth = Dimensions.get('window')
@@ -55,13 +53,40 @@ const Account = ({ navigation, ...props }) => {
 
 
     if (!result.canceled) {
-      setDataAvatar(result.assets[0])
-      setAvatar(result.assets[0].uri)
+      const isConfirmed = await showConfirmationDialog();
+      setModalVisible(!modalVisible);
+      if (isConfirmed) {
+        setDataAvatar(result.assets[0])
+        setAvatar(result.assets[0].uri)
+      }
+
     }
   };
 
 
 
+  const deleteCoverPhoto = async () => {
+    const isComfirmed = await showConfirmationDeleteDialog();
+    setModalVisible(!modalVisible);
+
+    if (isComfirmed) {
+      setCoverPhoto(null);
+      setDataCoverphoto(null);
+    }
+
+  }
+
+  const deleteAvatar = async () => {
+    const isComfirmed = await showConfirmationDeleteDialog();
+    setModalVisible(!modalVisible);
+
+
+    if (isComfirmed) {
+      setAvatar(null);
+      setDataAvatar(null);
+    }
+
+  }
 
   const handleSetCoverPhoto = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -74,10 +99,59 @@ const Account = ({ navigation, ...props }) => {
 
 
     if (!result.canceled) {
-      setDataCoverphoto(result.assets[0]);
-      setCoverPhoto(result.assets[0].uri)
+
+      const isConfirmed = await showConfirmationDialog(); // Hàm xác nhận
+
+      setModalVisible(!modalVisible);
+      if (isConfirmed) {
+        setDataCoverphoto(result.assets[0]);
+        setCoverPhoto(result.assets[0].uri)
+      }
+
     }
   }
+
+  const showConfirmationDialog = () => {
+    return new Promise((resolve) => {
+      Alert.alert(
+        'Xác nhận',
+        'Bạn có muốn lấy ảnh này không?',
+        [
+          {
+            text: 'Hủy',
+            onPress: () => resolve(false),
+            style: 'cancel',
+          },
+          {
+            text: 'Đồng ý',
+            onPress: () => resolve(true),
+          },
+        ],
+        { cancelable: false }
+      );
+    });
+  };
+
+  const showConfirmationDeleteDialog = () => {
+    return new Promise((resolve) => {
+      Alert.alert(
+        'Xác nhận',
+        'Bạn có muốn xóa ảnh này làm ảnh này không?',
+        [
+          {
+            text: 'Hủy',
+            onPress: () => resolve(false),
+            style: 'cancel',
+          },
+          {
+            text: 'Đồng ý',
+            onPress: () => resolve(true),
+          },
+        ],
+        { cancelable: false }
+      );
+    });
+  };
 
 
 
@@ -140,19 +214,19 @@ const Account = ({ navigation, ...props }) => {
         <View style={styles.menuContainer}>
           <View style={styles.content}>
             <Text style={styles.contentTitle}>Nội dung</Text>
-            <View style={styles.contentContent}>
+            <TouchableOpacity style={styles.contentContent}>
               <View style={{ paddingLeft: 17, flexDirection: 'row', justifyContent: 'center' }}>
                 <EvilIcons name="heart" size={30} color="black" />
                 <Text style={styles.contentHeart}>Yêu thích</Text>
               </View>
 
               <Entypo name="chevron-right" size={25} color="black" />
-            </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.option}>
             <Text style={styles.optionTitle}>Tùy chọn</Text>
 
-            <View style={styles.optionLanguage}>
+            <TouchableOpacity style={styles.optionLanguage}>
               <View style={styles.optionLanguageTitle}>
                 <MaterialIcons name="language" size={25} color="black" />
                 <Text style={styles.contentHeart}>Ngôn ngữ</Text>
@@ -161,26 +235,26 @@ const Account = ({ navigation, ...props }) => {
                 <Text style={styles.optionLanguageContentText}>Tiếng việt</Text>
                 <Entypo name="chevron-right" size={25} color="black" />
               </View>
-            </View>
+            </TouchableOpacity>
 
-            <View style={styles.optionDisplay}>
+            <TouchableOpacity style={styles.optionDisplay} onPress={() => navigation.navigate('Display')}>
               <View style={styles.optionLanguageTitle}>
                 <MaterialIcons name="settings-display" size={24} color="black" />
                 <Text style={styles.contentHeart}>Giao diện</Text>
               </View>
               <Entypo name="chevron-right" size={25} color="black" />
-            </View>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.privacy}>
             <Text style={styles.optionTitle}>Bảo mật</Text>
-            <View style={styles.optionLanguage}>
+            <TouchableOpacity style={styles.optionLanguage} onPress={() => navigation.navigate('Password')}>
               <View style={styles.optionLanguageTitle}>
                 <Entypo name="lock" size={25} color="black" />
                 <Text style={styles.contentHeart} >Thay đổi mật khẩu</Text>
               </View>
               <Entypo name="chevron-right" size={25} color="black" />
-            </View>
+            </TouchableOpacity>
           </View>
 
 
@@ -222,6 +296,12 @@ const Account = ({ navigation, ...props }) => {
 
           </TouchableOpacity>
 
+          {avatar && <TouchableOpacity style={styles.modalWapper} onPress={deleteAvatar}>
+              <AntDesign name="delete" size={24} color="black" />
+              <Text style={styles.modalCompoment}>Xóa ảnh đại diện </Text>
+
+            </TouchableOpacity>}
+
         </View>}
 
         {
@@ -237,6 +317,12 @@ const Account = ({ navigation, ...props }) => {
               <Text style={styles.modalCompoment}>Chọn ảnh bìa</Text>
 
             </TouchableOpacity>
+
+            {coverphoto && <TouchableOpacity style={styles.modalWapper} onPress={deleteCoverPhoto}>
+              <AntDesign name="delete" size={24} color="black" />
+              <Text style={styles.modalCompoment}>Xóa ảnh bìa</Text>
+
+            </TouchableOpacity>}
           </View>
         }
 

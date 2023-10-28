@@ -18,6 +18,8 @@ import EditInfo from "./src/screens/Account/Setting/EditInfo";
 import Notification from "./src/screens/Notification";
 import Blog from "./src/screens/Blog";
 import showFullImage from "./src/screens/Account/showFullImage";
+import Display from "./src/screens/Account/Display";
+import Password from "./src/screens/Account/Password";
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +52,8 @@ export default function App() {
           <Stack.Screen name="EditInfo" component={EditInfo} />
           <Stack.Screen name="Blog" component={Blog} />
           <Stack.Screen name="showImage" component={showFullImage} />
+          <Stack.Screen name="Display" component={Display} />
+          <Stack.Screen name="Password" component={Password} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>

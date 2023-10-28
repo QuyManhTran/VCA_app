@@ -7,6 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Setting = ({ navigation }) => {
 
@@ -15,12 +16,12 @@ const Setting = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <ScrollView>
 
 
                 <LinearBackGround
-                    height={100}
+                    height={70}
                     back={true}
                     avatar={false}
                     onPress={onBack}
@@ -94,7 +95,7 @@ const Setting = ({ navigation }) => {
                     <Text style={styles.footerText}>Đăng suất</Text>
                 </View>
             </ScrollView>
-        </View>
+        </SafeAreaView>
     )
 }
 
