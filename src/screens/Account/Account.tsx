@@ -42,13 +42,23 @@ const Account = ({ navigation, ...props }) => {
     setModalVisible(!modalVisible);
   }
 
-  const handleSetAvatar = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  const handleSetAvatar = async (fromCamera = false) => {
+    let result;
+    if (fromCamera) {
+      result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        // aspect: [4, 3],
+        quality: 1,
+      });
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        // aspect: [4, 3],
+        quality: 1,
+      });
+    }
 
 
 
@@ -88,13 +98,23 @@ const Account = ({ navigation, ...props }) => {
 
   }
 
-  const handleSetCoverPhoto = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  const handleSetCoverPhoto = async (fromCamera = false) => {
+    let result;
+    if (fromCamera) {
+      result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        // aspect: [4, 3],
+        quality: 1,
+      });
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        // aspect: [4, 3],
+        quality: 1,
+      });
+    }
 
 
 
@@ -282,7 +302,7 @@ const Account = ({ navigation, ...props }) => {
             alignItems: 'center',
           }}>
         </TouchableOpacity>
-        {pressAvatar && <View style={{ height: 200, backgroundColor: colors.whiteText, borderRadius: 25 }}>
+        {pressAvatar && <View style={{ height: 300, backgroundColor: colors.whiteText, borderRadius: 25 }}>
 
           <TouchableOpacity style={styles.modalWapper}
             onPress={() => navigation.navigate('showImage', { data: dataAvatar })}>
@@ -290,31 +310,41 @@ const Account = ({ navigation, ...props }) => {
             <Text style={styles.modalCompoment}>Xem ảnh đại diện</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.modalWapper} onPress={handleSetAvatar}>
-            <Entypo name="image" size={25} color="black" />
-            <Text style={styles.modalCompoment}>Chọn ảnh đại diện</Text>
+          <TouchableOpacity style={styles.modalWapper} onPress={() => handleSetAvatar(false)}>
+            <Entypo name="folder-images" size={24} color="black" />
+            <Text style={styles.modalCompoment}>Chọn ảnh đại diện từ thư viện</Text>
+
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.modalWapper} onPress={() => handleSetAvatar(true)}>
+            <AntDesign name="camera" size={24} color="black" />
+            <Text style={styles.modalCompoment}>Chọn ảnh bìa từ camera </Text>
 
           </TouchableOpacity>
 
           {avatar && <TouchableOpacity style={styles.modalWapper} onPress={deleteAvatar}>
-              <AntDesign name="delete" size={24} color="black" />
-              <Text style={styles.modalCompoment}>Xóa ảnh đại diện </Text>
+            <AntDesign name="delete" size={24} color="black" />
+            <Text style={styles.modalCompoment}>Xóa ảnh đại diện </Text>
 
-            </TouchableOpacity>}
+          </TouchableOpacity>}
 
         </View>}
 
         {
-          pressCoverPhoto && <View style={{ height: 200, backgroundColor: colors.whiteText, borderRadius: 25 }}>
+          pressCoverPhoto && <View style={{ height: 300, backgroundColor: colors.whiteText, borderRadius: 25 }}>
 
             <TouchableOpacity style={styles.modalWapper} onPress={() => navigation.navigate('showImage', { data: dataCoverphoto })} >
-              <MaterialIcons name="account-circle" size={25} color="black" />
+              <Entypo name="image" size={24} color="black" />
               <Text style={styles.modalCompoment}>Xem ảnh bìa</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.modalWapper} onPress={handleSetCoverPhoto}>
-              <Entypo name="image" size={25} color="black" />
-              <Text style={styles.modalCompoment}>Chọn ảnh bìa</Text>
+            <TouchableOpacity style={styles.modalWapper} onPress={() => handleSetCoverPhoto(false)}>
+              <Entypo name="folder-images" size={24} color="black" />
+              <Text style={styles.modalCompoment}>Chọn ảnh bìa từ thư viên </Text>
+
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalWapper} onPress={() => handleSetCoverPhoto(true)}>
+              <AntDesign name="camera" size={24} color="black" />
+              <Text style={styles.modalCompoment}>Chọn ảnh bìa từ camera </Text>
 
             </TouchableOpacity>
 
