@@ -156,7 +156,7 @@ const Account = ({ navigation, ...props }) => {
     return new Promise((resolve) => {
       Alert.alert(
         'Xác nhận',
-        'Bạn có muốn xóa ảnh này làm ảnh này không?',
+        'Bạn có muốn xóa ảnh này không?',
         [
           {
             text: 'Hủy',
@@ -310,16 +310,18 @@ const Account = ({ navigation, ...props }) => {
             <Text style={styles.modalCompoment}>Xem ảnh đại diện</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.modalWapper} onPress={() => handleSetAvatar(false)}>
-            <Entypo name="folder-images" size={24} color="black" />
-            <Text style={styles.modalCompoment}>Chọn ảnh đại diện từ thư viện</Text>
-
-          </TouchableOpacity>
           <TouchableOpacity style={styles.modalWapper} onPress={() => handleSetAvatar(true)}>
             <AntDesign name="camera" size={24} color="black" />
             <Text style={styles.modalCompoment}>Chọn ảnh bìa từ camera </Text>
 
           </TouchableOpacity>
+
+          <TouchableOpacity style={styles.modalWapper} onPress={() => handleSetAvatar(false)}>
+            <Entypo name="folder-images" size={24} color="black" />
+            <Text style={styles.modalCompoment}>Chọn ảnh đại diện từ thư viện</Text>
+
+          </TouchableOpacity>
+        
 
           {avatar && <TouchableOpacity style={styles.modalWapper} onPress={deleteAvatar}>
             <AntDesign name="delete" size={24} color="black" />
@@ -337,16 +339,18 @@ const Account = ({ navigation, ...props }) => {
               <Text style={styles.modalCompoment}>Xem ảnh bìa</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.modalWapper} onPress={() => handleSetCoverPhoto(false)}>
-              <Entypo name="folder-images" size={24} color="black" />
-              <Text style={styles.modalCompoment}>Chọn ảnh bìa từ thư viên </Text>
-
-            </TouchableOpacity>
             <TouchableOpacity style={styles.modalWapper} onPress={() => handleSetCoverPhoto(true)}>
               <AntDesign name="camera" size={24} color="black" />
               <Text style={styles.modalCompoment}>Chọn ảnh bìa từ camera </Text>
 
             </TouchableOpacity>
+
+            <TouchableOpacity style={styles.modalWapper} onPress={() => handleSetCoverPhoto(false)}>
+              <Entypo name="folder-images" size={24} color="black" />
+              <Text style={styles.modalCompoment}>Chọn ảnh bìa từ thư viện </Text>
+
+            </TouchableOpacity>
+            
 
             {coverphoto && <TouchableOpacity style={styles.modalWapper} onPress={deleteCoverPhoto}>
               <AntDesign name="delete" size={24} color="black" />
