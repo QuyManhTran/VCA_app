@@ -82,7 +82,7 @@ const Home = ({ route, navigation }: RouterProps) => {
     >
       <LinearBackGround
         height={140}
-        title="Chào buổi sáng"
+        title="Chào buổi "
         isDarkMode={isDarkMode}
       ></LinearBackGround>
       <Animatable.View duration={1000} style={[styles.search]} ref={searchRef}>

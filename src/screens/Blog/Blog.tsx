@@ -149,7 +149,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
     >
       <TouchableOpacity
         activeOpacity={0.6}
-        style={styles.backBtn}
+        style={[styles.backBtn, { top: width < 400 ? 24 : 32 }]}
         onPress={onBack}
       >
         <Ionicons

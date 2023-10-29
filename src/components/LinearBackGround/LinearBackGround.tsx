@@ -1,10 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import colors, {
-  linearColors,
-  navbarDarkLinearColors,
-} from "../../../constants/colors";
+import colors, { navbarDarkLinearColors } from "../../../constants/colors";
 import { userAvatar } from "../../../assets/img/icons";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
@@ -24,6 +21,15 @@ const LinearBackGround = ({
   onPress,
   isDarkMode = false,
 }: LinearBackGroundProps) => {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour > 0 && hour < 18) {
+      setTime("sáng");
+    } else {
+      setTime("tối");
+    }
+  }, []);
   return (
     <LinearGradient
       colors={isDarkMode ? navbarDarkLinearColors : ["#FF0701", "#FFD28D"]}
@@ -58,6 +64,7 @@ const LinearBackGround = ({
         }}
       >
         {title}
+        {time}
       </Text>
       {avatar && (
         <TouchableOpacity activeOpacity={0.8}>

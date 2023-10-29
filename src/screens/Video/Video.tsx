@@ -162,7 +162,7 @@ const Video = ({ toggleFullscreen, isFullscreen }: VideoProps) => {
           styles.vidWarpper,
           {
             flex: isFullscreen ? 1 : 0,
-            marginTop: isFullscreen ? 0 : 64,
+            marginTop: isFullscreen ? 0 : width < 400 ? 64 : 72,
           },
         ]}
         onTouchStart={() => {

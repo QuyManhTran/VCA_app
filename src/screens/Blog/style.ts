@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     position: "absolute",
-    top: 24,
     left: 12,
   },
   wrapperNav: {

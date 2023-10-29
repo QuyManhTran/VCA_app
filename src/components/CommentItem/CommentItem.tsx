@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import { memo } from "react";
 import { colors } from "../../../constants";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 
@@ -10,6 +10,7 @@ interface CommentItemProps {
   time: string;
   likeAmount: number;
   isDarkMode: boolean;
+  width: number;
 }
 const CommentItem = ({ ...props }: CommentItemProps) => {
   return (
@@ -22,7 +23,10 @@ const CommentItem = ({ ...props }: CommentItemProps) => {
       <View
         style={[
           styles.contentWrapper,
-          { backgroundColor: props.isDarkMode ? colors.darkBg : colors.grayBg },
+          {
+            backgroundColor: props.isDarkMode ? colors.darkBg : colors.grayBg,
+            maxWidth: props.width - 50 - 12 * 3,
+          },
         ]}
       >
         <Text
@@ -88,7 +92,7 @@ const CommentItem = ({ ...props }: CommentItemProps) => {
   );
 };
 
-export default CommentItem;
+export default memo(CommentItem);
 
 const styles = StyleSheet.create({
   container: {
@@ -106,17 +110,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 24,
     minWidth: 160,
-    maxWidth: 300,
   },
   name: {
     fontFamily: baloo2Fonts.bold,
     fontSize: 20,
-    lineHeight: 28,
+    marginBottom: -8,
   },
   content: {
     fontFamily: baloo2Fonts.regular,
     fontSize: 18,
-    lineHeight: 22,
+    lineHeight: 20,
+    paddingTop: 8,
   },
   timeWrapper: {
     position: "absolute",
