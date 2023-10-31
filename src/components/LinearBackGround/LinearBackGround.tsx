@@ -64,7 +64,7 @@ const LinearBackGround = ({
         }}
       >
         {title}
-        {time}
+        {title ? time : ""}
       </Text>
       {avatar && (
         <TouchableOpacity activeOpacity={0.8}>
