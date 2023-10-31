@@ -243,7 +243,7 @@ const Account = ({ navigation, ...props }) => {
               <Entypo name="chevron-right" size={25} color="black" />
             </TouchableOpacity>
           </View>
-          <View style={styles.option}>
+          {/* <View style={styles.option}>
             <Text style={styles.optionTitle}>Tùy chọn</Text>
 
             <TouchableOpacity style={styles.optionLanguage}>
@@ -275,7 +275,7 @@ const Account = ({ navigation, ...props }) => {
               </View>
               <Entypo name="chevron-right" size={25} color="black" />
             </TouchableOpacity>
-          </View>
+          </View> */}
 
 
 

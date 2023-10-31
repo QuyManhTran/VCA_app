@@ -32,61 +32,75 @@ const Setting = ({ navigation }) => {
                 </View>
 
                 <View style={styles.wapper}>
-                    <View style={styles.options}>
+                    <TouchableOpacity style={styles.options}>
                         <View style={styles.optionsLeft}>
                             <Entypo name="info-with-circle" size={24} color="black" />
                             <Text style={styles.optionsText}>Phiên bản</Text>
                         </View>
                         <Text>1.0.1</Text>
-                    </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.options} onPress={() => navigation.navigate('Language')}>
+                        <View style={styles.optionsLeft}>
+                            <Entypo name="info-with-circle" size={24} color="black" />
+                            <Text style={styles.optionsText}>Ngôn ngữ</Text>
+                        </View>
+                        <AntDesign name="right" size={20} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.options}  onPress={() => navigation.navigate('Display')}>
+                        <View style={styles.optionsLeft}>
+                            <Entypo name="info-with-circle" size={24} color="black" />
+                            <Text style={styles.optionsText}>Giao diện</Text>
+                        </View>
+                        <AntDesign name="right" size={20} color="black" />
+                    </TouchableOpacity>
 
-                    <View style={styles.options}>
+                    <TouchableOpacity style={styles.options}>
                         <View style={styles.optionsLeft}>
                             <Entypo name="help-with-circle" size={24} color="black" />
                             <Text style={styles.optionsText}>Trợ giúp</Text>
                         </View>
                         <AntDesign name="right" size={20} color="black" />
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.options}>
+                    <TouchableOpacity style={styles.options}>
                         <View style={styles.optionsLeft}>
                             <FontAwesome name="flag" size={24} color="black" />
                             <Text style={styles.optionsText}>Góp ý, báo lỗi</Text>
                         </View>
                         <AntDesign name="right" size={20} color="black" />
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.options}>
+                    <TouchableOpacity style={styles.options}>
                         <View style={styles.optionsLeft}>
                             <AntDesign name="staro" size={24} color="black" />
                             <Text style={styles.optionsText}>Bình chọn cho VGA</Text>
                         </View>
                         <AntDesign name="right" size={20} color="black" />
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.options}>
+                    <TouchableOpacity style={styles.options} onPress={() => navigation.navigate('TermsOfService')} >
                         <View style={styles.optionsLeft}>
                             <FontAwesome name="list-alt" size={24} color="black" />
                             <Text style={styles.optionsText}>Điều khoản, dịch vụ</Text>
                         </View>
                         <AntDesign name="right" size={20} color="black" />
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.options}>
+                    <TouchableOpacity style={styles.options} onPress={() => navigation.navigate('PrivacyPolicy')}>
                         <View style={styles.optionsLeft}>
                             <MaterialIcons name="privacy-tip" size={24} color="black" />
                             <Text style={styles.optionsText}>Chính sách, bảo mật</Text>
                         </View>
                         <AntDesign name="right" size={20} color="black" />
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.options}>
+                    <TouchableOpacity style={styles.options}>
                         <View style={styles.optionsLeft}>
                             <MaterialCommunityIcons name="dots-horizontal-circle-outline" size={24} color="black" />
                             <Text style={styles.optionsText}>Khác</Text>
                         </View>
                         <AntDesign name="right" size={20} color="black" />
-                    </View>
+                    </TouchableOpacity>
 
 
                 </View>

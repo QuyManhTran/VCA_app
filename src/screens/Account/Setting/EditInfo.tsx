@@ -3,7 +3,7 @@ import LinearBackGround from "../../../components/LinearBackGround";
 import * as ImagePicker from 'expo-image-picker';
 import { useHeaderHeight } from '@react-navigation/elements'
 import { memo, useEffect, useState } from "react";
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Entypo, MaterialIcons } from '@expo/vector-icons';
 import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -111,7 +111,7 @@ const EditInfo = ({ navigation }) => {
     }, []);
 
     // avatar
-    
+
 
 
 
@@ -144,7 +144,7 @@ const EditInfo = ({ navigation }) => {
                         ></LinearBackGround>
 
 
-                        
+
                         <Text style={styles.title}>Thông tin cá nhân </Text>
                         <Text style={styles.textLable}>Tên</Text>
                         <View style={styles.wapperEdit}>
@@ -180,6 +180,24 @@ const EditInfo = ({ navigation }) => {
                             </Pressable>
                         }
 
+                        <TouchableOpacity style={{
+                            height: 70,
+                            marginLeft: 10,
+                            marginTop: 10, borderTopWidth: 1,
+                            borderTopColor: '#D9D9D9', flexDirection: 'row',
+                            borderBottomColor: '#D9D9D9', borderBottomWidth: 1,
+                            justifyContent: 'space-between', alignItems: 'center'
+                        }} onPress={() => navigation.navigate('Password')}>
+
+                            <Text style={{
+                                fontFamily: baloo2Fonts.bold,
+
+                                fontSize: 20,
+                            }}>Thay đổi mật khẩu</Text>
+
+                            <Entypo style={{ marginRight: 5 }} name="chevron-right" size={25} color="black" />
+                        </TouchableOpacity>
+
 
                         <View style={styles.summitWapper} >
                             <TouchableOpacity onPress={onSaveData}>
@@ -209,6 +227,8 @@ const styles = StyleSheet.create({
     },
 
     textLable: {
+        borderTopWidth: 1,
+        borderTopColor: '#D9D9D9',
         marginTop: 10,
         fontFamily: baloo2Fonts.bold,
         marginLeft: 10,
