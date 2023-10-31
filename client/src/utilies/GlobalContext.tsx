@@ -2,7 +2,6 @@ import { LogBox } from "react-native";
 import React, { useState, useEffect } from "react";
 import ThemeContext from "./theme";
 import { list } from "../../assets/img/foods";
-import { EventRegister } from "react-native-event-listeners";
 import { mostlySearch, notifytions } from "../../constants/fakeData";
 interface GlobalContextProps {
   children: React.ReactNode;
@@ -18,6 +17,11 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
   const [isHomeScrollDown, setIsHomeScrollDown] = useState(false);
   const [personalLists, setPersonalLists] = useState(fakeData);
   const [notifitions, setNotifitions] = useState(notifytions);
+
+  const onDarkTheme = (isDarkMode: boolean) => {
+    setIsDarkMode(isDarkMode);
+  };
+
   const setHomeNavbar = (isScrollDown: boolean) => {
     if (isScrollDown !== isHomeScrollDown) {
       setIsHomeScrollDown(isScrollDown);
@@ -115,14 +119,14 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
       "Non-serializable values were found in the navigation state",
     ]);
   }, []);
-  useEffect(() => {
-    const listener = EventRegister.addEventListener("ChangeTheme", (theme) => {
-      setIsDarkMode(theme);
-    });
-    return () => {
-      EventRegister.removeAllListeners();
-    };
-  }, [isDarkMode]);
+  // useEffect(() => {
+  //   const listener = EventRegister.addEventListener("ChangeTheme", (theme) => {
+  //     setIsDarkMode(theme);
+  //   });
+  //   return () => {
+  //     EventRegister.removeAllListeners();
+  //   };
+  // }, [isDarkMode]);
 
   return (
     <ThemeContext.Provider
@@ -137,6 +141,7 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
         onAdjustList,
         onRemoveBlogList,
         onRemoveUnread,
+        onDarkTheme,
       }}
     >
       {children}
