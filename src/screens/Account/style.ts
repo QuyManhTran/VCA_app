@@ -4,11 +4,11 @@ import { baloo2Fonts, montserratFonts } from "../../../constants/fontFamiles";
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 20,
+       marginTop: 40,
     },
 
     header: {
-
+        
         display: "flex",
     },
 
@@ -17,26 +17,29 @@ const styles = StyleSheet.create({
         top: '50%',    
         left: '50%',  
         transform: [{ translateX: -64 }], 
-        height: 128,
-        width: 128,
+        height: 150,
+        width: 150,
 
     },
 
     headerImage: {
-        position: 'relative',
+        marginTop: 10,
+      
+        
         flexDirection: 'row',
-        height: 230,
+       
         justifyContent: "center",
         alignItems: 'center',
     },
 
     headerImageDetail: {
         alignSelf: 'flex-end',
-        height: 190,
+        height: 200,
+        width: '100%'
     },
 
     headerText: {
-        marginTop: 30,
+        marginTop: 60,
         justifyContent: 'space-between',
         alignItems: 'center',
 
@@ -61,6 +64,7 @@ const styles = StyleSheet.create({
     },
 
     headerTextEditText: {
+        flexWrap: "nowrap",
         color: "#FFF",
         fontFamily: baloo2Fonts.extra,
         fontSize: 25,
@@ -150,6 +154,23 @@ const styles = StyleSheet.create({
         borderBottomColor: '#D9D9D9',
         paddingBottom: 10,
     },
+
+    modalWapper: {
+        paddingTop: 20,
+        marginLeft: 20,
+        flexDirection: 'row',
+        justifyContent : 'flex-start',
+        alignItems: 'center',
+        borderBottomWidth: 2,
+        paddingBottom: 10,
+        borderBottomColor: '#D9D9D9',
+    },
+
+    modalCompoment : {
+        marginLeft: 12,
+        fontSize: 17,
+        fontFamily: baloo2Fonts.medium
+    }
 })
 
 export default styles;

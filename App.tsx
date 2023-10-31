@@ -17,6 +17,13 @@ import Setting from "./src/screens/Account/Setting/Setting";
 import EditInfo from "./src/screens/Account/Setting/EditInfo";
 import Notification from "./src/screens/Notification";
 import Blog from "./src/screens/Blog";
+import showFullImage from "./src/screens/Account/showFullImage";
+import Display from "./src/screens/Account/Display";
+import Password from "./src/screens/Account/Password";
+import TermsOfService from "./src/screens/Account/Setting/TermsOfService";
+import PrivacyPolicy from "./src/screens/Account/Setting/PrivacyPolicy";
+import Language from "./src/screens/Account/Setting/Language";
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -47,6 +54,12 @@ export default function App() {
           <Stack.Screen name="Setting" component={Setting} />
           <Stack.Screen name="EditInfo" component={EditInfo} />
           <Stack.Screen name="Blog" component={Blog} />
+          <Stack.Screen name="showImage" component={showFullImage} />
+          <Stack.Screen name="Display" component={Display} />
+          <Stack.Screen name="Password" component={Password} />
+          <Stack.Screen name="TermsOfService" component={TermsOfService}/>
+          <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+          <Stack.Screen name="Language" component={Language} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>
