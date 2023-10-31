@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     position: "absolute",
-    top: 24,
     left: 12,
   },
   wrapperNav: {
@@ -27,6 +26,13 @@ const styles = StyleSheet.create({
   navItemText: {
     fontFamily: baloo2Fonts.semi,
     fontSize: 20,
+  },
+  cmtWrapper: {
+    position: "absolute",
+    top: 1000,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
 export default styles;

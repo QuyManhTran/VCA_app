@@ -4,9 +4,6 @@ import ThemeContext, { darkTheme } from "../../utilies/theme";
 import { EventRegister } from "react-native-event-listeners";
 import * as ImagePicker from 'expo-image-picker';
 import { Dimensions } from 'react-native';
-
-
-
 import { EvilIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';

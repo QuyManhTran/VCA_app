@@ -7,6 +7,7 @@ import {
   Animated,
 } from "react-native";
 import { useCallback, useState, useContext, useRef, useEffect } from "react";
+import * as Animatable from "react-native-animatable";
 import { RouterProps } from "../Splash/Splash";
 import Video from "../Video";
 import styles from "./style";
@@ -20,6 +21,11 @@ import Description from "./Description";
 import Meaning from "./Meaning";
 import Recipe from "./Recipe";
 import RateModal from "./RateModal";
+import Comment from "./Comment";
+
+const upComment = { 0: { top: 1000 }, 1: { top: 0 } };
+const downComment = { 0: { top: 0 }, 1: { top: 1000 } };
+
 const Blog = ({ route, navigation }: RouterProps) => {
   const { height, width } = useWindowDimensions();
   const { isDarkMode } = useContext(ThemeContext);
@@ -29,11 +35,16 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const [isRate, setIsRate] = useState(originRate);
   const [activeNav, setActiveNav] = useState(0);
   const [contentY, setContentY] = useState(0);
+  const [topComment, setTopComment] = useState(0);
   const [isModal, setIsModal] = useState(false);
+  const [isComment, setIsComment] = useState(false);
+  const [firstComment, setFirstComment] = useState(false);
   const NavRef = useRef<FlatList>(null);
   const pageRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
+  const commentRef = useRef(null);
   const contentRef = useRef<View>(null);
+
   const onBack = () => {
     navigation.goBack();
   };
@@ -79,6 +90,14 @@ const Blog = ({ route, navigation }: RouterProps) => {
     setIsModal(false);
   }, []);
 
+  const openComment = useCallback(() => {
+    setIsComment(true);
+  }, []);
+
+  const closeComment = useCallback(() => {
+    setIsComment(false);
+  }, []);
+
   useEffect(() => {
     if (!isFullscreen) {
       scrollX.setValue(activeNav * (width - 24));
@@ -109,6 +128,18 @@ const Blog = ({ route, navigation }: RouterProps) => {
     }
   }, [activeNav]);
 
+  useEffect(() => {
+    if (firstComment) {
+      if (isComment) {
+        commentRef.current.animate(upComment);
+      } else {
+        commentRef.current.animate(downComment);
+      }
+    } else {
+      setFirstComment(true);
+    }
+  }, [isComment]);
+
   return (
     <View
       style={[
@@ -118,7 +149,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
     >
       <TouchableOpacity
         activeOpacity={0.6}
-        style={styles.backBtn}
+        style={[styles.backBtn, { top: width < 400 ? 24 : 32 }]}
         onPress={onBack}
       >
         <Ionicons
@@ -147,6 +178,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
           isRate={isRate}
           width={width}
           openModal={openModal}
+          openComment={openComment}
         ></Header>
         <View
           style={[
@@ -293,6 +325,20 @@ const Blog = ({ route, navigation }: RouterProps) => {
             )}
           ></FlatList>
         </View>
+        <Animatable.View
+          style={[
+            styles.cmtWrapper,
+            { backgroundColor: isDarkMode ? colors.darkTheme : "#fff" },
+          ]}
+          ref={commentRef}
+          duration={500}
+        >
+          <Comment
+            isDarkMode={isDarkMode}
+            closeComment={closeComment}
+            name={name}
+          ></Comment>
+        </Animatable.View>
       </View>
       {isModal && (
         <RateModal

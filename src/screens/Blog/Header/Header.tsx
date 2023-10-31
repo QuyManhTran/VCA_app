@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { useEffect, useRef, useState, memo } from "react";
 import { Audio } from "expo-av";
 import * as Animatable from "react-native-animatable";
@@ -6,7 +6,6 @@ import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../../constants";
 import { FbSound } from "../../../../assets/audios";
-import Modal from "../../../components/Modal";
 interface HeaderBlogProps {
   name: string;
   like: number;
@@ -18,6 +17,7 @@ interface HeaderBlogProps {
   isRate: boolean;
   width: number;
   openModal: any;
+  openComment: any;
 }
 const interactAnimation = {
   0: { scale: 1 },
@@ -33,6 +33,7 @@ const Header = ({
   isDarkMode,
   width,
   openModal,
+  openComment,
   ...props
 }: HeaderBlogProps) => {
   const heartRef = useRef(null);
@@ -171,7 +172,9 @@ const Header = ({
                 {rate}
               </Text>
             </View>
-            <View
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={openComment}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -192,7 +195,7 @@ const Header = ({
               >
                 {rate}k
               </Text>
-            </View>
+            </TouchableOpacity>
             <View
               style={{
                 flexDirection: "row",
