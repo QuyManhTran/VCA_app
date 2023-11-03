@@ -4,12 +4,16 @@ const { signUpController } = require('../../controllers/profile/signUpController
 const { loginController } = require('../../controllers/profile/loginController');
 const { sendMailController } = require('../../controllers/profile/sendMailController');
 const {ggLoginController, ggCallbackController, ggInfor} = require('../../controllers/profile/ggLoginController')
-const {deleteAccount} = require('../../controllers/profile/deleteAccount')
+const {deleteAccount} = require('../../controllers/profile/deleteAccount');
+const {comfirnOtpController } = require('../../controllers/profile/confirmOtpController');
+const { changePasswordController } = require('../../controllers/profile/changePasswordController');
 
-accountRouter.post('/login', loginController);
+accountRouter.get('/login', loginController);
 accountRouter.post('/signup', signUpController);
-accountRouter.post('/send-email', sendMailController);
-accountRouter.post('/delete', deleteAccount);
+accountRouter.post('/forgot', sendMailController);
+accountRouter.post('/confirm', comfirnOtpController);
+accountRouter.post('/change-password', changePasswordController);
+accountRouter.put('/delete', deleteAccount);
 
 
 // Đăng nhập bằng tài khoản Google

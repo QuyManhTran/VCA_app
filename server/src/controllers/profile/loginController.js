@@ -1,28 +1,30 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../../models/profile/User')
+const User = require('../../models/profile/User');
 
 const loginController = async (req, res) => {
-    const { username, password } = req.body;
+   
+    const {email, password} = req.query;
+    
     
     // Tìm người dùng trong cơ sở dữ liệu
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
 
     if (!user) {
-        return res.status(401).json({ message: 'Tên người dùng không tồn tại' });
+        return res.json({ message: 401 });
     }
 
     // So sánh mật khẩu đã mã hóa
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Mật khẩu không đúng' });
+        return res.json({ message: 402 });
     }
 
     // Tạo mã JWT để xác thực
-    const token = jwt.sign({ username: user.username }, 'my-secret-key', { expiresIn: '1h' });
+    const token = jwt.sign({ username: user.username, email: user.email }, 'my-secret-key');
 
-    res.json({ message: 'Đăng nhập thành công', token });
+    res.json({user: {...user._doc}, message: 200});
 }
 
 module.exports = {

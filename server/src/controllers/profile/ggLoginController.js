@@ -36,7 +36,7 @@ const ggCallbackController = async (req, res) => {
 }
 
 const ggInfor = async (req, res) => {
-    res.send('<h1>Xin chào, ' + req.user.displayName + '</h1>');
+    res.json('test ok')
 }
 
 module.exports = {
