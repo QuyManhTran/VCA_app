@@ -28,6 +28,7 @@ import NavButton from "../../components/NavButton";
 import screenWidth from "../../../constants/screenWidth";
 import Modal from "../../components/Modal";
 import ThemeContext from "../../utilies/theme";
+import * as registerService from "../../services/signupService";
 
 const Register = ({ route, navigation }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
@@ -47,7 +48,7 @@ const Register = ({ route, navigation }: RouterProps) => {
   const debounce = useDebounce(password, 500);
   const emailDebounce = useDebounce(email, 500);
   const width = screenWidth();
-  const onRegister = () => {
+  const onRegister = async () => {
     if (!isValidated) {
       if (!userName.length) {
         const title = "UserName";
@@ -77,9 +78,23 @@ const Register = ({ route, navigation }: RouterProps) => {
         setIsModal(true);
       }
     } else {
-      navigation.navigate("SuccessfullyChange", {
-        from: "Register",
-      });
+      const response = await registerService.register(
+        registerService.pathRegister,
+        {
+          username: userName,
+          email: email,
+          password: password,
+        }
+      );
+      if (response.message !== 200) {
+        setModalTitle("Lỗi đăng ký");
+        setModalContent("Có lỗi xảy ra trong quá trình đăng ký");
+        setIsModal(true);
+      } else {
+        navigation.navigate("SuccessfullyChange", {
+          from: "Register",
+        });
+      }
     }
   };
 
@@ -300,6 +315,7 @@ const Register = ({ route, navigation }: RouterProps) => {
             title={modalTitle}
             content={modalContent}
             onPress={() => setIsModal(false)}
+            isDarkMode={isDarkMode}
           ></Modal>
         )}
       </Animated.View>

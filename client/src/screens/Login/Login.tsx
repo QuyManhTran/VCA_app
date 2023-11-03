@@ -22,7 +22,7 @@ import NavButton from "../../components/NavButton";
 import { montserratFonts } from "../../../constants/fontFamiles";
 import screenWidth from "../../../constants/screenWidth";
 import ThemeContext from "../../utilies/theme";
-
+import * as loginService from "../../services/loginService";
 const Login = ({ route, navigation }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
   const width = screenWidth();
@@ -34,9 +34,16 @@ const Login = ({ route, navigation }: RouterProps) => {
   const [isHidePassword, setIsHidePassWord] = useState(true);
   const debounce = useDebounce(password, 500);
   const userDebounce = useDebounce(userName, 500);
-  const onLogin = () => {
-    // Alert.alert(JSON.stringify({ userName, password }));
-    navigation.navigate("Navbar");
+  const onLogin = async () => {
+    const response = await loginService.login(loginService.loginPath, {
+      email: userName,
+      password: password,
+    });
+    if (response.message !== 200) {
+      alert("Tài khoản không tồn tại");
+    } else {
+      navigation.navigate("Navbar");
+    }
   };
 
   const onForgotPassword = () => {

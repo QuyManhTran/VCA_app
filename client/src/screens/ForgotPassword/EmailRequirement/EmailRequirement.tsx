@@ -22,18 +22,32 @@ import NavButton from "../../../components/NavButton";
 import screenWidth from "../../../../constants/screenWidth";
 import Modal from "../../../components/Modal";
 import ThemeContext from "../../../utilies/theme";
-
+import { sendEmailService } from "../../../services/forgotService";
 const EmailRequirement = ({ route, navigation }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
   const width = screenWidth();
   const [email, setEmail] = useState("");
   const [isEmail, setIsEmail] = useState(false);
   const [isModal, setIsModal] = useState(false);
+  const [isExistEmail, setIsExistEmail] = useState(true);
   const emailDebounce = useDebounce(email, 500);
-  const onSendCode = () => {
+  const onSendCode = async () => {
     // if otp is sent, will be navigated
     if (isEmail && email.length > 0) {
-      navigation.navigate("CodeVerifying");
+      const response = await sendEmailService.sendEmail(
+        sendEmailService.sendEmailPath,
+        {
+          email: email,
+        }
+      );
+      if (response.message !== 200) {
+        setIsExistEmail(false);
+        setIsModal(true);
+      } else {
+        navigation.navigate("CodeVerifying", {
+          email: email,
+        });
+      }
     } else {
       setIsModal(true);
     }
@@ -126,11 +140,16 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
           <Modal
             title={"Email"}
             content={
-              email.length === 0
+              !isExistEmail
+                ? "Email do not exist!"
+                : email.length === 0
                 ? `Email can't be empty!`
                 : `Email isn't in correct format!`
             }
-            onPress={() => setIsModal(false)}
+            isDarkMode={isDarkMode}
+            onPress={() => {
+              setIsModal(false), setIsExistEmail(true);
+            }}
           ></Modal>
         )}
       </View>

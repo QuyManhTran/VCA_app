@@ -22,14 +22,31 @@ import NavButton from "../../../components/NavButton";
 import screenWidth from "../../../../constants/screenWidth";
 import Modal from "../../../components/Modal";
 import ThemeContext from "../../../utilies/theme";
+import { sendOTPService } from "../../../services/forgotService";
 const CodeVerifying = ({ route, navigation }: RouterProps) => {
+  const { email } = route.params;
   const { isDarkMode } = useContext(ThemeContext);
   const [otp, setOTP] = useState("");
+  const [isErrorOTP, setIsErrorOTP] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const width = screenWidth();
-  const onChangePassword = () => {
+  const onChangePassword = async () => {
     if (isOTP(otp)) {
-      navigation.navigate("ResetPassword");
+      const response = await sendOTPService.sendOTP(
+        sendOTPService.sendOTPPath,
+        {
+          email: email,
+          otp: otp,
+        }
+      );
+      if (response.message !== 200) {
+        setIsErrorOTP(true);
+        setIsModal(true);
+      } else {
+        navigation.navigate("ResetPassword", {
+          email: email,
+        });
+      }
     } else {
       setIsModal(true);
     }
@@ -149,8 +166,12 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
         {isModal && (
           <Modal
             title="OTP Code"
-            content="OTP code must be 6 digits"
-            onPress={() => setIsModal(false)}
+            content={isErrorOTP ? "Nhập sai mã" : "OTP code must be 6 digits"}
+            onPress={() => {
+              setIsModal(false);
+              setIsErrorOTP(false);
+            }}
+            isDarkMode={isDarkMode}
           ></Modal>
         )}
       </View>

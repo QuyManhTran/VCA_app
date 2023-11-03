@@ -22,8 +22,10 @@ import NavButton from "../../../components/NavButton";
 import screenWidth from "../../../../constants/screenWidth";
 import Modal from "../../../components/Modal";
 import ThemeContext from "../../../utilies/theme";
+import { resetService } from "../../../services/forgotService";
 
 const ResetPassword = ({ route, navigation }: RouterProps) => {
+  const { email } = route.params;
   const { isDarkMode } = useContext(ThemeContext);
   const keyBoardUp = useRef(new Animated.Value(141)).current;
   const arrowUp = useRef(new Animated.Value(72)).current;
@@ -34,11 +36,23 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const passwordDebounce = useDebounce(password, 500);
   const width = screenWidth();
-  const onSave = () => {
+  const onSave = async () => {
     if (password !== confirmPassword || !isPassword || password.length === 0) {
       setIsModal(true);
     } else {
-      navigation.navigate("SuccessfullyChange");
+      // navigation.navigate("SuccessfullyChange");
+      const response = await resetService.resetPassword(
+        resetService.resetPath,
+        {
+          email: email,
+          password: password,
+        }
+      );
+      if (response.message !== 200) {
+        alert("Có lỗi xảy ra!");
+      } else {
+        navigation.navigate("SuccessfullyChange");
+      }
     }
   };
   const handlePassword = (text: string) => {
@@ -203,6 +217,7 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
             title="Password"
             content={`password don't match`}
             onPress={() => setIsModal(false)}
+            isDarkMode={isDarkMode}
           ></Modal>
         )}
       </View>
