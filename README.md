@@ -33,3 +33,7 @@ Nhóm học sinh bao gồm:
 # Tài liệu thiết kế dự án
 
 - Tài liệu thiết kế giao diện: [Figma](https://www.figma.com/file/B3vUJhLtZ36TaMB4zG8f3L/Demo-2?type=design&node-id=44-1245&mode=design&t=aIlryjMkJYBzWfio-0)
+
+# Cài đặt
+
+- Chi tiết bên trong thư mục [`client`](./client/README.md) và [`server`](./server/)
