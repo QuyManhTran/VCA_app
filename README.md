@@ -36,4 +36,4 @@ Nhóm học sinh bao gồm:
 
 # Cài đặt
 
-- Chi tiết bên trong thư mục [`client`](./client/README.md) và [`server`](./server/)
+- Chi tiết bên trong thư mục [`client`](./client/README.md) và [`server`](./server/README.md)
