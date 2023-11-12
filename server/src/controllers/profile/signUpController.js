@@ -1,9 +1,8 @@
-const bcrypt = require('bcryptjs');
-const User = require('../../models/profile/User')
+const bcrypt = require("bcryptjs");
+const User = require("../../models/profile/User");
 // const jwt = require('jsonwebtoken');
 
 const signUpController = async (req, res) => {
-  
   const { username, email, password } = req.body;
 
   console.log(password);
@@ -14,18 +13,18 @@ const signUpController = async (req, res) => {
   const newUser = new User({ username, email, password: hashedPassword });
   console.log(newUser);
 
-  newUser.save()
-  .then(() => {
-    res.json({
-      message: 200,
+  newUser
+    .save()
+    .then(() => {
+      res.json({
+        message: 200,
+      });
+    })
+    .catch((error) => {
+      res.json(error);
     });
-  })
-  .catch((error) => {
-    res.json(error);
-  })
-
-}
+};
 
 module.exports = {
-  signUpController
-}
+  signUpController,
+};

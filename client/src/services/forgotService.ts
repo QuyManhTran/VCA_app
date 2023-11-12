@@ -1,12 +1,8 @@
 import * as request from "../utilies/request";
 // send email
 const sendEmail = async (path: string, payload: { email: string }) => {
-  try {
-    const response = await request.post(path, payload);
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await request.post(path, payload);
+  return response;
 };
 const sendEmailPath = "/account/forgot";
 // confirm OTP
@@ -14,12 +10,8 @@ const sendOTP = async (
   path: string,
   payload: { email: string; otp: string }
 ) => {
-  try {
-    const response = await request.post(path, payload);
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await request.post(path, payload);
+  return response;
 };
 const sendOTPPath = "/account/confirm";
 
@@ -28,12 +20,8 @@ const resetPassword = async (
   path: string,
   payload: { email: string; password: string }
 ) => {
-  try {
-    const response = await request.post(path, payload);
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await request.post(path, payload);
+  return response;
 };
 const resetPath = "/account/change-password";
 export const sendEmailService = { sendEmail, sendEmailPath };

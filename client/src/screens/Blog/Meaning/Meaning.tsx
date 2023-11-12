@@ -1,54 +1,36 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useState } from "react";
-import { baloo2Fonts } from "../../../../constants/fontFamiles";
+import { View } from "react-native";
 import { colors } from "../../../../constants";
-interface MeaningProps {
+import MeaningItem from "./MeaningItem";
+
+export interface history {
+  title: string;
+  img: any;
   content: string;
+}
+interface MeaningProps {
+  histories: history[];
   isDarkMode: boolean;
   width: number;
 }
-const Meaning = ({ content, isDarkMode, width }: MeaningProps) => {
-  const [isSeeMore, setIsSeeMore] = useState(false);
+const Meaning = ({ histories, isDarkMode, width }: MeaningProps) => {
   return (
-    <View>
-      <Text
-        style={[
-          styles.text,
-          { color: isDarkMode ? colors.whiteText : "black" },
-        ]}
-        numberOfLines={isSeeMore ? undefined : 8}
-        ellipsizeMode="tail"
-      >
-        {content}
-      </Text>
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={() => setIsSeeMore(!isSeeMore)}
-        style={{ marginTop: isSeeMore ? (width > 400 ? -30 : 0) : 0 }}
-      >
-        <Text
-          style={[
-            styles.text,
-            {
-              fontFamily: baloo2Fonts.bold,
-              color: isDarkMode ? colors.primary : "black",
-            },
-          ]}
-        >
-          {!isSeeMore ? "Xem thêm" : "Ẩn bớt"}
-        </Text>
-      </TouchableOpacity>
+    <View
+      style={{
+        backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+        flexDirection: "column",
+        gap: 24,
+        marginBottom: 12,
+      }}
+    >
+      {histories.map((history, index) => (
+        <MeaningItem
+          key={index}
+          {...history}
+          isDarkMode={isDarkMode}
+        ></MeaningItem>
+      ))}
     </View>
   );
 };
 
 export default Meaning;
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: baloo2Fonts.medium,
-    fontSize: 20,
-    textAlign: "justify",
-    lineHeight: 30,
-  },
-});

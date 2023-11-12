@@ -6,6 +6,8 @@ import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../../constants";
 import { FbSound } from "../../../../assets/audios";
+import Description from "../Description";
+import { navItems } from "../../../../constants/fakeData";
 interface HeaderBlogProps {
   name: string;
   like: number;

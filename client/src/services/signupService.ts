@@ -5,11 +5,7 @@ interface registerProps {
   password: string;
 }
 export const register = async (path: string, payload: registerProps) => {
-  try {
-    const response = await request.post(path, payload);
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await request.post(path, payload);
+  return response;
 };
 export const pathRegister = "/account/signup";

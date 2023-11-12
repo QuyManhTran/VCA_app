@@ -39,11 +39,14 @@ const Login = ({ route, navigation }: RouterProps) => {
       email: userName,
       password: password,
     });
+    console.log(response.message);
+
     if (response.message !== 200) {
       alert("Tài khoản không tồn tại");
     } else {
       navigation.navigate("Navbar");
     }
+    // navigation.navigate("Navbar");
   };
 
   const onForgotPassword = () => {
@@ -154,14 +157,6 @@ const Login = ({ route, navigation }: RouterProps) => {
               <Text style={styles.forgotPassword}>Forgot</Text>
             </TouchableOpacity>
           </Button>
-          {/* <Text style={styles.selection}>or login with</Text>
-          <Button customeStyles={{ marginVertical: 20 }}>
-            <View style={styles.icon}>
-              <GoogleIcon width="36px" height="36px"></GoogleIcon>
-            </View>
-            <Text style={{ fontSize: 20 }}>Continue with Google</Text>
-          </Button> */}
-
           <TouchableOpacity
             activeOpacity={0.7}
             disabled={!isValidated}

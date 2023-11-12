@@ -6,6 +6,7 @@ import {
   Animated,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import fontFamilies, { montserratFonts } from "../../../constants/fontFamiles";
@@ -15,6 +16,7 @@ interface ModalProps {
   content?: string;
   onPress?: any;
   children?: React.ReactNode;
+  isPending?: boolean;
   isDarkMode: boolean;
 }
 const Modal = ({
@@ -23,6 +25,7 @@ const Modal = ({
   onPress,
   children,
   isDarkMode = false,
+  isPending = false,
 }: ModalProps) => {
   const scaleUp = useRef(new Animated.Value(0.5)).current;
   const onClose = () => {
@@ -65,30 +68,45 @@ const Modal = ({
               >
                 {title}
               </Text>
+              {isPending && (
+                <View
+                  style={{ flexDirection: "row", justifyContent: "center" }}
+                >
+                  <ActivityIndicator
+                    color={"black"}
+                    size={"large"}
+                  ></ActivityIndicator>
+                </View>
+              )}
               <Text
                 style={[
                   styles.content,
-                  { color: isDarkMode ? colors.whiteText : "black" },
+                  {
+                    color: isDarkMode ? colors.whiteText : "black",
+                    textAlign: isPending ? "center" : "left",
+                  },
                 ]}
               >
                 {content}
               </Text>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                style={styles.closeBtn}
-                onPress={onClose}
-              >
-                <Text
-                  style={{
-                    color: colors.primary,
-                    fontSize: 20,
-                    padding: 8,
-                    fontFamily: montserratFonts.bold,
-                  }}
+              {!isPending && (
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.closeBtn}
+                  onPress={onClose}
                 >
-                  OK
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: colors.primary,
+                      fontSize: 20,
+                      padding: 8,
+                      fontFamily: montserratFonts.bold,
+                    }}
+                  >
+                    OK
+                  </Text>
+                </TouchableOpacity>
+              )}
             </>
           )}
           {!title && children}
