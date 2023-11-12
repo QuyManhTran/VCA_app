@@ -17,17 +17,10 @@ const changePasswordController = async (req, res) => {
             { upsert: true },
         );
 
-        res.json({
-            message: 200,
-        });
+        return res.status(200).json({ message: 'Đổi mật khẩu thành công' });
     } catch {
-        res.json({
-            message: 400,
-        })
+        return res.status(400).json({ message: 'Không đổi được mật khẩu. Vui lòng xem lại!' });
     }
-    
-
-    
 
 };
 

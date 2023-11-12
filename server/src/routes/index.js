@@ -1,15 +1,13 @@
 var express = require('express');
 const accountRouter = require('./profile/account.route');
+const foodRouter = require('./food/food.route');
 var router = express.Router();
 
 
-const route = (app) => {
+var route = (app) => {
   app.use('/account', accountRouter)
+  app.use('/food', foodRouter)
 }
 
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
 
 module.exports = route;

@@ -34,22 +34,21 @@ const sendMailController = async (req, res) => {
       from: '21020779@vnu.edu.vn', // Địa chỉ email người gửi
       to: email, // Địa chỉ email người nhận
       subject: 'Mã OTP của quý khách',
-      html: otp
+      html: 'Your verification code is: ' + otp
     };
 
     // Gửi email
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
-        console.error('Lỗi khi gửi email: ', error);
-        res.json({ message: 500 });
+        return res.status(500).json({ message: 'Không gửi được mail. Vui lòng xem lại!' });
       } else {
         console.log('Email đã được gửi: ', info.response);
         await User.findOneAndUpdate(
           { email: email },
-          { $set: { otp: otp } },
-          { upsert: true },
+          { otp: otp },
+          { new: true },
         );
-        res.json({ message: 200 });
+        return res.status(200).json({ message: 'Gửi mail thành công.' });
       }
     });
   }

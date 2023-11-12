@@ -6,25 +6,24 @@ const loginController = async (req, res) => {
    
     const {email, password} = req.query;
     
-    
     // Tìm người dùng trong cơ sở dữ liệu
     const user = await User.findOne({ email });
 
     if (!user) {
-        return res.json({ message: 401 });
+        return res.status(401).json({ message: 'Tên người dùng không tồn tại' });
     }
 
     // So sánh mật khẩu đã mã hóa
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-        return res.json({ message: 402 });
+        return res.status(401).json({ message: 'Mật khẩu không đúng' });
     }
 
     // Tạo mã JWT để xác thực
     const token = jwt.sign({ username: user.username, email: user.email }, 'my-secret-key');
 
-    res.json({user: {...user._doc}, message: 200});
+    res.json({user: {...user._doc}, message: 'Đăng nhập thành công'});
 }
 
 module.exports = {

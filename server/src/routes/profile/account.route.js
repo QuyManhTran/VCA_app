@@ -25,4 +25,7 @@ accountRouter.get('/auth/google/callback', ggCallbackController);
 // Trang hiển thị thông tin người dùng sau khi đăng nhập
 accountRouter.get('/profile', ggInfor);
 
+
+
+
 module.exports = accountRouter;

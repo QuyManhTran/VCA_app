@@ -7,7 +7,6 @@ const passport = require('passport');
 const session = require('express-session');
 const route = require('../routes/index');
 const cookieParser = require('cookie-parser');
-
 const db = require('../models/database');
 
 // view engine setup
@@ -17,6 +16,7 @@ const config = (app) => {
 
     // app.use(logger('dev'));
     app.use(express.json()); 
+    app.use(express.static('public'));
     app.use(cors());
     app.use(express.urlencoded({
         extended: true,
@@ -49,7 +49,6 @@ const config = (app) => {
     // }));
     // app.use(passport.initialize());
     // app.use(passport.session());
-
 
 }
 
