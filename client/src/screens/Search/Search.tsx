@@ -1,8 +1,6 @@
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
-  Keyboard,
   ScrollView,
   Animated,
   FlatList,
@@ -20,7 +18,6 @@ import { mostlySearch, viralSearchs } from "../../../constants/fakeData";
 import BackButton from "../../components/BackButton";
 import ThemeContext from "../../utilies/theme";
 import { colors } from "../../../constants";
-import { act } from "react-test-renderer";
 const Search = ({ route, navigation }: RouterProps) => {
   const flatRef = useRef<FlatList>(null);
   const scrollOpacity = useRef(new Animated.Value(0)).current;
@@ -119,7 +116,7 @@ const Search = ({ route, navigation }: RouterProps) => {
                         : index === activeTag
                         ? "#ff5c0033"
                         : colors.grayBg,
-                      marginLeft: index === 0 ? 24 : 0,
+                      marginLeft: index === 0 ? 12 : 0,
                       borderColor: isDarkMode
                         ? index === activeTag
                           ? "transparent"
@@ -152,7 +149,7 @@ const Search = ({ route, navigation }: RouterProps) => {
         <View
           style={{
             flex: 1,
-            paddingHorizontal: 24,
+            paddingHorizontal: 12,
             paddingBottom: 24,
           }}
         >

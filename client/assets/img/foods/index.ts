@@ -66,7 +66,7 @@ export const recommendLists = [
     img: banhmy,
     like: 3.0,
     rate: 4.4,
-    tag: "Truyền thống",
+    tags: ["Truyền thống"],
     isLiked: false,
     isRate: false,
     isFavorite: false,
@@ -76,7 +76,7 @@ export const recommendLists = [
     img: PhoBo,
     like: 3.0,
     rate: 4.4,
-    tag: "Truyền thống",
+    tags: ["Truyền thống"],
     isLiked: true,
     isRate: false,
     isFavorite: false,
@@ -86,7 +86,7 @@ export const recommendLists = [
     img: BunBo,
     like: 3.0,
     rate: 4.4,
-    tag: "Truyền thống",
+    tags: ["Truyền thống"],
     isLiked: false,
     isRate: false,
     isFavorite: false,
@@ -96,7 +96,7 @@ export const recommendLists = [
     img: Com,
     like: 3.0,
     rate: 4.4,
-    tag: "Truyền thống",
+    tags: ["Truyền thống"],
     isLiked: true,
     isRate: false,
     isFavorite: false,
@@ -106,7 +106,7 @@ export const recommendLists = [
     img: BanhXeo,
     like: 3.0,
     rate: 4.4,
-    tag: "Truyền thống",
+    tags: ["Truyền thống"],
     isLiked: true,
     isRate: false,
     isFavorite: false,
@@ -114,15 +114,15 @@ export const recommendLists = [
 ];
 const exploreData = [
   {
-    name: "Miền Bắc",
+    name: "Bắc",
     img: northern,
   },
   {
-    name: "Miền Trung",
+    name: "Trung",
     img: middle,
   },
   {
-    name: "Miền Nam",
+    name: "Nam",
     img: southern,
   },
 ];

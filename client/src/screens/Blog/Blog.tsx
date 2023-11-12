@@ -30,7 +30,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const { height, width } = useWindowDimensions();
   const { isDarkMode } = useContext(ThemeContext);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const { name, img, like, rate, tag, isLiked, originRate, isFavorite } =
+  const { name, img, like, rate, isLiked, originRate, isFavorite } =
     route.params;
   const [isRate, setIsRate] = useState(originRate);
   const [activeNav, setActiveNav] = useState(0);

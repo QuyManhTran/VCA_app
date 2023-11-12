@@ -8,7 +8,7 @@ interface FoodReviewProps {
   name: string;
   like: number;
   rate: number;
-  tag: string;
+  tags: string[];
   img: any;
   isDarkMode: boolean;
   isLiked: boolean;
@@ -21,7 +21,7 @@ const FoodReview = ({
   name,
   like,
   rate,
-  tag,
+  tags,
   img,
   isDarkMode = false,
   onTag = () => {},
@@ -42,7 +42,6 @@ const FoodReview = ({
             name,
             like,
             rate,
-            tag,
             img,
             isLiked,
             isFavorite,
@@ -65,7 +64,6 @@ const FoodReview = ({
               like,
               rate,
               img,
-              tag,
               isLiked,
               isFavorite,
               isRate,
@@ -82,37 +80,49 @@ const FoodReview = ({
           </Text>
         </TouchableOpacity>
         {/* chip tag */}
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{ flexDirection: "row" }}
-          onPress={(e) => {
-            e.stopPropagation();
-            onTag(tag);
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+            flexWrap: "wrap",
           }}
         >
-          <View
-            style={[
-              styles.chipTag,
-              { backgroundColor: isDarkMode ? colors.darkBg : "#fff" },
-            ]}
-          >
-            <Ionicons
-              name="pricetag"
-              size={14}
-              style={{ marginRight: 4 }}
-              color={isDarkMode ? colors.whiteText : "black"}
-            ></Ionicons>
-            <Text
-              style={{
-                fontSize: 14,
-                fontFamily: baloo2Fonts.semi,
-                color: isDarkMode ? colors.whiteText : "black",
+          {tags.map((tag, index) => (
+            <TouchableOpacity
+              key={index}
+              activeOpacity={0.8}
+              style={{ flexDirection: "row" }}
+              onPress={(e) => {
+                e.stopPropagation();
+                onTag(tag);
               }}
             >
-              {tag}
-            </Text>
-          </View>
-        </TouchableOpacity>
+              <View
+                style={[
+                  styles.chipTag,
+                  { backgroundColor: isDarkMode ? colors.darkBg : "#fff" },
+                ]}
+              >
+                <Ionicons
+                  name="pricetag"
+                  size={14}
+                  style={{ marginRight: 4 }}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                ></Ionicons>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: baloo2Fonts.semi,
+                    color: isDarkMode ? colors.whiteText : "black",
+                  }}
+                >
+                  {tag}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
         <View style={styles.icons}>
           <View
             style={{
