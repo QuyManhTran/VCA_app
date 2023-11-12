@@ -40,15 +40,15 @@ const Home = ({ route, navigation }: RouterProps) => {
   }, []);
 
   const onTag = useCallback((keyword: string) => {
-    navigation.navigate("Search", { keyword: keyword });
+    navigation.navigate("Search", { keyword: keyword, status: "tag" });
   }, []);
 
   const onBanner = useCallback((keyword: string) => {
-    navigation.navigate("Search", { keyword: keyword });
+    navigation.navigate("Search", { keyword: keyword, status: "tag" });
   }, []);
 
   const onChipTab = useCallback((keyword: string) => {
-    navigation.navigate("Search", { keyword: keyword });
+    navigation.navigate("Search", { keyword: keyword, status: "tag" });
   }, []);
 
   const onBlog = useCallback(({ ...props }) => {

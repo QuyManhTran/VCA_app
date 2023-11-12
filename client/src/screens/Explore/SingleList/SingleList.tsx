@@ -120,6 +120,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
   const onTag = useCallback((keyword: string) => {
     navigation.navigate("Search", {
       keyword: keyword,
+      status: "tag",
     });
   }, []);
 

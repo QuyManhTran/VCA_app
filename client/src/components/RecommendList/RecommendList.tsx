@@ -51,7 +51,7 @@ const RecommendList = ({
           flexDirection: "row",
           alignItems: "center",
         }}
-        onPress={() => onNavigateSearch({ keyword: heading })}
+        onPress={() => onNavigateSearch({ keyword: heading, status: "tag" })}
       >
         <Text
           style={[
@@ -79,7 +79,7 @@ const RecommendList = ({
             <TouchableOpacity
               onPress={() => {
                 if (explore) {
-                  onNavigateSearch({ keyword: blog.name });
+                  onNavigateSearch({ keyword: blog.name, status: "tag" });
                 } else {
                   onNavigateBlog({ ...blog });
                 }
@@ -118,7 +118,9 @@ const RecommendList = ({
           >
             <BackButton
               color={colors.primary}
-              onPress={() => onNavigateSearch({ keyword: heading })}
+              onPress={() =>
+                onNavigateSearch({ keyword: heading, status: "tag" })
+              }
               rotate="180deg"
               customeStyle={{
                 borderRadius: 25,
