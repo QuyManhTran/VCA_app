@@ -1,7 +1,7 @@
 var express = require('express');
 const accountRouter = require('./profile/account.route');
 const ulistRouter = require('./ulist/ulist.route');
-var router = express.Router();
+const foodRouter = require('./food/food.route');
 
 
 const route = (app) => {
