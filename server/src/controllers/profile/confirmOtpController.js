@@ -4,17 +4,11 @@ const comfirnOtpController = async (req, res) => {
    
     const { email, otp} = req.body;
 
-
-
     const user = await User.findOne({ email });
     if(otp === user.otp) {
-        res.json({
-            message: 200,
-        })
+        return res.status(200).json({ message: 'Xác nhận mã OTP thành công!' });
     }else {
-        res.json({
-            message: 401,
-        })
+        return res.status(401).json({ message: 'Mã xác nhận không đúng. Vui lòng xem lại!' });
     }
 };
 

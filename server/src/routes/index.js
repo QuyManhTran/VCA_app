@@ -1,15 +1,13 @@
 var express = require('express');
 const accountRouter = require('./profile/account.route');
-var router = express.Router();
+const ulistRouter = require('./ulist/ulist.route');
+const foodRouter = require('./food/food.route');
 
 
 const route = (app) => {
   app.use('/account', accountRouter)
+  app.use('/ulist', ulistRouter);
+  app.use('/food', foodRouter)
 }
-
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
 
 module.exports = route;
