@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styles from "./style";
@@ -45,6 +46,7 @@ const Register = ({ route, navigation }: RouterProps) => {
   const [isModal, setIsModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState("");
+  const [isPending, setIsPending] = useState(false);
   const debounce = useDebounce(password, 500);
   const emailDebounce = useDebounce(email, 500);
   const width = screenWidth();
@@ -78,22 +80,30 @@ const Register = ({ route, navigation }: RouterProps) => {
         setIsModal(true);
       }
     } else {
-      const response = await registerService.register(
-        registerService.pathRegister,
-        {
-          username: userName,
-          email: email,
-          password: password,
+      try {
+        setIsPending(true);
+        const response = await registerService.register(
+          registerService.pathRegister,
+          {
+            username: userName,
+            email: email,
+            password: password,
+          }
+        );
+        if (response) {
+          setIsPending(false);
+          if (response.message !== 200) {
+            setModalTitle("Lỗi đăng ký");
+            setModalContent("Có lỗi xảy ra trong quá trình đăng ký");
+            setIsModal(true);
+          } else {
+            navigation.navigate("SuccessfullyChange", {
+              from: "Register",
+            });
+          }
         }
-      );
-      if (response.message !== 200) {
-        setModalTitle("Lỗi đăng ký");
-        setModalContent("Có lỗi xảy ra trong quá trình đăng ký");
-        setIsModal(true);
-      } else {
-        navigation.navigate("SuccessfullyChange", {
-          from: "Register",
-        });
+      } catch (error) {
+        console.log("memeya", error);
       }
     }
   };
@@ -268,15 +278,34 @@ const Register = ({ route, navigation }: RouterProps) => {
             ></TextInput>
           </Button>
           <TouchableOpacity
+            disabled={isPending}
             activeOpacity={0.7}
             onPress={onRegister}
             style={{
               alignSelf: "flex-end",
               marginRight: width < 400 ? 26 : 34,
               marginTop: 34,
+              opacity: isPending ? 0.6 : 1,
             }}
           >
-            <NavButton>Create</NavButton>
+            <NavButton
+              customeStyle={isPending && { width: "auto" }}
+              customeText={
+                isPending && {
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginHorizontal: 12,
+                }
+              }
+            >
+              {isPending && (
+                <ActivityIndicator
+                  color={"white"}
+                  style={{ marginRight: 24 }}
+                ></ActivityIndicator>
+              )}
+              {isPending ? "Sending" : "Create"}
+            </NavButton>
           </TouchableOpacity>
         </Animated.View>
         <View

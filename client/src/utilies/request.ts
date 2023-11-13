@@ -3,20 +3,22 @@ const baseURL = process.env.EXPO_PUBLIC_API_URL;
 const request = axios.create({
   baseURL: baseURL,
 });
+
 export const get = async (path: string, options = {}) => {
   try {
     const response = await request.get(path, { params: options });
-    return response.data;
+    return { message: 200, data: response.data };
   } catch (error) {
-    console.log(error);
+    return { message: error?.response?.status || "Error network" };
   }
 };
+
 export const post = async (path: string, options = {}) => {
   try {
-    const response = await request.post(path, options);
-    return response.data;
+    const response = await request.post(path, options, { timeout: 5000 });
+    return { message: 200, data: response.data };
   } catch (error) {
-    console.log(error);
+    return { message: error?.response?.status || "Error network" };
   }
 };
 export default request;

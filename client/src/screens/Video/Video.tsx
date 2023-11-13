@@ -121,18 +121,19 @@ const Video = ({ toggleFullscreen, isFullscreen }: VideoProps) => {
     }
   }, [status]);
 
-  // useEffect(() => {
-  //   // auto play
-  //   (async () => {
-  //     if (vidRef.current) {
-  //       try {
-  //         await vidRef.current.playAsync();
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //   })();
-  // }, []);
+  useEffect(() => {
+    // auto play
+    (async () => {
+      if (vidRef.current) {
+        try {
+          await vidRef.current.playAsync();
+          setIsPlaying(true);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const updateCurrentTime = async () => {
@@ -176,7 +177,9 @@ const Video = ({ toggleFullscreen, isFullscreen }: VideoProps) => {
           ref={vidRef}
           usePoster={true}
           posterSource={banhMyThumbnail}
-          source={reviewDuyNen}
+          source={{
+            uri: "https://res.cloudinary.com/dxqd4odva/video/upload/v1698630386/VCA_app/Aquaman_jnqrbp.mp4",
+          }}
           resizeMode={ResizeMode.CONTAIN}
           style={{
             width: "100%",

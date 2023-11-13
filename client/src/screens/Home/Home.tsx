@@ -40,15 +40,15 @@ const Home = ({ route, navigation }: RouterProps) => {
   }, []);
 
   const onTag = useCallback((keyword: string) => {
-    navigation.navigate("Search", { keyword: keyword });
+    navigation.navigate("Search", { keyword: keyword, status: "tag" });
   }, []);
 
   const onBanner = useCallback((keyword: string) => {
-    navigation.navigate("Search", { keyword: keyword });
+    navigation.navigate("Search", { keyword: keyword, status: "tag" });
   }, []);
 
   const onChipTab = useCallback((keyword: string) => {
-    navigation.navigate("Search", { keyword: keyword });
+    navigation.navigate("Search", { keyword: keyword, status: "tag" });
   }, []);
 
   const onBlog = useCallback(({ ...props }) => {
@@ -114,7 +114,7 @@ const Home = ({ route, navigation }: RouterProps) => {
         <View style={styles.container}>
           <View style={styles.wrapper}>
             <Banner onPress={onBanner}></Banner>
-            <View style={{ paddingLeft: 24 }}>
+            <View style={{ paddingLeft: 12 }}>
               <Text
                 style={[
                   styles.otherHeading,
@@ -163,7 +163,7 @@ const Home = ({ route, navigation }: RouterProps) => {
                     isDarkmode={isDarkMode}
                     key={index}
                     title={food.title}
-                    marginLeft={index === 0 ? 24 : 0}
+                    marginLeft={index === 0 ? 12 : 0}
                     onPress={onChipTab}
                     img={food.img}
                   ></ChipTag>

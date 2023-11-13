@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontFamily: baloo2Fonts.extra,
     paddingBottom: 8,
-    paddingLeft: 24,
+    paddingLeft: 12,
   },
 });
 export default styles;

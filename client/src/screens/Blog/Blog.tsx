@@ -7,21 +7,21 @@ import {
   Animated,
 } from "react-native";
 import { useCallback, useState, useContext, useRef, useEffect } from "react";
-import * as Animatable from "react-native-animatable";
-import { RouterProps } from "../Splash/Splash";
-import Video from "../Video";
-import styles from "./style";
-import { Ionicons } from "@expo/vector-icons";
 import * as ScreenOrientation from "expo-screen-orientation";
+import * as Animatable from "react-native-animatable";
+import { Ionicons } from "@expo/vector-icons";
+import { RouterProps } from "../Splash/Splash";
 import Header from "./Header";
-import ThemeContext from "../../utilies/theme";
-import { colors } from "../../../constants";
-import { navItems } from "../../../constants/fakeData";
 import Description from "./Description";
 import Meaning from "./Meaning";
 import Recipe from "./Recipe";
 import RateModal from "./RateModal";
 import Comment from "./Comment";
+import Video from "../Video";
+import ThemeContext from "../../utilies/theme";
+import styles from "./style";
+import { colors } from "../../../constants";
+import { navItems } from "../../../constants/fakeData";
 
 const upComment = { 0: { top: 1000 }, 1: { top: 0 } };
 const downComment = { 0: { top: 0 }, 1: { top: 1000 } };
@@ -30,12 +30,11 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const { height, width } = useWindowDimensions();
   const { isDarkMode } = useContext(ThemeContext);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const { name, img, like, rate, tag, isLiked, originRate, isFavorite } =
+  const { name, img, like, rate, isLiked, originRate, isFavorite } =
     route.params;
   const [isRate, setIsRate] = useState(originRate);
   const [activeNav, setActiveNav] = useState(0);
   const [contentY, setContentY] = useState(0);
-  const [topComment, setTopComment] = useState(0);
   const [isModal, setIsModal] = useState(false);
   const [isComment, setIsComment] = useState(false);
   const [firstComment, setFirstComment] = useState(false);
@@ -263,7 +262,8 @@ const Blog = ({ route, navigation }: RouterProps) => {
               });
               if (index === 0) {
                 return (
-                  <Animated.View
+                  <Animated.ScrollView
+                    showsVerticalScrollIndicator={false}
                     key={index}
                     style={{
                       width: width - 24,
@@ -274,7 +274,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
                       content={item.content}
                       isDarkMode={isDarkMode}
                     ></Description>
-                  </Animated.View>
+                  </Animated.ScrollView>
                 );
               } else if (index === 1) {
                 return (
@@ -287,7 +287,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
                     }}
                   >
                     <Meaning
-                      content={item.content}
+                      histories={item.histories}
                       isDarkMode={isDarkMode}
                       width={width}
                     ></Meaning>

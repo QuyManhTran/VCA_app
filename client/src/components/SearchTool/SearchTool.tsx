@@ -65,7 +65,7 @@ const SearchTool = ({
           )}
           {isHome && (
             <Text
-              onPress={() => onPress({})}
+              onPress={() => onPress({ status: "tag" })}
               style={{
                 fontSize: 20,
                 fontFamily: baloo2Fonts.regular,

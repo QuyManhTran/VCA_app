@@ -24,7 +24,6 @@ interface RecommendListProps {
     img: any;
     like?: number;
     rate?: number;
-    tag?: string;
     isLiked?: boolean;
     isRate?: boolean;
     isFavorite?: boolean;
@@ -52,14 +51,14 @@ const RecommendList = ({
           flexDirection: "row",
           alignItems: "center",
         }}
-        onPress={() => onNavigateSearch({ keyword: heading })}
+        onPress={() => onNavigateSearch({ keyword: heading, status: "tag" })}
       >
         <Text
           style={[
             styles.heading,
             {
               fontSize: isLibrary ? 28 : 26,
-              paddingLeft: isLibrary ? 0 : 24,
+              paddingLeft: isLibrary ? 0 : 12,
               color: isDarkMode ? colors.whiteText : "black",
             },
           ]}
@@ -80,7 +79,7 @@ const RecommendList = ({
             <TouchableOpacity
               onPress={() => {
                 if (explore) {
-                  onNavigateSearch({ keyword: blog.name });
+                  onNavigateSearch({ keyword: blog.name, status: "tag" });
                 } else {
                   onNavigateBlog({ ...blog });
                 }
@@ -88,7 +87,7 @@ const RecommendList = ({
               activeOpacity={0.6}
               key={index}
               style={{
-                paddingLeft: isLibrary ? 0 : 24,
+                paddingLeft: isLibrary ? 0 : index === 0 ? 12 : 24,
                 marginRight: index === data.length - 1 ? 0 : isLibrary ? 24 : 0,
                 paddingRight: index === data.length - 1 ? 24 : 0,
                 justifyContent: "center",
@@ -119,7 +118,9 @@ const RecommendList = ({
           >
             <BackButton
               color={colors.primary}
-              onPress={() => onNavigateSearch({ keyword: heading })}
+              onPress={() =>
+                onNavigateSearch({ keyword: heading, status: "tag" })
+              }
               rotate="180deg"
               customeStyle={{
                 borderRadius: 25,

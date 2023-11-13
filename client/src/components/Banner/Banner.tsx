@@ -43,7 +43,7 @@ const Banner = ({ onPress }: BannerProps) => {
               }}
               key={index}
               style={{
-                marginLeft: index === 0 ? 24 : 0,
+                marginLeft: index === 0 ? 12 : 0,
                 marginRight: 16,
               }}
             >

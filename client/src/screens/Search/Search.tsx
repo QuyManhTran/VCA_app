@@ -1,8 +1,6 @@
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
-  Keyboard,
   ScrollView,
   Animated,
   FlatList,
@@ -20,21 +18,31 @@ import { mostlySearch, viralSearchs } from "../../../constants/fakeData";
 import BackButton from "../../components/BackButton";
 import ThemeContext from "../../utilies/theme";
 import { colors } from "../../../constants";
-import { act } from "react-test-renderer";
+
+type SearchStatusType = "tag" | "all";
 const Search = ({ route, navigation }: RouterProps) => {
   const flatRef = useRef<FlatList>(null);
   const scrollOpacity = useRef(new Animated.Value(0)).current;
   const { isDarkMode } = useContext(ThemeContext);
-  const [keyword, setKeyword] = useState(route.params.keyword || "");
+  const [keyword, setKeyword] = useState(route.params?.keyword || "");
   const [data, setData] = useState(mostlySearch);
   const debounceKeyword = useDebounce(keyword, 300);
   const [activeTag, setActiveTag] = useState(0);
+  const [searchStatus, setSearchStatus] = useState<SearchStatusType>(
+    route.params?.status || "all"
+  );
   const onKeyword = useCallback((text: string) => {
     setKeyword(text);
+    if (searchStatus !== "all") {
+      setSearchStatus("all");
+    }
   }, []);
 
   const onTag = useCallback((tag: string) => {
     setKeyword(tag);
+    if (searchStatus !== "tag") {
+      setSearchStatus("tag");
+    }
   }, []);
 
   const onBlog = useCallback(({ ...props }) => {
@@ -46,9 +54,17 @@ const Search = ({ route, navigation }: RouterProps) => {
   }, []);
 
   useEffect(() => {
+    if (!keyword) {
+      // call api with keyword = 'pho bien'
+    }
+  }, []);
+
+  useEffect(() => {
     // sent API by debounceKeyword
+    console.log(searchStatus);
     if (debounceKeyword === "") {
       setData(mostlySearch);
+      setSearchStatus("tag");
     } else {
       setData([]);
     }
@@ -119,7 +135,7 @@ const Search = ({ route, navigation }: RouterProps) => {
                         : index === activeTag
                         ? "#ff5c0033"
                         : colors.grayBg,
-                      marginLeft: index === 0 ? 24 : 0,
+                      marginLeft: index === 0 ? 12 : 0,
                       borderColor: isDarkMode
                         ? index === activeTag
                           ? "transparent"
@@ -152,7 +168,7 @@ const Search = ({ route, navigation }: RouterProps) => {
         <View
           style={{
             flex: 1,
-            paddingHorizontal: 24,
+            paddingHorizontal: 12,
             paddingBottom: 24,
           }}
         >
