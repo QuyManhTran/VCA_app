@@ -5,8 +5,8 @@ var router = express.Router();
 
 
 var route = (app) => {
-  app.use('/account', accountRouter)
-  app.use('/food', foodRouter)
+    app.use('/account', accountRouter)
+    app.use('/food', foodRouter)
   
 }
 
