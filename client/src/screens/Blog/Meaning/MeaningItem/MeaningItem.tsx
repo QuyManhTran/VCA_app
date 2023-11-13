@@ -16,7 +16,7 @@ const MeaningItem = ({ img, title, content, isDarkMode }: MeaningItemProps) => {
       style={[
         styles.wrapperItem,
         {
-          backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+          backgroundColor: isDarkMode ? colors.darkBg : "#ff5c001a",
         },
       ]}
     >
@@ -54,6 +54,16 @@ const MeaningItem = ({ img, title, content, isDarkMode }: MeaningItemProps) => {
           ]}
         >
           {content}
+          <Text
+            style={{
+              fontFamily: baloo2Fonts.bold,
+              color: colors.primary,
+            }}
+            onPress={() => setIsSeeMore(false)}
+          >
+            {" "}
+            Ẩn đi
+          </Text>
         </Text>
       )}
     </View>
@@ -67,17 +77,12 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   wrapperItem: {
-    backgroundColor: "#fff",
+    backgroundColor: "#ff5c001a",
     padding: 12,
     borderRadius: 12,
-    elevation: 2,
-    shadowColor: "#000040",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
+    shadowColor: "#000000",
     flexDirection: "column",
     gap: 12,
-    marginHorizontal: 1,
   },
   contentText: {
     fontFamily: baloo2Fonts.semi,

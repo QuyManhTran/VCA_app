@@ -4,22 +4,19 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
-  Modal,
   Alert,
+  Pressable,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import ThemeContext from "../../utilies/theme";
 import * as ImagePicker from "expo-image-picker";
-import { Dimensions } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-
 import { colors } from "../../../constants";
 import styles from "./style";
-
+const uriBase64 = "data:image/jpeg;base64,";
 const Account = ({ navigation, ...props }) => {
   const { isDarkMode } = useContext(ThemeContext);
   const [avatar, setAvatar] = useState(null);
@@ -50,6 +47,7 @@ const Account = ({ navigation, ...props }) => {
         allowsEditing: true,
         // aspect: [4, 3],
         quality: 1,
+        base64: true,
       });
     } else {
       result = await ImagePicker.launchImageLibraryAsync({
@@ -57,6 +55,7 @@ const Account = ({ navigation, ...props }) => {
         allowsEditing: true,
         // aspect: [4, 3],
         quality: 1,
+        base64: true,
       });
     }
 
@@ -98,6 +97,7 @@ const Account = ({ navigation, ...props }) => {
         allowsEditing: true,
         // aspect: [4, 3],
         quality: 1,
+        base64: true,
       });
     } else {
       result = await ImagePicker.launchImageLibraryAsync({
@@ -105,6 +105,7 @@ const Account = ({ navigation, ...props }) => {
         allowsEditing: true,
         // aspect: [4, 3],
         quality: 1,
+        base64: true,
       });
     }
 
@@ -161,9 +162,23 @@ const Account = ({ navigation, ...props }) => {
     });
   };
 
+  useEffect(() => {
+    if (dataAvatar) {
+      // api avatar image
+      // const data = uriBase64 + dataAvatar?.base64;
+    }
+  }, [dataAvatar]);
+
+  useEffect(() => {
+    if (dataCoverphoto) {
+      // api cover photo image
+      // const data = uriBase64 + dataAvatar?.base64;
+    }
+  }, [dataCoverphoto]);
+
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView style={{ marginTop: 40 }}>
         <View style={styles.header}>
           <View style={{ alignItems: "flex-end" }}>
             <TouchableOpacity
@@ -182,6 +197,7 @@ const Account = ({ navigation, ...props }) => {
 
           <View style={styles.headerImage}>
             <TouchableOpacity
+              activeOpacity={0.6}
               style={{
                 width: "100%",
                 position: "relative",
@@ -191,7 +207,13 @@ const Account = ({ navigation, ...props }) => {
               onPress={setActionChooseCoverPhoto}
             >
               <Image
-                style={styles.headerImageDetail}
+                style={[
+                  styles.headerImageDetail,
+                  {
+                    borderTopLeftRadius: coverphoto ? 999 : 0,
+                    borderTopRightRadius: coverphoto ? 999 : 0,
+                  },
+                ]}
                 source={
                   coverphoto
                     ? { uri: coverphoto }
@@ -214,45 +236,50 @@ const Account = ({ navigation, ...props }) => {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.headerAvatar}
-              onPress={() => setActionChooseAvatar()}
-            >
-              <Image
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 85,
-                  borderWidth: 2,
-                  borderColor: colors.whiteText,
-                }}
-                source={
-                  avatar
-                    ? { uri: avatar }
-                    : require("../../../assets/img/accounts/anhDaiDienAccount.png")
-                }
-              />
-              <View
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 15,
-                  zIndex: 9999,
-                  borderRadius: 50,
-                  borderColor: "white",
-                  borderWidth: 2,
-                  backgroundColor: colors.whiteText,
-                }}
+            <View style={styles.headerAvatar}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => setActionChooseAvatar()}
               >
-                <MaterialIcons name="photo-camera" size={20}></MaterialIcons>
-              </View>
-            </TouchableOpacity>
+                <Image
+                  style={{
+                    width: 150,
+                    height: "100%",
+                    borderRadius: 85,
+                    borderWidth: 2,
+                    borderColor: colors.whiteText,
+                  }}
+                  source={
+                    avatar
+                      ? { uri: avatar }
+                      : require("../../../assets/img/accounts/anhDaiDienAccount.png")
+                  }
+                />
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 15,
+                    zIndex: 9999,
+                    borderRadius: 50,
+                    borderColor: "white",
+                    borderWidth: 2,
+                    backgroundColor: colors.whiteText,
+                  }}
+                >
+                  <MaterialIcons name="photo-camera" size={20}></MaterialIcons>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.headerText}>
             <Text style={styles.headerTextName}>Charlie Puth</Text>
             <Text style={styles.headerTextEmail}>user12345@gmail.com</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("EditInfo")}>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => navigation.navigate("EditInfo")}
+            >
               <View style={styles.headerTextEdit}>
                 <Text style={styles.headerTextEditText}>
                   Chỉnh sửa thông tin
@@ -280,7 +307,132 @@ const Account = ({ navigation, ...props }) => {
               <Entypo name="chevron-right" size={25} color="black" />
             </TouchableOpacity>
           </View>
-          {/* <View style={styles.option}>
+
+          <View style={{ height: 150 }}></View>
+        </View>
+      </ScrollView>
+      {modalVisible && (
+        <Pressable
+          onPress={() => setModalVisible(!modalVisible)}
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            justifyContent: "flex-end",
+          }}
+        >
+          {pressAvatar && (
+            <View
+              style={{
+                backgroundColor: colors.whiteText,
+                borderTopRightRadius: 24,
+                borderTopLeftRadius: 24,
+                paddingBottom: 82,
+              }}
+            >
+              <TouchableOpacity
+                style={styles.modalWapper}
+                onPress={() =>
+                  navigation.navigate("showImage", { data: dataAvatar })
+                }
+              >
+                <MaterialIcons name="account-circle" size={25} color="black" />
+                <Text style={styles.modalCompoment}>Xem ảnh đại diện</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.modalWapper}
+                onPress={() => handleSetAvatar(true)}
+              >
+                <AntDesign name="camera" size={24} color="black" />
+                <Text style={styles.modalCompoment}>
+                  Chọn ảnh đại diện từ camera{" "}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.modalWapper}
+                onPress={() => handleSetAvatar(false)}
+              >
+                <Entypo name="folder-images" size={24} color="black" />
+                <Text style={styles.modalCompoment}>
+                  Chọn ảnh đại diện từ thư viện
+                </Text>
+              </TouchableOpacity>
+
+              {avatar && (
+                <TouchableOpacity
+                  style={styles.modalWapper}
+                  onPress={deleteAvatar}
+                >
+                  <AntDesign name="delete" size={24} color="black" />
+                  <Text style={styles.modalCompoment}>Xóa ảnh đại diện </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+          {pressCoverPhoto && (
+            <View
+              style={{
+                height: 300,
+                backgroundColor: colors.whiteText,
+                borderRadius: 25,
+              }}
+            >
+              <TouchableOpacity
+                style={styles.modalWapper}
+                onPress={() =>
+                  navigation.navigate("showImage", { data: dataCoverphoto })
+                }
+              >
+                <Entypo name="image" size={24} color="black" />
+                <Text style={styles.modalCompoment}>Xem ảnh bìa</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.modalWapper}
+                onPress={() => handleSetCoverPhoto(true)}
+              >
+                <AntDesign name="camera" size={24} color="black" />
+                <Text style={styles.modalCompoment}>
+                  Chọn ảnh bìa từ camera{" "}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.modalWapper}
+                onPress={() => handleSetCoverPhoto(false)}
+              >
+                <Entypo name="folder-images" size={24} color="black" />
+                <Text style={styles.modalCompoment}>
+                  Chọn ảnh bìa từ thư viện{" "}
+                </Text>
+              </TouchableOpacity>
+
+              {coverphoto && (
+                <TouchableOpacity
+                  style={styles.modalWapper}
+                  onPress={deleteCoverPhoto}
+                >
+                  <AntDesign name="delete" size={24} color="black" />
+                  <Text style={styles.modalCompoment}>Xóa ảnh bìa</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+        </Pressable>
+      )}
+    </View>
+  );
+};
+
+export default Account;
+
+{
+  /* <View style={styles.option}>
             <Text style={styles.optionTitle}>Tùy chọn</Text>
 
             <TouchableOpacity style={styles.optionLanguage}>
@@ -312,158 +464,5 @@ const Account = ({ navigation, ...props }) => {
               </View>
               <Entypo name="chevron-right" size={25} color="black" />
             </TouchableOpacity>
-          </View> */}
-
-          <View style={{ height: 150 }}></View>
-        </View>
-      </ScrollView>
-
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => setModalVisible(!modalVisible)}
-          style={{
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        ></TouchableOpacity>
-        {pressAvatar && (
-          <View
-            style={{
-              height: 300,
-              backgroundColor: colors.whiteText,
-              borderRadius: 25,
-            }}
-          >
-            <TouchableOpacity
-              style={styles.modalWapper}
-              onPress={() =>
-                navigation.navigate("showImage", { data: dataAvatar })
-              }
-            >
-              <MaterialIcons name="account-circle" size={25} color="black" />
-              <Text style={styles.modalCompoment}>Xem ảnh đại diện</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.modalWapper}
-              onPress={() => handleSetAvatar(true)}
-            >
-              <AntDesign name="camera" size={24} color="black" />
-              <Text style={styles.modalCompoment}>
-                Chọn ảnh đại diện từ camera{" "}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.modalWapper}
-              onPress={() => handleSetAvatar(false)}
-            >
-              <Entypo name="folder-images" size={24} color="black" />
-              <Text style={styles.modalCompoment}>
-                Chọn ảnh đại diện từ thư viện
-              </Text>
-            </TouchableOpacity>
-
-            {avatar && (
-              <TouchableOpacity
-                style={styles.modalWapper}
-                onPress={deleteAvatar}
-              >
-                <AntDesign name="delete" size={24} color="black" />
-                <Text style={styles.modalCompoment}>Xóa ảnh đại diện </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-
-        {pressCoverPhoto && (
-          <View
-            style={{
-              height: 300,
-              backgroundColor: colors.whiteText,
-              borderRadius: 25,
-            }}
-          >
-            <TouchableOpacity
-              style={styles.modalWapper}
-              onPress={() =>
-                navigation.navigate("showImage", { data: dataCoverphoto })
-              }
-            >
-              <Entypo name="image" size={24} color="black" />
-              <Text style={styles.modalCompoment}>Xem ảnh bìa</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.modalWapper}
-              onPress={() => handleSetCoverPhoto(true)}
-            >
-              <AntDesign name="camera" size={24} color="black" />
-              <Text style={styles.modalCompoment}>Chọn ảnh bìa từ camera </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.modalWapper}
-              onPress={() => handleSetCoverPhoto(false)}
-            >
-              <Entypo name="folder-images" size={24} color="black" />
-              <Text style={styles.modalCompoment}>
-                Chọn ảnh bìa từ thư viện{" "}
-              </Text>
-            </TouchableOpacity>
-
-            {coverphoto && (
-              <TouchableOpacity
-                style={styles.modalWapper}
-                onPress={deleteCoverPhoto}
-              >
-                <AntDesign name="delete" size={24} color="black" />
-                <Text style={styles.modalCompoment}>Xóa ảnh bìa</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-      </Modal>
-    </View>
-  );
-};
-
-export default Account;
-
-// return (
-//   <View
-//     style={{
-//       flex: 1,
-//       alignItems: "center",
-//       justifyContent: "center",
-//       backgroundColor: darkMode ? darkTheme.backGroundColor : undefined,
-//     }}
-//   >
-//     <Text
-//       style={{
-//         fontSize: 30,
-//         fontWeight: "600",
-//         color: darkMode ? darkTheme.color : undefined,
-//       }}
-//     >
-//       ACCOUNT
-//     </Text>
-//     <Switch
-//       value={darkMode}
-//       onValueChange={(value) => {
-//         setDarkMode(value);
-//         EventRegister.emit("ChangeTheme", value);
-//       }}
-//       style={[{ transform: [{ scale: 1.5 }] }, { width: 30 }]}
-//     ></Switch>
-//   </View>
-// );
+          </View> */
+}

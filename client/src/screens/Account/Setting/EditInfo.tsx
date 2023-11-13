@@ -118,105 +118,110 @@ const EditInfo = ({ navigation }) => {
       keyboardVerticalOffset={height + 100}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.contaier}>
-            <LinearBackGround
-              height={100}
-              back={true}
-              avatar={false}
-              onPress={onBack}
-              // isDarkMode={isDarkMode}
-            ></LinearBackGround>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flexGrow: 1 }}>
+          <LinearBackGround
+            height={100}
+            back={true}
+            avatar={false}
+            onPress={onBack}
+            // isDarkMode={isDarkMode}
+          ></LinearBackGround>
 
-            <Text style={styles.title}>Thông tin cá nhân </Text>
-            <Text style={styles.textLable}>Tên</Text>
-            <View style={styles.wapperEdit}>
-              <TextInput
-                style={styles.textEdit}
-                editable={true}
-                onChangeText={(value) => setFullName(value)}
-              >
-                {fullName}
-              </TextInput>
-            </View>
-
-            <Text style={styles.textLable}>Số điện thoại</Text>
-            <View style={styles.wapperEdit}>
-              <TextInput
-                style={styles.textEdit}
-                onChangeText={(value) => setPhoneNumber(value)}
-              >
-                {phoneNumber}
-              </TextInput>
-            </View>
-            <Text style={styles.textLable}>Ngày sinh</Text>
-            {showPicker && (
-              <DateTimePicker
-                mode="date"
-                display="spinner"
-                onChange={onChange}
-                value={date}
-              />
-            )}
-            {!showPicker && (
-              <Pressable onPress={toggleDatapicker} style={styles.wapperEdit}>
-                <TextInput
-                  editable={false}
-                  value={selectedStartDate}
-                  placeholderTextColor={colors.black}
-                  style={styles.textEdit}
-                ></TextInput>
-              </Pressable>
-            )}
-
-            <TouchableOpacity
-              style={{
-                height: 70,
-                marginLeft: 10,
-                marginTop: 10,
-                borderTopWidth: 1,
-                borderTopColor: "#D9D9D9",
-                flexDirection: "row",
-                borderBottomColor: "#D9D9D9",
-                borderBottomWidth: 1,
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-              onPress={() => navigation.navigate("Password")}
+          <Text style={styles.title}>Thông tin cá nhân </Text>
+          <Text style={styles.textLable}>Tên</Text>
+          <View style={styles.wapperEdit}>
+            <TextInput
+              style={styles.textEdit}
+              editable={true}
+              onChangeText={(value) => setFullName(value)}
+              placeholder="Tên của bạn"
+              selectionColor={colors.primary}
             >
-              <Text
-                style={{
-                  fontFamily: baloo2Fonts.bold,
-
-                  fontSize: 20,
-                }}
-              >
-                Thay đổi mật khẩu
-              </Text>
-
-              <Entypo
-                style={{ marginRight: 5 }}
-                name="chevron-right"
-                size={25}
-                color="black"
-              />
-            </TouchableOpacity>
-
-            <View style={styles.summitWapper}>
-              <TouchableOpacity onPress={onSaveData}>
-                <Text style={styles.summitText}>Lưu thay đổi</Text>
-              </TouchableOpacity>
-            </View>
+              {fullName}
+            </TextInput>
           </View>
-        </TouchableWithoutFeedback>
-      </View>
+
+          <Text style={styles.textLable}>Số điện thoại</Text>
+          <View style={styles.wapperEdit}>
+            <TextInput
+              style={styles.textEdit}
+              onChangeText={(value) => setPhoneNumber(value)}
+              placeholder="0123456789"
+              selectionColor={colors.primary}
+            >
+              {phoneNumber}
+            </TextInput>
+          </View>
+          <Text style={styles.textLable}>Ngày sinh</Text>
+          {showPicker && (
+            <DateTimePicker
+              mode="date"
+              display="spinner"
+              onChange={onChange}
+              value={date}
+            />
+          )}
+
+          <Pressable onPress={toggleDatapicker} style={styles.wapperEdit}>
+            <TextInput
+              editable={false}
+              value={selectedStartDate}
+              placeholderTextColor={colors.black}
+              style={styles.textEdit}
+              placeholder="Tên của bạn"
+              selectionColor={colors.primary}
+            ></TextInput>
+          </Pressable>
+
+          <TouchableOpacity
+            style={{
+              height: 70,
+              marginLeft: 10,
+              marginTop: 10,
+              borderTopWidth: 1,
+              borderTopColor: "#D9D9D9",
+              flexDirection: "row",
+              borderBottomColor: "#D9D9D9",
+              borderBottomWidth: 1,
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+            onPress={() => navigation.navigate("Password")}
+          >
+            <Text
+              style={{
+                fontFamily: baloo2Fonts.bold,
+
+                fontSize: 20,
+              }}
+            >
+              Thay đổi mật khẩu
+            </Text>
+
+            <Entypo
+              style={{ marginRight: 5 }}
+              name="chevron-right"
+              size={25}
+              color="black"
+            />
+          </TouchableOpacity>
+
+          <View style={styles.summitWapper}>
+            <TouchableOpacity onPress={onSaveData}>
+              <Text style={styles.summitText}>Lưu thay đổi</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  contaier: {},
+  container: {
+    flex: 1,
+  },
 
   title: {
     fontFamily: baloo2Fonts.bold,
@@ -226,8 +231,8 @@ const styles = StyleSheet.create({
   },
 
   textLable: {
-    borderTopWidth: 1,
-    borderTopColor: "#D9D9D9",
+    // borderTopWidth: 1,
+    // borderTopColor: "#D9D9D9",
     marginTop: 10,
     fontFamily: baloo2Fonts.bold,
     marginLeft: 10,
@@ -237,22 +242,20 @@ const styles = StyleSheet.create({
   wapperEdit: {
     marginHorizontal: 10,
     flexDirection: "row",
-    justifyContent: "space-between",
     backgroundColor: "#D9D9D9",
     alignItems: "center",
     borderRadius: 15,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    height: 60,
   },
 
   textEdit: {
-    position: "relative",
-    display: "flex",
-    justifyContent: "flex-end",
-    flex: 1,
+    height: "100%",
+    width: "100%",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     color: colors.black,
     fontFamily: baloo2Fonts.regular,
-    fontSize: 25,
+    fontSize: 22,
   },
 
   summitWapper: {

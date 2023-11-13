@@ -4,7 +4,7 @@ import { baloo2Fonts, montserratFonts } from "../../../constants/fontFamiles";
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
+    flex: 1,
   },
 
   header: {
@@ -14,10 +14,10 @@ const styles = StyleSheet.create({
   headerAvatar: {
     position: "absolute",
     top: "50%",
-    left: "50%",
-    transform: [{ translateX: -64 }],
+    left: 0,
+    width: "100%",
     height: 150,
-    width: 150,
+    alignItems: "center",
   },
 
   headerImage: {
