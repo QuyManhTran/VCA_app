@@ -20,6 +20,12 @@ const UserAccount = new Schema ({
         type: String,
         // required: true,
       },
+      avatar : {
+        type: String,
+      },
+      coverPhoto : {
+        type: String,
+      }
 })
 
 module.exports = mongoose.model('account', UserAccount)
