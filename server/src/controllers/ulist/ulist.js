@@ -2,7 +2,11 @@ const ulist = require('../../models/ulist/ulist');
 
 const createNewList = async (req, res, next) => {
     const { name } = req.body;
-    const image = req.file.path;
+    originalString = req.file.path;
+    const startIndex = originalString.indexOf("public");
+    const image = originalString.substring(startIndex);
+    console.log(image);
+    
     const newUList = new ulist({ name: name, image: image });
     try {
         await newUList.save();
