@@ -7,12 +7,7 @@ import * as Network from "expo-network";
 interface GlobalContextProps {
   children: React.ReactNode;
 }
-const fakeData = [
-  { img: list, name: "Món ngon Hà Nội", data: mostlySearch },
-  { img: list, name: "Gỏi các loại", data: mostlySearch },
-  { img: list, name: "Bún with love", data: mostlySearch },
-  { img: list, name: "Xem sau", data: mostlySearch },
-];
+const fakeData = [{ img: list, name: "Xem sau", data: mostlySearch }];
 const GlobalContext = ({ children }: GlobalContextProps) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [baseURL, setBaseURL] = useState<string | null>(null);

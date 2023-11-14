@@ -25,6 +25,7 @@ import { navItems } from "../../../constants/fakeData";
 import { blogService } from "../../services/blogService";
 import { history } from "./Meaning/Meaning";
 import { ingredients } from "./Recipe/Recipe";
+import FavoriteModal from "./FavoriteModal";
 
 const upComment = { 0: { top: 1000 }, 1: { top: 0 } };
 const downComment = { 0: { top: 0 }, 1: { top: 1000 } };
@@ -47,6 +48,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const [activeNav, setActiveNav] = useState(0);
   const [contentY, setContentY] = useState(0);
   const [isModal, setIsModal] = useState(false);
+  const [isFavoriteModal, setIsFavoriteModal] = useState(false);
   const [isComment, setIsComment] = useState(false);
   const [firstComment, setFirstComment] = useState(false);
   const NavRef = useRef<FlatList>(null);
@@ -93,6 +95,14 @@ const Blog = ({ route, navigation }: RouterProps) => {
 
   const openModal = useCallback(() => {
     setIsModal(true);
+  }, []);
+
+  const openFavoriteModal = useCallback(() => {
+    setIsFavoriteModal(true);
+  }, []);
+
+  const closeFavoriteModal = useCallback(() => {
+    setIsFavoriteModal(false);
   }, []);
 
   const onRating = useCallback(() => {
@@ -207,6 +217,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
           width={width}
           openModal={openModal}
           openComment={openComment}
+          openFavoriteModal={openFavoriteModal}
         ></Header>
         <View
           style={[
@@ -378,6 +389,12 @@ const Blog = ({ route, navigation }: RouterProps) => {
           closeModal={closeModal}
           onRating={onRating}
         ></RateModal>
+      )}
+      {isFavoriteModal && (
+        <FavoriteModal
+          isDarkMode={isDarkMode}
+          onCloseModal={closeFavoriteModal}
+        ></FavoriteModal>
       )}
     </View>
   );
