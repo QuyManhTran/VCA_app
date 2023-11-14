@@ -5,6 +5,7 @@ import {
   Animated,
   FlatList,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { useCallback, useEffect, useState, useRef, useContext } from "react";
 import styles from "./style";
@@ -18,14 +19,18 @@ import { mostlySearch, viralSearchs } from "../../../constants/fakeData";
 import BackButton from "../../components/BackButton";
 import ThemeContext from "../../utilies/theme";
 import { colors } from "../../../constants";
-
+import {
+  searchAllService,
+  searchTagService,
+} from "../../services/searchService";
+import { noResults } from "../../../assets/img/ilustraitions";
 type SearchStatusType = "tag" | "all";
 const Search = ({ route, navigation }: RouterProps) => {
   const flatRef = useRef<FlatList>(null);
   const scrollOpacity = useRef(new Animated.Value(0)).current;
   const { isDarkMode } = useContext(ThemeContext);
   const [keyword, setKeyword] = useState(route.params?.keyword || "");
-  const [data, setData] = useState(mostlySearch);
+  const [data, setData] = useState([]);
   const debounceKeyword = useDebounce(keyword, 300);
   const [activeTag, setActiveTag] = useState(0);
   const [searchStatus, setSearchStatus] = useState<SearchStatusType>(
@@ -53,21 +58,66 @@ const Search = ({ route, navigation }: RouterProps) => {
     navigation.goBack();
   }, []);
 
-  useEffect(() => {
-    if (!keyword) {
-      // call api with keyword = 'pho bien'
+  const searchByTag = async (tag: string) => {
+    // console.log("tag: ", tag);
+
+    const foods = await searchTagService.searchTag(
+      searchTagService.searchTagPath,
+      {
+        tag: tag,
+      }
+    );
+
+    if (foods.message !== 200) {
+      setData([]);
+    } else {
+      setData(foods.data);
     }
-  }, []);
+  };
+
+  const searchByAll = async (keyword: string) => {
+    // console.log("keyword: ", keyword);
+    const foods = await searchAllService.searchAll(
+      searchAllService.searchAllPath,
+      {
+        keyword: keyword,
+      }
+    );
+
+    if (foods.message !== 200) {
+      setData([]);
+    } else {
+      setData(foods.data);
+    }
+  };
+
+  useEffect(() => {
+    console.log(searchStatus);
+  }, [searchStatus]);
+
+  useEffect(() => {
+    const viralSearch = async () => {
+      await searchByTag(viralSearchs[activeTag]);
+    };
+    viralSearch();
+  }, [activeTag]);
 
   useEffect(() => {
     // sent API by debounceKeyword
-    console.log(searchStatus);
-    if (debounceKeyword === "") {
-      setData(mostlySearch);
-      setSearchStatus("tag");
-    } else {
-      setData([]);
-    }
+    const getFoods = async () => {
+      if (debounceKeyword === "") {
+        console.log(debounceKeyword);
+        setSearchStatus("tag");
+        await searchByTag(viralSearchs[activeTag]);
+      } else {
+        if (searchStatus === "tag") {
+          await searchByTag(debounceKeyword);
+        } else {
+          await searchByAll(debounceKeyword);
+        }
+      }
+    };
+    getFoods();
     scrollOpacity.setValue(0);
   }, [debounceKeyword]);
 
@@ -116,7 +166,7 @@ const Search = ({ route, navigation }: RouterProps) => {
         ></SearchTool>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {debounceKeyword === "" && (
+        {(data.length !== 0 || searchStatus === "tag") && (
           <FlatList
             ref={flatRef}
             data={viralSearchs}
@@ -172,45 +222,47 @@ const Search = ({ route, navigation }: RouterProps) => {
             paddingBottom: 24,
           }}
         >
-          {/* {debounceKeyword === "" && (
-            <Text
-              style={{
-                fontSize: 30,
-                fontFamily: baloo2Fonts.extra,
-                paddingVertical: 12,
-                color: isDarkMode ? colors.whiteText : "black",
-              }}
-            >
-              {viralSearchs[activeTag]}
-            </Text>
-          )} */}
-          {debounceKeyword !== "" && (
-            <Animated.Text
-              style={{
-                fontSize: 20,
-                fontFamily: baloo2Fonts.extra,
-                paddingVertical: 12,
-                textAlign: "center",
-                opacity: scrollOpacity,
-                color: isDarkMode ? colors.whiteText : "black",
-              }}
-            >
-              {data.length === 0
-                ? `Không có kết quả phù hợp '${debounceKeyword}'`
-                : undefined}
-            </Animated.Text>
+          {data.length === 0 &&
+            searchStatus === "all" &&
+            debounceKeyword !== "" && (
+              <View style={{ alignItems: "center" }}>
+                <Animated.Text
+                  numberOfLines={2}
+                  ellipsizeMode={"tail"}
+                  style={{
+                    fontSize: 20,
+                    fontFamily: baloo2Fonts.extra,
+                    paddingVertical: 12,
+                    textAlign: "center",
+                    opacity: scrollOpacity,
+                    color: isDarkMode ? colors.whiteText : "black",
+                  }}
+                >
+                  {data.length === 0
+                    ? `Không có kết quả phù hợp '${debounceKeyword}'`
+                    : undefined}
+                </Animated.Text>
+                <Image
+                  source={noResults}
+                  resizeMode="cover"
+                  style={{ flex: 1, width: 300, height: 300 }}
+                ></Image>
+              </View>
+            )}
+
+          {data.length > 0 && (
+            <View style={{ flex: 1 }}>
+              {data.map((food, index) => (
+                <FoodReview
+                  {...food}
+                  key={index}
+                  onTag={onTag}
+                  isDarkMode={isDarkMode}
+                  onBlog={onBlog}
+                ></FoodReview>
+              ))}
+            </View>
           )}
-          <View style={{ flex: 1 }}>
-            {data.map((food, index) => (
-              <FoodReview
-                {...food}
-                key={index}
-                onTag={onTag}
-                isDarkMode={isDarkMode}
-                onBlog={onBlog}
-              ></FoodReview>
-            ))}
-          </View>
         </View>
       </ScrollView>
     </View>

@@ -83,8 +83,8 @@ export const notifytions = {
 };
 
 export const viralSearchs = [
-  "Phổ biến",
   "Truyền thống",
+  "Phổ biến",
   "Mới",
   "Yêu thích",
   "Bánh",

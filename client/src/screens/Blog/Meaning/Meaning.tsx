@@ -5,7 +5,7 @@ import { baloo2Fonts } from "../../../../constants/fontFamiles";
 
 export interface history {
   title: string;
-  img: any;
+  image: any;
   content: string;
 }
 interface MeaningProps {

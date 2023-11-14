@@ -9,7 +9,12 @@ interface MeaningItemProps extends history {
   isDarkMode: boolean;
 }
 
-const MeaningItem = ({ img, title, content, isDarkMode }: MeaningItemProps) => {
+const MeaningItem = ({
+  image,
+  title,
+  content,
+  isDarkMode,
+}: MeaningItemProps) => {
   const [isSeeMore, setIsSeeMore] = useState(false);
   return (
     <View
@@ -27,7 +32,7 @@ const MeaningItem = ({ img, title, content, isDarkMode }: MeaningItemProps) => {
       >
         <Image
           source={{
-            uri: "https://banhmipho.vn/wp-content/uploads/2021/08/banh-mi-Hoa-Ma.jpg",
+            uri: image,
           }}
           resizeMode="cover"
           style={{ width: 44, height: 44, borderRadius: 12 }}

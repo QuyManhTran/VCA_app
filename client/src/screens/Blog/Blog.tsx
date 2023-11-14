@@ -22,16 +22,27 @@ import ThemeContext from "../../utilies/theme";
 import styles from "./style";
 import { colors } from "../../../constants";
 import { navItems } from "../../../constants/fakeData";
+import { blogService } from "../../services/blogService";
+import { history } from "./Meaning/Meaning";
+import { ingredients } from "./Recipe/Recipe";
 
 const upComment = { 0: { top: 1000 }, 1: { top: 0 } };
 const downComment = { 0: { top: 0 }, 1: { top: 1000 } };
 
 const Blog = ({ route, navigation }: RouterProps) => {
   const { height, width } = useWindowDimensions();
+  const { id, name, like, image, rate } = route.params;
+  const { isLiked, originRate, isFavorite } = {
+    isLiked: false,
+    originRate: false,
+    isFavorite: false,
+  };
   const { isDarkMode } = useContext(ThemeContext);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const { name, img, like, rate, isLiked, originRate, isFavorite } =
-    route.params;
+  const [description, setDescription] = useState("");
+  const [histories, setHistories] = useState<history[]>([]);
+  const [ingredientList, setIngredientList] = useState<ingredients[]>([]);
+  const [video, setVideo] = useState<string>("");
   const [isRate, setIsRate] = useState(originRate);
   const [activeNav, setActiveNav] = useState(0);
   const [contentY, setContentY] = useState(0);
@@ -95,6 +106,22 @@ const Blog = ({ route, navigation }: RouterProps) => {
 
   const closeComment = useCallback(() => {
     setIsComment(false);
+  }, []);
+  // Call API
+  useEffect(() => {
+    const getBlog = async () => {
+      const response = await blogService.getBlog(blogService.blogPath, {
+        _id: id,
+      });
+      if (response.message === 200) {
+        const { history, video, describe, ingredient_list } = response.data;
+        setHistories(history);
+        setDescription(describe);
+        setVideo(video);
+        setIngredientList(ingredient_list);
+      }
+    };
+    getBlog();
   }, []);
 
   useEffect(() => {
@@ -160,6 +187,8 @@ const Blog = ({ route, navigation }: RouterProps) => {
       <Video
         isFullscreen={isFullscreen}
         toggleFullscreen={toggleFullscreen}
+        video={video}
+        thumbnail={image}
       ></Video>
       <View
         style={{
@@ -170,7 +199,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
           name={name}
           like={like}
           rate={rate}
-          img={img}
+          image={image}
           isDarkMode={isDarkMode}
           isLiked={isLiked}
           isFavorite={isFavorite}
@@ -271,7 +300,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
                     }}
                   >
                     <Description
-                      content={item.content}
+                      content={description}
                       isDarkMode={isDarkMode}
                     ></Description>
                   </Animated.ScrollView>
@@ -287,7 +316,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
                     }}
                   >
                     <Meaning
-                      histories={item.histories}
+                      histories={histories}
                       isDarkMode={isDarkMode}
                       width={width}
                     ></Meaning>
@@ -303,7 +332,10 @@ const Blog = ({ route, navigation }: RouterProps) => {
                       opacity: opacity,
                     }}
                   >
-                    <Recipe isDarkMode={isDarkMode}></Recipe>
+                    <Recipe
+                      isDarkMode={isDarkMode}
+                      ingredientList={ingredientList}
+                    ></Recipe>
                   </Animated.ScrollView>
                 );
               }
