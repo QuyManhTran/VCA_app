@@ -6,7 +6,7 @@ const foodSearchAllCtrl = async (req, res) => {
 
     // Tìm món ăn trong cơ sở dữ liệu
     const foodByTag = await Food.find({
-        tag: { $regex: new RegExp(keyword, "i")}
+        tags: { $regex: new RegExp(keyword, "i")}
     });
     const foodByName = await Food.find({
         name: { $regex: new RegExp(keyword, "i")}
@@ -18,7 +18,7 @@ const foodSearchAllCtrl = async (req, res) => {
             id: foodInstance._id,
             name: foodInstance.name,
             image: foodInstance.image,
-            tags: foodInstance.tag,
+            tags: foodInstance.tags,
             like: foodInstance.like,
             rate: foodInstance.rate
         };
@@ -32,7 +32,7 @@ const foodSearchTagCtrl = async (req, res) => {
 
     // Tìm món ăn trong cơ sở dữ liệu
     const food = await Food.find({
-        tag: { $regex: new RegExp(tag, "i")}
+        tags: { $regex: new RegExp(tag, "i")}
     });
 
     const result = food.map(foodInstance => {
@@ -40,7 +40,7 @@ const foodSearchTagCtrl = async (req, res) => {
             id: foodInstance._id,
             name: foodInstance.name,
             image: foodInstance.image,
-            tags: foodInstance.tag,
+            tags: foodInstance.tags,
             like: foodInstance.like,
             rate: foodInstance.rate
         };

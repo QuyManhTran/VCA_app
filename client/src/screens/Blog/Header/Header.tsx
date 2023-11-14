@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useEffect, useRef, useState, memo } from "react";
 import { Audio } from "expo-av";
 import * as Animatable from "react-native-animatable";
@@ -6,13 +6,12 @@ import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../../constants";
 import { FbSound } from "../../../../assets/audios";
-import Description from "../Description";
-import { navItems } from "../../../../constants/fakeData";
+
 interface HeaderBlogProps {
   name: string;
   like: number;
   rate: number;
-  img: any;
+  image: any;
   isDarkMode: boolean;
   isLiked: boolean;
   isFavorite: boolean;
@@ -31,7 +30,7 @@ const Header = ({
   name,
   like,
   rate,
-  img,
+  image,
   isDarkMode,
   width,
   openModal,

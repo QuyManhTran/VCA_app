@@ -23,13 +23,20 @@ import { banhMyThumbnail } from "../../../assets/img/thumbnail";
 interface VideoProps {
   toggleFullscreen: any;
   isFullscreen: boolean;
+  video?: string;
+  thumbnail: any;
 }
 const rotateAnimation = { 0: { rotate: "0deg" }, 1: { rotate: "360deg" } };
 const rotateReverseAnimation = {
   0: { rotate: "0deg" },
   1: { rotate: "-360deg" },
 };
-const Video = ({ toggleFullscreen, isFullscreen }: VideoProps) => {
+const Video = ({
+  toggleFullscreen,
+  isFullscreen,
+  video,
+  thumbnail,
+}: VideoProps) => {
   const { width, height } = useWindowDimensions();
   const vidRef = useRef<VideoPlayer>(null);
   const backwardRef = useRef(null);
@@ -152,7 +159,7 @@ const Video = ({ toggleFullscreen, isFullscreen }: VideoProps) => {
     if (isTouchEnd) {
       timeOutRef.current = setTimeout(() => {
         setIsTouchStart(false);
-      }, 2000);
+      }, 1000);
     }
     return () => clearTimeout(timeOutRef.current as NodeJS.Timeout);
   }, [isTouchEnd]);
@@ -176,9 +183,9 @@ const Video = ({ toggleFullscreen, isFullscreen }: VideoProps) => {
         <VideoPlayer
           ref={vidRef}
           usePoster={true}
-          posterSource={banhMyThumbnail}
+          posterSource={{ uri: thumbnail }}
           source={{
-            uri: "https://res.cloudinary.com/dxqd4odva/video/upload/v1698630386/VCA_app/Aquaman_jnqrbp.mp4",
+            uri: video,
           }}
           resizeMode={ResizeMode.CONTAIN}
           style={{

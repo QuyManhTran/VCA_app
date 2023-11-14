@@ -4,10 +4,16 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "../../../../constants";
 import { banhmyRecipe } from "../../../../constants/recipes";
 import styles from "./style";
+export interface ingredients {
+  name: string;
+  image: string;
+  quantity: string;
+}
 interface RecipeProps {
   isDarkMode: boolean;
+  ingredientList: ingredients[];
 }
-const Recipe = ({ isDarkMode }: RecipeProps) => {
+const Recipe = ({ isDarkMode, ingredientList }: RecipeProps) => {
   return (
     <View style={{ backgroundColor: isDarkMode ? colors.darkTheme : "#fff" }}>
       <Text
@@ -148,11 +154,11 @@ const Recipe = ({ isDarkMode }: RecipeProps) => {
             minWidth: 64,
           }}
         >
-          6 loại
+          {ingredientList.length} loại
         </Text>
       </View>
       <View style={{ marginTop: -10 }}>
-        {banhmyRecipe.map((item, index) => (
+        {ingredientList.map((item, index) => (
           <View
             style={[
               styles.recipeWrapper,
@@ -170,7 +176,7 @@ const Recipe = ({ isDarkMode }: RecipeProps) => {
               }}
             >
               <Image
-                source={item.img}
+                source={{ uri: item.image }}
                 resizeMode="cover"
                 style={{ width: 36, height: 36 }}
               ></Image>
@@ -193,7 +199,7 @@ const Recipe = ({ isDarkMode }: RecipeProps) => {
                 },
               ]}
             >
-              {item.amount}
+              {item.quantity}
             </Text>
           </View>
         ))}

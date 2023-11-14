@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import ThemeContext from "./theme";
 import { list } from "../../assets/img/foods";
 import { mostlySearch, notifytions } from "../../constants/fakeData";
+import * as Network from "expo-network";
 interface GlobalContextProps {
   children: React.ReactNode;
 }
@@ -14,6 +15,7 @@ const fakeData = [
 ];
 const GlobalContext = ({ children }: GlobalContextProps) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [baseURL, setBaseURL] = useState<string | null>(null);
   const [isHomeScrollDown, setIsHomeScrollDown] = useState(false);
   const [personalLists, setPersonalLists] = useState(fakeData);
   const [notifitions, setNotifitions] = useState(notifytions);
@@ -119,14 +121,16 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
       "Non-serializable values were found in the navigation state",
     ]);
   }, []);
-  // useEffect(() => {
-  //   const listener = EventRegister.addEventListener("ChangeTheme", (theme) => {
-  //     setIsDarkMode(theme);
-  //   });
-  //   return () => {
-  //     EventRegister.removeAllListeners();
-  //   };
-  // }, [isDarkMode]);
+
+  useEffect(() => {
+    const getIpAddress = async () => {
+      const ip = await Network.getIpAddressAsync();
+      const url = `${process.env.EXPO_PUBLIC_API_PROTOCOL}://${ip}:${process.env.EXPO_PUBLIC_SERVER_PORT}`;
+      console.log(url);
+      setBaseURL(url);
+    };
+    getIpAddress();
+  }, []);
 
   return (
     <ThemeContext.Provider
@@ -135,6 +139,7 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
         isHomeScrollDown,
         personalLists,
         notifitions,
+        baseURL,
         setHomeNavbar,
         onAddList,
         onRemoveList,
