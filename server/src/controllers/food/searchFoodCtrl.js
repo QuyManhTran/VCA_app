@@ -13,8 +13,6 @@ const foodSearchAllCtrl = async (req, res) => {
     });
     const food = foodByTag.concat(foodByName);
 
-    if (food.length === 0) return res.status(401).json({ message: 'Không tìm được món ăn phù hợp' });
-
     const result = food.map(foodInstance => {
         return {
             id: foodInstance._id,
@@ -25,7 +23,7 @@ const foodSearchAllCtrl = async (req, res) => {
             rate: foodInstance.rate
         };
     });
-    console.log(result);
+    
     return res.status(200).json(result);
 }
 
@@ -37,10 +35,6 @@ const foodSearchTagCtrl = async (req, res) => {
         tag: { $regex: new RegExp(tag, "i")}
     });
 
-    if (!food) {
-        return res.status(401).json({ message: 'Không tìm được món ăn phù hợp' });
-    }
-
     const result = food.map(foodInstance => {
         return {
             id: foodInstance._id,
@@ -51,7 +45,7 @@ const foodSearchTagCtrl = async (req, res) => {
             rate: foodInstance.rate
         };
     });
-    console.log(result);
+    
     return res.status(200).json(result);
 }
 
