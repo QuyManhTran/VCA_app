@@ -6,12 +6,14 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { memo } from "react";
+import { useState, useEffect, memo } from "react";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
 import { colors } from "../../../constants";
 import { recommendLists } from "../../../assets/img/foods";
 import { Ionicons } from "@expo/vector-icons";
+import { searchTagService } from "../../services/searchService";
+import { mostlySearch } from "../../../constants/fakeData";
 interface RecommendListProps {
   heading: string;
   explore?: boolean;
@@ -19,6 +21,7 @@ interface RecommendListProps {
   isLibrary?: boolean;
   onNavigateSearch: any;
   onBlog: any;
+  trending?: string;
   data: {
     name: string;
     img: any;
@@ -30,14 +33,36 @@ interface RecommendListProps {
   }[];
 }
 const RecommendList = ({
+  trending,
   heading,
   explore = false,
   onNavigateSearch,
   isDarkMode = false,
   isLibrary = false,
   onBlog = () => {},
-  data = recommendLists,
+  data: fallBackData = mostlySearch,
 }: RecommendListProps) => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    if (!trending) {
+      setData(fallBackData);
+    } else {
+      const recommendSearch = async () => {
+        const response = await searchTagService.searchTag(
+          searchTagService.searchTagPath,
+          {
+            tag: trending,
+          }
+        );
+        if (response.message === 200) {
+          setData(response.data);
+        } else {
+          setData(fallBackData);
+        }
+      };
+      recommendSearch();
+    }
+  }, []);
   const onNavigateBlog = (data: any) => {
     onBlog(data);
   };
@@ -81,7 +106,13 @@ const RecommendList = ({
                 if (explore) {
                   onNavigateSearch({ keyword: blog.name, status: "tag" });
                 } else {
-                  onNavigateBlog({ ...blog });
+                  onNavigateBlog({
+                    id: blog.id,
+                    name: blog.name,
+                    image: blog.image,
+                    like: blog.like,
+                    rate: blog.rate,
+                  });
                 }
               }}
               activeOpacity={0.6}
@@ -95,7 +126,7 @@ const RecommendList = ({
               }}
             >
               <Image
-                source={blog.img}
+                source={trending ? { uri: blog.image } : blog.img}
                 resizeMode="cover"
                 style={{ borderRadius: 12, width: 150, height: 90 }}
               ></Image>

@@ -14,6 +14,7 @@ import { colors } from "../../../constants";
 import FoodReview from "../../components/FoodReview";
 import Banner from "../../components/Banner";
 import exploreData, { recommendLists } from "../../../assets/img/foods";
+import { searchTagService } from "../../services/searchService";
 const searchUp = {
   0: { translateY: 0 },
   1: { translateY: -60 },
@@ -26,10 +27,11 @@ const Home = ({ route, navigation }: RouterProps) => {
   const { width, height } = useWindowDimensions();
   const { isDarkMode, setHomeNavbar } = useContext(ThemeContext);
   const [prevOffSetY, setPrevOffSetY] = useState(0);
+  const [countVar, setCountVar] = useState(0);
+  const [recommendations, setRecommendations] = useState([]);
   const scrollY = useRef(new Animated.Value(0)).current;
   const diffClampScrollY = Animated.diffClamp(scrollY, 0, 70);
   const searchRef = useRef(null);
-  const [countVar, setCountVar] = useState(0);
   const headerBottom = diffClampScrollY.interpolate({
     inputRange: [0, 35],
     outputRange: [0, -70],
@@ -53,6 +55,21 @@ const Home = ({ route, navigation }: RouterProps) => {
 
   const onBlog = useCallback(({ ...props }) => {
     navigation.navigate("Blog", { ...props });
+  }, []);
+
+  useEffect(() => {
+    const recommendSearch = async () => {
+      const response = await searchTagService.searchTag(
+        searchTagService.searchTagPath,
+        {
+          tag: "Hà Nội",
+        }
+      );
+      if (response.message === 200) {
+        setRecommendations(response.data);
+      }
+    };
+    recommendSearch();
   }, []);
 
   useEffect(() => {
@@ -126,7 +143,7 @@ const Home = ({ route, navigation }: RouterProps) => {
               >
                 Đề xuất cho bạn
               </Text>
-              {mostlySearch
+              {recommendations
                 .filter((food, index) => index < 3)
                 .map((food, index) => (
                   <FoodReview
@@ -171,6 +188,7 @@ const Home = ({ route, navigation }: RouterProps) => {
               </ScrollView>
             </View>
             <RecommendList
+              trending="Hà Nội"
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Phổ biến"
@@ -178,6 +196,7 @@ const Home = ({ route, navigation }: RouterProps) => {
               onBlog={onBlog}
             ></RecommendList>
             <RecommendList
+              trending="Bún"
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Yêu thích"
@@ -185,6 +204,7 @@ const Home = ({ route, navigation }: RouterProps) => {
               onBlog={onBlog}
             ></RecommendList>
             <RecommendList
+              trending="Tết"
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Thêm gần đây"

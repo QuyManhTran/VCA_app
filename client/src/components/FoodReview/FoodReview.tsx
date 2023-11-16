@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
@@ -43,11 +50,28 @@ const FoodReview = ({
           })
         }
       >
-        <Image
-          source={{ uri: image }}
-          style={{ width: 150, height: 100, borderRadius: 12 }}
-          resizeMode="cover"
-        ></Image>
+        {image && (
+          <Image
+            source={{ uri: image }}
+            style={{ width: 150, height: 100, borderRadius: 12 }}
+            resizeMode="cover"
+          ></Image>
+        )}
+        {!image && (
+          <View
+            style={{
+              width: 150,
+              height: 100,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator
+              size={"large"}
+              color={isDarkMode ? colors.whiteText : colors.placeHolder}
+            ></ActivityIndicator>
+          </View>
+        )}
       </TouchableOpacity>
       <View style={{ marginLeft: 16 }}>
         <TouchableOpacity
@@ -55,6 +79,10 @@ const FoodReview = ({
           onPress={() =>
             onNavigateBlog({
               id,
+              name,
+              like,
+              image,
+              rate,
             })
           }
         >

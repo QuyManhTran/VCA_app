@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
     fontFamily: baloo2Fonts.medium,
   },
   createText: {
-    marginLeft: "auto",
     color: colors.primary,
     fontFamily: baloo2Fonts.bold,
     fontSize: 24,

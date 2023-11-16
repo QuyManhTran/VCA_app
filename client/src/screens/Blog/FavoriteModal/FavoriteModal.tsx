@@ -190,30 +190,48 @@ const FavoriteModal = ({
               ></TextInput>
             </View>
           )}
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={styles.footer}
-            onPress={onToggleCreate}
-          >
-            <Ionicons
-              name={isCreating ? "close-circle-outline" : "add"}
-              size={32}
-              color={isDarkMode ? colors.whiteText : "black"}
-            ></Ionicons>
-            <Text
-              style={[
-                styles.footerText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
+          <View style={styles.footer}>
+            <TouchableOpacity
+              style={[styles.footer, { marginTop: 0 }]}
+              activeOpacity={0.6}
+              onPress={onToggleCreate}
             >
-              {isCreating ? "Hủy danh sách" : "Tạo danh sách mới"}
-            </Text>
-            {isCreating && (
-              <Text onPress={onCreating} style={styles.createText}>
-                Tạo
+              <Ionicons
+                name={isCreating ? "close-circle-outline" : "add"}
+                size={32}
+                color={isDarkMode ? colors.whiteText : "black"}
+              ></Ionicons>
+              <Text
+                style={[
+                  styles.footerText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                {isCreating ? "Hủy danh sách" : "Tạo danh sách mới"}
               </Text>
+            </TouchableOpacity>
+            {isCreating && (
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginLeft: "auto",
+                }}
+                onPress={onCreating}
+                disabled={!inputText.trim()}
+              >
+                <Text
+                  style={[
+                    styles.createText,
+                    { opacity: inputText.trim() ? 1 : 0.5 },
+                  ]}
+                >
+                  Tạo
+                </Text>
+              </TouchableOpacity>
             )}
-          </TouchableOpacity>
+          </View>
           {!isCreating && (
             <TouchableOpacity
               onPress={onSave}

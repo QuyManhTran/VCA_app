@@ -128,19 +128,19 @@ const Video = ({
     }
   }, [status]);
 
-  // useEffect(() => {
-  //   // auto play
-  //   (async () => {
-  //     if (vidRef.current) {
-  //       try {
-  //         await vidRef.current.playAsync();
-  //         setIsPlaying(true);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //   })();
-  // }, []);
+  useEffect(() => {
+    // auto play
+    (async () => {
+      if (vidRef.current) {
+        try {
+          await vidRef.current.playAsync();
+          setIsPlaying(true);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const updateCurrentTime = async () => {
@@ -211,7 +211,7 @@ const Video = ({
             }}
           ></ActivityIndicator>
         )}
-        {isTouchStart && (
+        {isTouchStart && duration !== 0 && (
           <Pressable
             style={styles.vidControl}
             onTouchStart={() => {
@@ -240,40 +240,36 @@ const Video = ({
               {!isPlaying && <PlayIcon fill size={48} color="#fff"></PlayIcon>}
               {isPlaying && <PauseIcon fill size={48} color="#fff"></PauseIcon>}
             </TouchableOpacity>
-
             <TouchableOpacity activeOpacity={0.5} onPress={onForWard}>
               <Animatable.View duration={200} ref={forwardRef}>
                 <ForWardIcon></ForWardIcon>
               </Animatable.View>
             </TouchableOpacity>
-
-            {duration !== 0 && (
-              <View style={styles.progressBar}>
-                <ProgressBar
-                  currentTime={currentTime}
-                  duration={duration}
-                  onSeek={onSeek}
-                  seekingEvent={seekingEvent}
-                  isSeeking={isSeeking}
-                ></ProgressBar>
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  style={styles.fullScreenIcon}
-                  onPress={toggleFullscreen}
-                >
-                  {!isFullscreen && (
-                    <FullScreen size={32} color="white"></FullScreen>
-                  )}
-                  {isFullscreen && (
-                    <MaterialIcons
-                      name="fullscreen-exit"
-                      size={32}
-                      color="white"
-                    ></MaterialIcons>
-                  )}
-                </TouchableOpacity>
-              </View>
-            )}
+            <View style={styles.progressBar}>
+              <ProgressBar
+                currentTime={currentTime}
+                duration={duration}
+                onSeek={onSeek}
+                seekingEvent={seekingEvent}
+                isSeeking={isSeeking}
+              ></ProgressBar>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.fullScreenIcon}
+                onPress={toggleFullscreen}
+              >
+                {!isFullscreen && (
+                  <FullScreen size={32} color="white"></FullScreen>
+                )}
+                {isFullscreen && (
+                  <MaterialIcons
+                    name="fullscreen-exit"
+                    size={32}
+                    color="white"
+                  ></MaterialIcons>
+                )}
+              </TouchableOpacity>
+            </View>
           </Pressable>
         )}
       </Pressable>

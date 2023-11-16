@@ -26,9 +26,16 @@ import { blogService } from "../../services/blogService";
 import { history } from "./Meaning/Meaning";
 import { ingredients } from "./Recipe/Recipe";
 import FavoriteModal from "./FavoriteModal";
+import { baloo2Fonts } from "../../../constants/fontFamiles";
 
 const upComment = { 0: { top: 1000 }, 1: { top: 0 } };
 const downComment = { 0: { top: 0 }, 1: { top: 1000 } };
+const saveFavoriteAnimation = {
+  0: { bottom: -50 },
+  0.05: { bottom: 0 },
+  0.98: { bottom: 0 },
+  1: { bottom: -50 },
+};
 
 const Blog = ({ route, navigation }: RouterProps) => {
   const { height, width } = useWindowDimensions();
@@ -56,7 +63,10 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const [isFavoriteModal, setIsFavoriteModal] = useState(false);
   const [isComment, setIsComment] = useState(false);
   const [firstComment, setFirstComment] = useState(false);
-  const NavRef = useRef<FlatList>(null);
+  const [isSavedFavorite, setIsSavedFavorite] = useState<boolean>(null);
+  const timoutRef: { current: NodeJS.Timeout } = useRef(null);
+  const FavoriteRef = useRef(null);
+  const navRef = useRef<FlatList>(null);
   const pageRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
   const commentRef = useRef(null);
@@ -117,6 +127,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
 
   const onFavoriting = useCallback(() => {
     setIsFavorite(true);
+    setIsSavedFavorite(true);
   }, []);
 
   const openComment = useCallback(() => {
@@ -146,6 +157,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
       }
     };
     getBlog();
+    return () => clearTimeout(timoutRef.current as NodeJS.Timeout);
   }, []);
 
   useEffect(() => {
@@ -164,8 +176,8 @@ const Blog = ({ route, navigation }: RouterProps) => {
   }, [scrollX]);
 
   useEffect(() => {
-    if (NavRef.current) {
-      NavRef.current.scrollToIndex({
+    if (navRef.current) {
+      navRef.current.scrollToIndex({
         index: activeNav,
         animated: true,
       });
@@ -189,6 +201,15 @@ const Blog = ({ route, navigation }: RouterProps) => {
       setFirstComment(true);
     }
   }, [isComment]);
+
+  useEffect(() => {
+    if (isSavedFavorite) {
+      FavoriteRef.current?.animate(saveFavoriteAnimation);
+      timoutRef.current = setTimeout(() => {
+        setIsSavedFavorite(null);
+      }, 3000);
+    }
+  }, [isSavedFavorite]);
 
   return (
     <View
@@ -243,7 +264,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
           ]}
         >
           <FlatList
-            ref={NavRef}
+            ref={navRef}
             data={navItems}
             renderItem={({ item, index }) => {
               return (
@@ -410,6 +431,32 @@ const Blog = ({ route, navigation }: RouterProps) => {
           isDarkMode={isDarkMode}
           onCloseModal={closeFavoriteModal}
         ></FavoriteModal>
+      )}
+      {isSavedFavorite && (
+        <Animatable.View
+          duration={3000}
+          ref={FavoriteRef}
+          style={{
+            position: "absolute",
+            bottom: -50,
+            left: 0,
+            width: "100%",
+            alignItems: "center",
+            height: 50,
+            backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: baloo2Fonts.semi,
+              color: colors.primary,
+            }}
+          >
+            Lưu thành công
+          </Text>
+        </Animatable.View>
       )}
     </View>
   );
