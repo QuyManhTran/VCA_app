@@ -33,6 +33,7 @@ const Header = ({
   rate,
   image,
   isDarkMode,
+  isFavorite,
   width,
   openModal,
   openFavoriteModal,
@@ -44,7 +45,6 @@ const Header = ({
   const favoriteRef = useRef(null);
   const [likeSound, setLikeSound] = useState<Audio.Sound>();
   const [isLiked, setIsLiked] = useState(props.isLiked);
-  const [isFavorite, setIsFavorite] = useState(props.isFavorite);
   const [isRate, setIsRate] = useState<boolean>(null);
 
   async function playSound() {
@@ -219,7 +219,6 @@ const Header = ({
                   style={{ paddingRight: 4 }}
                   onPress={() => {
                     openFavoriteModal();
-                    setIsFavorite(!isFavorite);
                   }}
                 ></Ionicons>
               </Animatable.View>

@@ -33,7 +33,11 @@ const downComment = { 0: { top: 0 }, 1: { top: 1000 } };
 const Blog = ({ route, navigation }: RouterProps) => {
   const { height, width } = useWindowDimensions();
   const { id, name, like, image, rate } = route.params;
-  const { isLiked, originRate, isFavorite } = {
+  const {
+    isLiked,
+    originRate,
+    isFavorite: isFavoriteOrigin,
+  } = {
     isLiked: false,
     originRate: false,
     isFavorite: false,
@@ -45,6 +49,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const [ingredientList, setIngredientList] = useState<ingredients[]>([]);
   const [video, setVideo] = useState<string>("");
   const [isRate, setIsRate] = useState(originRate);
+  const [isFavorite, setIsFavorite] = useState(isFavoriteOrigin);
   const [activeNav, setActiveNav] = useState(0);
   const [contentY, setContentY] = useState(0);
   const [isModal, setIsModal] = useState(false);
@@ -110,6 +115,10 @@ const Blog = ({ route, navigation }: RouterProps) => {
     setIsModal(false);
   }, []);
 
+  const onFavoriting = useCallback(() => {
+    setIsFavorite(true);
+  }, []);
+
   const openComment = useCallback(() => {
     setIsComment(true);
   }, []);
@@ -124,9 +133,14 @@ const Blog = ({ route, navigation }: RouterProps) => {
         _id: id,
       });
       if (response.message === 200) {
-        const { history, video, describe, ingredient_list } = response.data;
+        const {
+          history,
+          video,
+          description: descriptionAPI,
+          ingredient_list,
+        } = response.data;
         setHistories(history);
-        setDescription(describe);
+        setDescription(descriptionAPI);
         setVideo(video);
         setIngredientList(ingredient_list);
       }
@@ -392,6 +406,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
       )}
       {isFavoriteModal && (
         <FavoriteModal
+          onFavoriting={onFavoriting}
           isDarkMode={isDarkMode}
           onCloseModal={closeFavoriteModal}
         ></FavoriteModal>

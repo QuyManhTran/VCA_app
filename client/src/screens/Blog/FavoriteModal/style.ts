@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     width: 320,
-    maxHeight: 480,
+    maxHeight: 450,
     borderRadius: 8,
     backgroundColor: "#fff",
     padding: 12,
@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
   },
   wrapperContent: {
     gap: 24,
-    backgroundColor: "#fff",
     overflow: "scroll",
   },
   listItem: {
@@ -60,16 +59,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: baloo2Fonts.medium,
     marginLeft: 12,
+    maxWidth: "70%",
   },
   checkbox: {
-    marginLeft: "auto",
+    flexShrink: 0,
     borderWidth: 2,
     borderRadius: 4,
     width: 30,
     height: 30,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    marginLeft: "auto",
   },
   footer: {
     flexDirection: "row",
@@ -103,6 +103,14 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontFamily: baloo2Fonts.bold,
     fontSize: 24,
+  },
+  doneSelection: {
+    borderTopWidth: 1,
+    borderTopColor: colors.placeHolder,
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 });
 export default styles;
