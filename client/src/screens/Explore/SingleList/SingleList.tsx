@@ -153,12 +153,13 @@ const SingleList = ({ route, navigation }: RouterProps) => {
       const response = await singleListService.getSingleList(
         singleListService.singleListPath,
         {
-          id: listId,
+          id_ulist: listId,
           id_user: userId,
         }
       );
       if (response.message === 200) {
-        setFoodList(response.data);
+        console.log(response.data?.foods);
+        // setFoodList(response.data);
       }
     };
     getSingleList();

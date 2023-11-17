@@ -15,19 +15,19 @@ interface DeleteListProps {
 
 interface EditNameProps {
   id_user: string;
-  name: string;
-  id: string;
+  newName: string;
+  id_ulist: string;
 }
 
 interface SingleListProps {
   id_user: string;
-  id: string;
+  id_ulist: string;
 }
 
 interface AddItemListProps {
   id_user: string;
-  id: string;
-  idFood: string;
+  list_id_ulist: string[];
+  id_food: string;
 }
 
 // [GET] All personal list
@@ -52,8 +52,8 @@ const deleteList = async (path: string, payload: DeleteListProps) => {
 const deleteListPath = "/ulist/delete-list";
 
 // [PATCH] UPDATE name of list
-const editNameList = async (path: string, params: EditNameProps) => {
-  const response = await request.patch(path, params);
+const editNameList = async (path: string, body: EditNameProps) => {
+  const response = await request.patch(path, body);
   return response;
 };
 const editNameListPath = "/ulist/edit-name-list";
@@ -66,8 +66,8 @@ const getSingleList = async (path: string, params: SingleListProps) => {
 const singleListPath = "/ulist/single-list";
 
 // [PATCH] add item list
-const addItemList = async (path: string, params: AddItemListProps) => {
-  const response = await request.patch(path, params);
+const addItemList = async (path: string, body: AddItemListProps) => {
+  const response = await request.patch(path, body);
   return response;
 };
 const addItemListPath = "/ulist/add-item-list";

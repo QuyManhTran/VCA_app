@@ -427,6 +427,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
       )}
       {isFavoriteModal && (
         <FavoriteModal
+          blogId={id}
           onFavoriting={onFavoriting}
           isDarkMode={isDarkMode}
           onCloseModal={closeFavoriteModal}

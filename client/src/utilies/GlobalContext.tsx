@@ -80,9 +80,9 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
     const response = await editNameListService.editNameList(
       editNameListService.editNameListPath,
       {
-        name: newName,
+        newName: newName,
         id_user: userId,
-        id: listId,
+        id_ulist: listId,
       }
     );
     if (response.message === 200) {
@@ -115,13 +115,13 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
     });
     return result;
   };
-  const onAddItemList = async (foodId: string, listId: string) => {
+  const onAddItemList = async (foodId: string, listsId: string[]) => {
     const response = await addItemListService.addItemList(
       addItemListService.addItemListPath,
       {
-        id: listId,
+        list_id_ulist: listsId,
         id_user: userId,
-        idFood: foodId,
+        id_food: foodId,
       }
     );
     if (response.message) {

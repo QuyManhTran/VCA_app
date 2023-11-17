@@ -16,32 +16,35 @@ import { colors } from "../../../../constants";
 import styles from "./style";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import ThemeContext from "../../../utilies/theme";
+import { list } from "../../../../assets/img/foods";
+import { addItemListService } from "../../../services/listService";
 
 interface FavoriteModalProps {
+  blogId: string;
   isDarkMode: boolean;
   onCloseModal: any;
   onFavoriting: any;
 }
 
 interface PersonalItem {
-  img: any;
   name: string;
-  data?: any;
+  id: string;
 }
 
 const FavoriteModal = ({
+  blogId,
   isDarkMode,
   onCloseModal,
   onFavoriting,
 }: FavoriteModalProps) => {
   const { width } = useWindowDimensions();
-  const [selectedLists, setSelectedLists] = useState<number[]>([]);
+  const [selectedLists, setSelectedLists] = useState<string[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const [isCreating, setIsCreating] = useState(false);
-  const { personalLists, onAddList } = useContext(ThemeContext);
+  const { personalLists, onAddList, onAddItemList } = useContext(ThemeContext);
   const modalAnimation = useRef(new Animated.Value(0.5)).current;
 
-  const onSelect = (index: number) => {
+  const onSelect = (index: string) => {
     if (selectedLists.includes(index)) {
       const newLists = selectedLists.filter((list) => list !== index);
       setSelectedLists(newLists);
@@ -66,9 +69,12 @@ const FavoriteModal = ({
     setIsCreating(false);
   };
 
-  const onSave = () => {
+  const onSave = async () => {
     // call API
-    onFavoriting();
+    if (selectedLists.length) {
+      onAddItemList(blogId, selectedLists);
+      onFavoriting();
+    }
     onCloseModal();
   };
 
@@ -126,7 +132,7 @@ const FavoriteModal = ({
                 return (
                   <View style={[styles.listItem]} key={index}>
                     <Image
-                      source={item.img}
+                      source={list}
                       resizeMode="cover"
                       style={styles.image}
                     ></Image>
@@ -148,9 +154,9 @@ const FavoriteModal = ({
                           backgroundColor: isDarkMode ? "transparent" : "#fff",
                         },
                       ]}
-                      onPress={() => onSelect(index)}
+                      onPress={() => onSelect(item.id)}
                     >
-                      {selectedLists.includes(index) && (
+                      {selectedLists.includes(item.id) && (
                         <Entypo
                           name="check"
                           size={24}

@@ -24,9 +24,7 @@ export const post = async (path: string, options = {}) => {
 
 export const patch = async (path: string, options = {}) => {
   try {
-    const response = await request.patch(path, null, {
-      params: options,
-    });
+    const response = await request.patch(path, options);
     return { message: 200, data: response.data };
   } catch (error) {
     return { message: error?.response?.status || "Error network" };
