@@ -19,22 +19,30 @@ import { RouterProps } from "../Splash/Splash";
 import ThemeContext from "../../utilies/theme";
 import { useFocusEffect } from "@react-navigation/native";
 import RecommendList from "../../components/RecommendList";
-import { recommendLists } from "../../../assets/img/foods";
+import { list, recommendLists } from "../../../assets/img/foods";
 
 const Explore = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, setHomeNavbar, personalLists, onAddList } =
+  const { isDarkMode, setHomeNavbar, personalLists, onAddList, userId } =
     useContext(ThemeContext);
   const [newList, setNewList] = useState<string | null>("");
   const [isModal, setIsModal] = useState(false);
   const [isGoBack, setIsGoBack] = useState(true);
   const [isNotify, setIsNotify] = useState(true);
   const [prevOffSetY, setPrevOffSetY] = useState(0);
-  const onSingleList = (name: string, data, img: any, index: number) => {
+  const onSingleList = (
+    name: string,
+    data,
+    img: any,
+    index: number,
+    listId: string
+  ) => {
     navigation.navigate("SingleList", {
       name: name,
       data: data,
       img: img,
       position: index,
+      userId: userId,
+      listId: listId,
     });
   };
 
@@ -144,7 +152,13 @@ const Explore = ({ route, navigation }: RouterProps) => {
                   key={index}
                   onPress={() => {
                     setIsGoBack(false);
-                    onSingleList(item.name, item.data, item.img, index);
+                    onSingleList(
+                      item.name,
+                      recommendLists,
+                      list,
+                      index,
+                      item.id
+                    );
                   }}
                 >
                   <View
@@ -155,7 +169,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
                     }}
                   >
                     <Image
-                      source={item.img}
+                      source={list}
                       style={{
                         width: 80,
                         height: 80,
@@ -239,7 +253,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
             <TouchableOpacity
               disabled={newList.trim() ? false : true}
               activeOpacity={0.6}
-              onPress={() => {
+              onPress={async () => {
                 onAddList(newList);
                 setIsModal(false);
               }}

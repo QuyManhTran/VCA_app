@@ -11,6 +11,14 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { colors } from "../../../constants";
 
+export interface FoodReviewRawProps {
+  id: string;
+  name: string;
+  like: number;
+  rate: number;
+  tags: string[];
+  image: any;
+}
 interface FoodReviewProps {
   id: string;
   name: string;
@@ -22,6 +30,7 @@ interface FoodReviewProps {
   onTag?: any;
   onBlog: any;
 }
+
 const FoodReview = ({
   id,
   name,

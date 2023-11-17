@@ -21,4 +21,24 @@ export const post = async (path: string, options = {}) => {
     return { message: error?.response?.status || "Error network" };
   }
 };
+
+export const patch = async (path: string, options = {}) => {
+  try {
+    const response = await request.patch(path, null, {
+      params: options,
+    });
+    return { message: 200, data: response.data };
+  } catch (error) {
+    return { message: error?.response?.status || "Error network" };
+  }
+};
+
+export const Delete = async (path: string, options = {}) => {
+  try {
+    const response = await request.delete(path, { data: options });
+    return { message: 200, data: response.data };
+  } catch (error) {
+    return { message: error?.response?.status || "Error network" };
+  }
+};
 export default request;

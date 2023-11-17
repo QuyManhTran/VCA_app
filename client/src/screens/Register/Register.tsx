@@ -92,14 +92,18 @@ const Register = ({ route, navigation }: RouterProps) => {
         );
         if (response) {
           setIsPending(false);
-          if (response.message !== 200) {
+          if (response.message === 409) {
             setModalTitle("Lỗi đăng ký");
-            setModalContent("Có lỗi xảy ra trong quá trình đăng ký");
+            setModalContent("Email đã tồn tại. Vui lòng chọn email khác!");
             setIsModal(true);
-          } else {
+          } else if (response.message === 200) {
             navigation.navigate("SuccessfullyChange", {
               from: "Register",
             });
+          } else {
+            setModalTitle("Lỗi đăng ký");
+            setModalContent("Có lỗi xảy ra trong quá trình đăng ký");
+            setIsModal(true);
           }
         }
       } catch (error) {

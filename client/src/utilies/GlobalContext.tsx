@@ -3,17 +3,33 @@ import React, { useState, useEffect } from "react";
 import ThemeContext from "./theme";
 import { list } from "../../assets/img/foods";
 import { mostlySearch, notifytions } from "../../constants/fakeData";
-import * as Network from "expo-network";
+import {
+  addItemListService,
+  addListService,
+  allListService,
+  deleteListService,
+  editNameListService,
+} from "../services/listService";
 interface GlobalContextProps {
   children: React.ReactNode;
 }
+
+interface AllListProps {
+  id: string;
+  name: string;
+}
 const fakeData = [{ img: list, name: "Xem sau", data: mostlySearch }];
 const GlobalContext = ({ children }: GlobalContextProps) => {
+  const [userId, setUserId] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [baseURL, setBaseURL] = useState<string | null>(null);
   const [isHomeScrollDown, setIsHomeScrollDown] = useState(false);
-  const [personalLists, setPersonalLists] = useState(fakeData);
+  const [personalLists, setPersonalLists] = useState<any[]>(fakeData);
   const [notifitions, setNotifitions] = useState(notifytions);
+
+  const onUserId = (userId: string) => {
+    setUserId(userId);
+  };
 
   const onDarkTheme = (isDarkMode: boolean) => {
     setIsDarkMode(isDarkMode);
@@ -24,28 +40,62 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
       setIsHomeScrollDown(isScrollDown);
     }
   };
-  const onAddList = (name: string) => {
-    setPersonalLists((prevLists) => [
-      ...prevLists,
-      { img: list, name: name, data: mostlySearch },
-    ]);
-  };
-  const onRemoveList = (index: number) => {
-    setPersonalLists((prevLists) => {
-      prevLists.splice(index, 1);
-      return prevLists;
+  const onAddList = async (name: string) => {
+    const response = await addListService.addList(addListService.addListPath, {
+      id_user: userId,
+      name: name,
     });
+    if (response.message === 200) {
+      console.log(response.data);
+      setPersonalLists((prev) => [
+        ...prev,
+        { id: response.data?.id, name: response.data?.name },
+      ]);
+    }
   };
-  const onAdjustList = (position: number, newName: string) => {
-    setPersonalLists((prevLists) => {
-      return prevLists.map((list, index) => {
-        if (index === position) {
-          return { ...list, name: newName };
-        } else {
-          return list;
-        }
+  const onRemoveList = async (
+    index: number,
+    userId: string,
+    listId: string
+  ) => {
+    const response = await deleteListService.deleteList(
+      deleteListService.deleteListPath,
+      {
+        id_ulist: listId,
+        id_user: userId,
+      }
+    );
+
+    if (response.message === 200) {
+      setPersonalLists((prevLists) =>
+        prevLists.filter((list, Index) => Index !== index)
+      );
+    }
+  };
+  const onAdjustList = async (
+    position: number,
+    newName: string,
+    listId: string
+  ) => {
+    const response = await editNameListService.editNameList(
+      editNameListService.editNameListPath,
+      {
+        name: newName,
+        id_user: userId,
+        id: listId,
+      }
+    );
+    if (response.message === 200) {
+      setPersonalLists((prevLists) => {
+        return prevLists.map((list, index) => {
+          if (index === position) {
+            return { ...list, name: newName };
+          } else {
+            return list;
+          }
+        });
       });
-    });
+    }
   };
   const onRemoveBlogList = (position: number, removeList: number[]) => {
     let result;
@@ -64,6 +114,19 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
       });
     });
     return result;
+  };
+  const onAddItemList = async (foodId: string, listId: string) => {
+    const response = await addItemListService.addItemList(
+      addItemListService.addItemListPath,
+      {
+        id: listId,
+        id_user: userId,
+        idFood: foodId,
+      }
+    );
+    if (response.message) {
+      alert(`add item list:${response.message}`);
+    }
   };
 
   const onRemoveUnread = (type: string, position: number, isRead: boolean) => {
@@ -118,14 +181,31 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
   }, []);
 
   useEffect(() => {
-    const getIpAddress = async () => {
-      const ip = await Network.getIpAddressAsync();
-      const url = `${process.env.EXPO_PUBLIC_API_PROTOCOL}://${ip}:${process.env.EXPO_PUBLIC_SERVER_PORT}`;
-      console.log(url);
-      setBaseURL(url);
-    };
-    getIpAddress();
-  }, []);
+    // const getIpAddress = async () => {
+    //   const ip = await Network.getIpAddressAsync();
+    //   const url = `${process.env.EXPO_PUBLIC_API_PROTOCOL}://${ip}:${process.env.EXPO_PUBLIC_SERVER_PORT}`;
+    //   console.log(url);
+    //   setBaseURL(url);
+    // };
+    // getIpAddress();
+
+    if (userId) {
+      const getAllList = async () => {
+        const response = await allListService.getAllList(
+          allListService.allListPath,
+          { id_user: userId }
+        );
+        if (response.message === 200) {
+          setPersonalLists(response.data || fakeData);
+        }
+      };
+      getAllList();
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    console.log(personalLists);
+  }, [personalLists]);
 
   return (
     <ThemeContext.Provider
@@ -135,11 +215,14 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
         personalLists,
         notifitions,
         baseURL,
+        userId,
+        onUserId,
         setHomeNavbar,
         onAddList,
         onRemoveList,
         onAdjustList,
         onRemoveBlogList,
+        onAddItemList,
         onRemoveUnread,
         onDarkTheme,
       }}

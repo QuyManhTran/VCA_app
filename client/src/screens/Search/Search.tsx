@@ -15,7 +15,7 @@ import { RouterProps } from "../Splash/Splash";
 import useDebounce from "../../../hooks/useDebounce";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import FoodReview from "../../components/FoodReview";
-import { mostlySearch, viralSearchs } from "../../../constants/fakeData";
+import { viralSearchs } from "../../../constants/fakeData";
 import BackButton from "../../components/BackButton";
 import ThemeContext from "../../utilies/theme";
 import { colors } from "../../../constants";
@@ -23,7 +23,7 @@ import {
   searchAllService,
   searchTagService,
 } from "../../services/searchService";
-import { noResults } from "../../../assets/img/ilustraitions";
+import { resultNotFound } from "../../../assets/img/ilustraitions";
 type SearchStatusType = "tag" | "all";
 const Search = ({ route, navigation }: RouterProps) => {
   const flatRef = useRef<FlatList>(null);
@@ -243,7 +243,7 @@ const Search = ({ route, navigation }: RouterProps) => {
                     : undefined}
                 </Animated.Text>
                 <Image
-                  source={noResults}
+                  source={resultNotFound}
                   resizeMode="cover"
                   style={{ flex: 1, width: 300, height: 300 }}
                 ></Image>

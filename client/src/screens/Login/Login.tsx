@@ -24,7 +24,7 @@ import screenWidth from "../../../constants/screenWidth";
 import ThemeContext from "../../utilies/theme";
 import * as loginService from "../../services/loginService";
 const Login = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode } = useContext(ThemeContext);
+  const { isDarkMode, onUserId } = useContext(ThemeContext);
   const width = screenWidth();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -44,6 +44,10 @@ const Login = ({ route, navigation }: RouterProps) => {
     if (response.message !== 200) {
       alert("Tài khoản không tồn tại");
     } else {
+      console.log(response.data?.user);
+      if (response.data?.user) {
+        onUserId(response.data.user._id);
+      }
       navigation.navigate("Navbar");
     }
     // navigation.navigate("Navbar");

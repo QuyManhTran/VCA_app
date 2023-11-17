@@ -34,6 +34,8 @@ import Modal from "../../../components/Modal";
 import BackButton from "../../../components/BackButton";
 import NavButton from "../../../components/NavButton";
 import AskModal from "../../../components/AskModal";
+import { FoodReviewRawProps } from "../../../components/FoodReview/FoodReview";
+import { singleListService } from "../../../services/listService";
 const headerHide = {
   0: { scale: 1, opacity: 1 },
   0.8: { opacity: 0 },
@@ -53,15 +55,13 @@ const listDown = {
 };
 
 const SingleList = ({ route, navigation }: RouterProps) => {
-  const { name, data, img, position } = route.params;
+  const { name, data, img, position, userId, listId } = route.params;
   const { width } = useWindowDimensions();
-  const [foodList, setFoodList] = useState(data);
+  const [foodList, setFoodList] = useState<FoodReviewRawProps[]>([]);
   const { isDarkMode, onRemoveList, onAdjustList, onRemoveBlogList } =
     useContext(ThemeContext);
   const [realName, setRealName] = useState(name);
-  const [allRemoveList, setAllRemoveList] = useState(() => {
-    return data.map((value, index) => index);
-  });
+  const [allRemoveList, setAllRemoveList] = useState([]);
   const [removeList, setRemoveList] = useState([]);
   const [newName, setNewName] = useState(name);
   const [isModal, setIsModal] = useState(false);
@@ -147,6 +147,22 @@ const SingleList = ({ route, navigation }: RouterProps) => {
       listAnimation.current.animate(listDown);
     }
   }, [isRemoveMode]);
+  // Call API
+  useEffect(() => {
+    const getSingleList = async () => {
+      const response = await singleListService.getSingleList(
+        singleListService.singleListPath,
+        {
+          id: listId,
+          id_user: userId,
+        }
+      );
+      if (response.message === 200) {
+        setFoodList(response.data);
+      }
+    };
+    getSingleList();
+  }, []);
   useEffect(() => {
     if (foodList.length !== allRemoveList.length) {
       setAllRemoveList(foodList.map((value, index) => index));
@@ -448,8 +464,8 @@ const SingleList = ({ route, navigation }: RouterProps) => {
             <TouchableOpacity
               disabled={newName.trim() ? false : true}
               activeOpacity={0.6}
-              onPress={() => {
-                onAdjustList(position, newName);
+              onPress={async () => {
+                onAdjustList(position, newName, listId);
                 setRealName(newName);
                 setIsAdjustModal(false);
               }}
@@ -506,8 +522,8 @@ const SingleList = ({ route, navigation }: RouterProps) => {
           title={realName}
           content="Bạn chắc chắn muốn xóa danh sách này?"
           removeContent="Xóa danh sách"
-          onAccess={() => {
-            onRemoveList(position);
+          onAccess={async () => {
+            onRemoveList(position, userId, listId);
             setIsRemoveListModal(false);
             navigation.goBack();
           }}

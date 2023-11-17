@@ -59,7 +59,7 @@ const FavoriteModal = ({
     });
   };
 
-  const onCreating = (e: GestureResponderEvent) => {
+  const onCreating = async (e: GestureResponderEvent) => {
     e.stopPropagation();
     onAddList(inputText);
     setInputText("");

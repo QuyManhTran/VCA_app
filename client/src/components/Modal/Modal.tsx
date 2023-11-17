@@ -53,7 +53,6 @@ const Modal = ({
             styles.wrapper,
             {
               backgroundColor: isDarkMode ? colors.darkBg : "#fff",
-              opacity: scaleUp,
               transform: [{ scale: scaleUp }],
             },
           ]}
