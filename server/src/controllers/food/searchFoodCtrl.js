@@ -1,6 +1,6 @@
 const cloudinary = require('../../configs/cloundinary.config');
 const Food = require('../../models/food/food');
-
+const lodash = require('lodash');
 const foodSearchAllCtrl = async (req, res) => {
     const {keyword} = req.query;
 
@@ -11,8 +11,8 @@ const foodSearchAllCtrl = async (req, res) => {
     const foodByName = await Food.find({
         name: { $regex: new RegExp(keyword, "i")}
     });
-    const food = foodByTag.concat(foodByName);
-
+    const food = lodash.merge(foodByTag, foodByName);
+      
     const result = food.map(foodInstance => {
         return {
             id: foodInstance._id,
