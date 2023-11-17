@@ -18,6 +18,7 @@ interface HeaderBlogProps {
   isRate: boolean;
   width: number;
   openModal: any;
+  openFavoriteModal: any;
   openComment: any;
 }
 const interactAnimation = {
@@ -34,6 +35,7 @@ const Header = ({
   isDarkMode,
   width,
   openModal,
+  openFavoriteModal,
   openComment,
   ...props
 }: HeaderBlogProps) => {
@@ -215,7 +217,10 @@ const Header = ({
                   }
                   size={32}
                   style={{ paddingRight: 4 }}
-                  onPress={() => setIsFavorite(!isFavorite)}
+                  onPress={() => {
+                    openFavoriteModal();
+                    setIsFavorite(!isFavorite);
+                  }}
                 ></Ionicons>
               </Animatable.View>
               <Text
