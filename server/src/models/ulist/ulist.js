@@ -2,26 +2,26 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UList = new Schema({
-    name: {
+    id_user: {
         type: String,
-        unique: true,
+        require: true
+    },
+    name: {
+        require: true,
+        type: String,
     },
     image: {
         type: String,
     },
-    list: {
+    listFood: {
         type: Array,
         items: {
-            type: Object,
-            properties: {
-                id_food: {
-                    type: String,
-                    unique: true
-                },
-                image: {
-                    type: String,
-                }
-            }
+
+            id_food: {
+                type: String,
+                unique: true
+            },
+
 
         }
     }

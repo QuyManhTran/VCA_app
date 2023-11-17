@@ -1,116 +1,157 @@
 const ulist = require('../../models/ulist/ulist');
+const Food = require('../../models/food/food');
+const food = require('../../models/food/food');
 
 const createNewList = async (req, res, next) => {
-    const { name } = req.body;
-    originalString = req.file.path;
-    const startIndex = originalString.indexOf("public");
-    const image = originalString.substring(startIndex);
-    console.log(image);
-    
-    const newUList = new ulist({ name: name, image: image });
-    try {
-        await newUList.save();
-        res.status(200).json({
-            success: true,
-            message: "Create new list successfull"
+    const { name, id_user } = req.body;
+    // originalString = req.file.path;
+    // const startIndex = originalString.indexOf("public");
+    // const image = originalString.substring(startIndex);
+    // console.log(image);
+    const allListOfUser = await ulist.find({ id_user: id_user })
+    const nameListOfUser = allListOfUser.map((list, index) => {
+        return list.name;
+    });
+
+    if (nameListOfUser.includes(name)) {
+        return res.status(422).json({
+            success: false,
+            text: "name already exist or id_user incorrect"
         })
+    }
+
+    const newUList = new ulist({ id_user: id_user, name: name });
+    try {
+        await newUList.save()
+            .then(ulist => {
+                res.status(200).json({
+                    id: ulist._id,
+                    name: ulist.name,
+                    success: true,
+                    text: "Create new list successfull"
+                })
+            })
     } catch (error) {
-        if (error.code === 11000) {
-            res.status(422).json({
-                success: false,
-                message: "name already exist"
-            })
-        } else {
-            res.status(500).json({
-                success: false,
-                message: "Fail create new lish"
-            })
-        }
+
+        res.status(500).json({
+            success: false,
+            text: "Fail create new lish"
+        })
+
     }
 
 };
 
 const getAllList = async (req, res, next) => {
+    const { id_user } = req.query;
     try {
-        let allList = await ulist.find().sort({ createAt: -1 });
-        res.status(200).json(allList);
+        let allList = await ulist.find({ id_user: id_user }).sort({ createAt: -1 });
+        const newAllList = allList.map((list, index) => {
+            return { id: list._id, name: list.name }
+        })
+        res.status(200).json(newAllList);
         allList = null;
 
     } catch (error) {
         res.status(400).json({
             success: false,
-            message: "Fail"
+            text: "Fail"
         })
     }
 };
 
 const getSingleList = async (req, res, next) => {
-    const { id } = req.params;
-    try {
-        let list = await ulist.findById(id);
-        res.status(200).json(list);
-        list = null;
-
-    } catch (error) {
-
-        res.status(400).json({
-            success: false,
-            message: "Fail"
+    const { id_user, id_ulist } = req.query;
+   
+    ulist.find({ _id: id_ulist, id_user: id_user })
+        .then(list => {
+            const promises = list[0].listFood.map(async (idFood, key) => {
+                const food = await Food.findById(idFood);
+                return {
+                    id: idFood,
+                    name: food.name,
+                    like: food.like,
+                    rate: food.rate,
+                    tags: food.tags,
+                    image: food.image,
+                };
+            });
+            return Promise.all(promises);
         })
-
-    }
+        .then(listFoodDetail => {
+            res.status(200).json({
+                foods : listFoodDetail
+            });
+        })
+        .catch (error => {
+            res.status(400).json({
+                success: false,
+                text: "Fail"
+            });
+        })
+    
 };
 
 const deleteList = async (req, res, next) => {
-    const { id } = req.params;
+    const { id_user, id_ulist } = req.body;
+    // const { id } = req.params;
     try {
-        await ulist.deleteOne({ _id: id });
-        res.status(200).json({
-            success: true,
-            message: "Delete Success"
-        });
+        const result = await ulist.deleteOne({ _id: id_ulist, id_user: id_user });
+        if (result.deletedCount === 1) {
+            res.status(200).json({
+                success: true,
+                text: "Delete Success"
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                text: "Delete Failed: Item not found or permission denied"
+            });
+        }
     } catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             success: false,
-            message: "Fail"
-        })
+            text: "Server Error"
+        });
     }
+    
 };
 
 const editNameList = async (req, res, next) => {
-    const { name } = req.body;
-    const { id } = req.params;
+    const { newName, id_user, id_ulist } = req.body;
     try {
         let list = await ulist.findOneAndUpdate(
-            { _id: id },
-            { $set: { name: name } },
+            { _id: id_ulist, id_user: id_user },
+            { $set: { name: newName } },
             { upsert: true },
         )
+
 
         if (list) {
             // Update successful
             res.status(200).json({
                 success: true,
-                message: "Update name success",
+                text: "Update name success",
             });
         } else {
             // Document not found, handle accordingly
             res.status(404).json({
                 success: false,
-                message: "Document not found",
+                text: "Document not found",
             });
         }
 
     } catch (error) {
+        console.log(error.code);
         if (error.code === 11000) {
             res.status(422).json({
                 success: false,
-                message: "name already exist"
+                text: "id_user incorrect"
             })
         } else {
             res.status(400).json({
                 success: false,
-                message: "Fail"
+                text: "Fail"
             })
         }
 
@@ -118,58 +159,83 @@ const editNameList = async (req, res, next) => {
 };
 
 const addItemOfList = async (req, res, next) => {
-    const { id } = req.params;
-    const { idFood, imageFood } = req.body;
-    let list = await ulist.findById(id);
-    const updateList = [...list.list, {
-        id_food: idFood,
-        image: imageFood
-    }]
-
-
+    const { id_food, id_user, id_ulist} = req.body;
     try {
-        let list = await ulist.findOneAndUpdate(
-            { _id: id },
-            { $set: {list : updateList}},
-            { upsert: true },
-        );
 
-        if (list) {
-            // Update successful
-            res.status(200).json({
-                success: true,
-                message: "Update list success",
-            });
-        } else {
-            // Document not found, handle accordingly
+        let list = await ulist.find({ _id: id_ulist, id_user: id_user });
+        const old_list_food = [...list[0].listFood]
+        console.log(list[0].listFood);
+        let isIdFoodExsit = false;
+        for (let i = 0; i < old_list_food.length; i++) {
+            if (old_list_food[i] == id_food) {
+                isIdFoodExsit = true;
+                break;
+            }
+        }
+        if (isIdFoodExsit) {
+            return res.status(422).json({
+                success: false,
+                text: "name already exist"
+            })
+        }
+        const updateList = [...list[0].listFood, id_food];
+
+        if (!list) {
             res.status(404).json({
                 success: false,
-                message: "Document not found",
+                text: "Document not found",
             });
         }
+        try {
+            let list = await ulist.findOneAndUpdate(
+                { _id: id_ulist, id_user: id_user },
+                { $set: { listFood: updateList } },
+                { upsert: true },
+            );
 
-        list = null;
+            if (list) {
+                res.status(200).json({
+                    success: true,
+                    text: "Update list success",
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    text: "Document not found",
+                });
+            }
+
+            list = null;
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                success: false,
+                text: "Fail"
+            })
+        }
+
+
     } catch (error) {
-        res.status(400).json({
-            success: false,
-            message: "Fail"
-        })
-    }
 
+        res.status(500).json({
+            success: false,
+            text: "id_user incorrect or not found id of list"
+        })
+
+    }
 };
 
 const deleteItemOfList = async (req, res, next) => {
-    const { id } = req.params;
-    const { idFood } = req.body
-    let list = await ulist.findById(id);
-    updateList = [...list.list]
-    console.log(updateList);
-    updateList = updateList.filter(item => item.id_food !== idFood)
+    const { idFood, id_user, id_ulist } = req.body;
+
+    let list = await ulist.find({ _id: id_ulist, id_user: id_user });
+    updateList = [...list[0].listFood];
+    updateList = updateList.filter(item => item !== idFood)
 
     try {
         let list = await ulist.findOneAndUpdate(
-            { _id: id },
-            { $set: { list: updateList } },
+            { _id: id_ulist, id_user: id_user },
+            { $set: { listFood: updateList } },
             { upsert: true },
         );
 
@@ -177,13 +243,13 @@ const deleteItemOfList = async (req, res, next) => {
 
             res.status(200).json({
                 success: true,
-                message: "delete item of list success",
+                text: "delete item of list success",
             });
         } else {
 
             res.status(404).json({
                 success: false,
-                message: "Document not found",
+                text: "Document not found",
             });
         }
 
@@ -191,10 +257,12 @@ const deleteItemOfList = async (req, res, next) => {
     } catch (error) {
         res.status(400).json({
             success: false,
-            message: "Fail"
+            text: "Fail"
         })
     }
 };
+
+
 
 
 module.exports = {
