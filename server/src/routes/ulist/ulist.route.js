@@ -22,5 +22,6 @@ ulistRouter.delete('/delete-list', ulist.deleteList);
 ulistRouter.patch('/edit-name-list', ulist.editNameList);
 ulistRouter.patch('/add-item-list', ulist.addItemOfList);
 ulistRouter.delete('/delete-item-list', ulist.deleteItemOfList);
+ulistRouter.patch('/add-item-multi-list', ulist.addItemToMutilList);
 
 module.exports = ulistRouter;
