@@ -37,11 +37,11 @@ const FavoriteModal = ({
   onCloseModal,
   onFavoriting,
 }: FavoriteModalProps) => {
+  const { personalLists, onAddList, onAddItemList } = useContext(ThemeContext);
   const { width } = useWindowDimensions();
   const [selectedLists, setSelectedLists] = useState<string[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const [isCreating, setIsCreating] = useState(false);
-  const { personalLists, onAddList, onAddItemList } = useContext(ThemeContext);
   const modalAnimation = useRef(new Animated.Value(0.5)).current;
 
   const onSelect = (index: string) => {
@@ -77,6 +77,15 @@ const FavoriteModal = ({
     }
     onCloseModal();
   };
+
+  useEffect(() => {
+    const initialSlectedLists = personalLists.map((list) => {
+      if (list?.listFood.includes(blogId)) {
+        return list.id;
+      }
+    });
+    setSelectedLists(initialSlectedLists.filter((list) => list));
+  }, []);
 
   useEffect(() => {
     Animated.timing(modalAnimation, {

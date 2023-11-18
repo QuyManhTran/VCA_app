@@ -29,6 +29,7 @@ interface FoodReviewProps {
   isDarkMode: boolean;
   onTag?: any;
   onBlog: any;
+  onLongPress?: any;
 }
 
 const FoodReview = ({
@@ -41,6 +42,7 @@ const FoodReview = ({
   isDarkMode = false,
   onTag = () => {},
   onBlog = () => {},
+  onLongPress = () => {},
 }: FoodReviewProps) => {
   const onNavigateBlog = ({ ...props }) => {
     onBlog({ ...props });
@@ -49,6 +51,11 @@ const FoodReview = ({
     <View style={styles.container}>
       <TouchableOpacity
         activeOpacity={0.6}
+        onLongPress={() => {
+          if (onLongPress) {
+            onLongPress();
+          }
+        }}
         onPress={() =>
           onNavigateBlog({
             id,

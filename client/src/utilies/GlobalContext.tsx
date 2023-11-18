@@ -7,6 +7,7 @@ import {
   addItemListService,
   addListService,
   allListService,
+  deleteItemListService,
   deleteListService,
   editNameListService,
 } from "../services/listService";
@@ -97,23 +98,38 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
       });
     }
   };
-  const onRemoveBlogList = (position: number, removeList: number[]) => {
-    let result;
-    setPersonalLists((prevLists) => {
-      return prevLists.map((list, index) => {
-        if (index === position) {
-          result = list.data.filter(
-            (value, index) => !removeList.includes(index)
-          );
-          return {
-            ...list,
-            data: result,
-          };
-        }
-        return list;
-      });
-    });
-    return result;
+  const onRemoveBlogList = async (
+    position: number,
+    listId: string,
+    removeList: string[]
+  ) => {
+    // let result;
+    // setPersonalLists((prevLists) => {
+    //   return prevLists.map((list, index) => {
+    //     if (index === position) {
+    //       result = list.data.filter(
+    //         (value, index) => !removeList.includes(index)
+    //       );
+    //       return {
+    //         ...list,
+    //         data: result,
+    //       };
+    //     }
+    //     return list;
+    //   });
+    // });
+    // return result;
+    const response = await deleteItemListService.deleteItemList(
+      deleteItemListService.deleteItemListPath,
+      {
+        id_foods: removeList,
+        id_ulist: listId,
+        id_user: userId,
+      }
+    );
+    if (response) {
+      return response;
+    }
   };
   const onAddItemList = async (foodId: string, listsId: string[]) => {
     const response = await addItemListService.addItemList(
@@ -125,7 +141,13 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
       }
     );
     if (response.message) {
-      alert(`add item list:${response.message}`);
+      const response = await allListService.getAllList(
+        allListService.allListPath,
+        { id_user: userId }
+      );
+      if (response.message === 200) {
+        setPersonalLists(response.data || fakeData);
+      }
     }
   };
 

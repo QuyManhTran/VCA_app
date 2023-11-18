@@ -9,6 +9,7 @@ import {
   Pressable,
   TextInput,
   useWindowDimensions,
+  Vibration,
 } from "react-native";
 import {
   useCallback,
@@ -73,6 +74,13 @@ const SingleList = ({ route, navigation }: RouterProps) => {
   const headerAnimation = useRef(null);
   const listAnimation = useRef(null);
 
+  const onLongPress = useCallback(() => {
+    if (!isRemoveMode) {
+      Vibration.vibrate(50);
+      setIsRemoveMode(true);
+    }
+  }, []);
+
   const onPressOptions = (index: number) => {
     if (index === 0) {
       onCloseModal(400);
@@ -86,12 +94,12 @@ const SingleList = ({ route, navigation }: RouterProps) => {
     }
   };
 
-  const handleRemove = (index: number) => {
-    if (removeList.includes(index)) {
-      setRemoveList(removeList.filter((value) => value !== index));
+  const handleRemove = (id: string) => {
+    if (removeList.includes(id)) {
+      setRemoveList(removeList.filter((value) => value !== id));
       return;
     }
-    setRemoveList((prevList) => prevList.concat([index]));
+    setRemoveList((prevList) => prevList.concat([id]));
   };
 
   const handleSelectRemove = () => {
@@ -128,6 +136,19 @@ const SingleList = ({ route, navigation }: RouterProps) => {
     navigation.navigate("Blog", { ...props });
   }, []);
 
+  const updateList = async (
+    response: Promise<{ message: number; data?: any }>
+  ) => {
+    const message = await response;
+    if (message.message === 200) {
+      setFoodList((prev) =>
+        prev.filter((food, index) => !removeList.includes(food.id))
+      );
+    } else {
+      alert("update fail for some reasons!");
+    }
+  };
+
   useEffect(() => {
     if (isModal) {
       Animated.timing(heightOptions, {
@@ -158,17 +179,19 @@ const SingleList = ({ route, navigation }: RouterProps) => {
         }
       );
       if (response.message === 200) {
-        console.log(response.data?.foods);
-        // setFoodList(response.data);
+        if (response.data?.foods) {
+          setFoodList(response.data.foods);
+        }
       }
     };
     getSingleList();
   }, []);
   useEffect(() => {
     if (foodList.length !== allRemoveList.length) {
-      setAllRemoveList(foodList.map((value, index) => index));
+      setAllRemoveList(foodList.map((food, index) => food.id));
     }
   }, [foodList]);
+
   return (
     <View
       style={{
@@ -303,13 +326,14 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                     isDarkMode={isDarkMode}
                     onTag={onTag}
                     onBlog={onBlog}
+                    onLongPress={onLongPress}
                   ></FoodReview>
                   {isRemoveMode && (
                     <TouchableOpacity
                       activeOpacity={0.7}
-                      onPress={() => handleRemove(index)}
+                      onPress={() => handleRemove(foodList[index].id)}
                     >
-                      {!removeList.includes(index) && (
+                      {!removeList.includes(foodList[index].id) && (
                         <Ionicons
                           name="ellipse-outline"
                           size={20}
@@ -317,7 +341,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                           color={isDarkMode ? colors.whiteText : "black"}
                         ></Ionicons>
                       )}
-                      {removeList.includes(index) && (
+                      {removeList.includes(foodList[index].id) && (
                         <Ionicons
                           name="checkmark-circle"
                           size={20}
@@ -536,8 +560,8 @@ const SingleList = ({ route, navigation }: RouterProps) => {
           isDarkMode={isDarkMode}
           content="Bạn chắc chắn muốn xóa các bài viết này?"
           removeContent="Xóa"
-          onAccess={() => {
-            setFoodList(onRemoveBlogList(position, removeList));
+          onAccess={async () => {
+            updateList(onRemoveBlogList(position, listId, removeList));
             setisRemoveFoodBlog(false);
             setRemoveList([]);
             setIsRemoveMode(false);

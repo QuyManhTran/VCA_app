@@ -30,6 +30,12 @@ interface AddItemListProps {
   id_food: string;
 }
 
+interface DeleteItemListProps {
+  id_user: string;
+  id_ulist: string;
+  id_foods: string[];
+}
+
 // [GET] All personal list
 const getAllList = async (path: string, payload: AllListProps) => {
   const response = await request.get(path, payload);
@@ -70,7 +76,14 @@ const addItemList = async (path: string, body: AddItemListProps) => {
   const response = await request.patch(path, body);
   return response;
 };
-const addItemListPath = "/ulist/add-item-list";
+const addItemListPath = "/ulist/add-item-multi-list";
+
+// [DELETE] add item list
+const deleteItemList = async (path: string, body: DeleteItemListProps) => {
+  const response = await request.Delete(path, body);
+  return response;
+};
+const deleteItemListPath = "/ulist/delete-item-multi-list";
 
 export const allListService = { getAllList, allListPath };
 export const addListService = { addList, addListPath };
@@ -78,3 +91,4 @@ export const deleteListService = { deleteList, deleteListPath };
 export const editNameListService = { editNameList, editNameListPath };
 export const singleListService = { getSingleList, singleListPath };
 export const addItemListService = { addItemList, addItemListPath };
+export const deleteItemListService = { deleteItemList, deleteItemListPath };
