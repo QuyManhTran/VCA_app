@@ -62,7 +62,7 @@ const getAllList = async (req, res, next) => {
 
 const getSingleList = async (req, res, next) => {
     const { id_user, id_ulist } = req.query;
-   
+
     ulist.find({ _id: id_ulist, id_user: id_user })
         .then(list => {
             const promises = list[0].listFood.map(async (idFood, key) => {
@@ -80,16 +80,16 @@ const getSingleList = async (req, res, next) => {
         })
         .then(listFoodDetail => {
             res.status(200).json({
-                foods : listFoodDetail
+                foods: listFoodDetail
             });
         })
-        .catch (error => {
+        .catch(error => {
             res.status(400).json({
                 success: false,
                 text: "Fail"
             });
         })
-    
+
 };
 
 const deleteList = async (req, res, next) => {
@@ -114,7 +114,7 @@ const deleteList = async (req, res, next) => {
             text: "Server Error"
         });
     }
-    
+
 };
 
 const editNameList = async (req, res, next) => {
@@ -159,7 +159,7 @@ const editNameList = async (req, res, next) => {
 };
 
 const addItemOfList = async (req, res, next) => {
-    const { id_food, id_user, id_ulist} = req.body;
+    const { id_food, id_user, id_ulist } = req.body;
     try {
 
         let list = await ulist.find({ _id: id_ulist, id_user: id_user });
@@ -225,6 +225,53 @@ const addItemOfList = async (req, res, next) => {
     }
 };
 
+const addItemToMutilList = async (req, res, next) => {
+    const { id_food, id_user, list_id_ulist } = req.body;
+    try {
+        const ulistDetails = await ulist.find({ _id: { $in: list_id_ulist }, id_user: id_user });
+
+        const list_id_ulist_with_existing_name = [];
+        let is_existing_name = false;
+        
+        for (let i = 0; i < ulistDetails.length; i++) {
+            const ulistDetail = ulistDetails[i];
+            if (ulistDetail.listFood.includes(id_food)) {
+                is_existing_name = true;
+                list_id_ulist_with_existing_name.push(ulistDetail._id);
+            }
+        }
+        
+        if (is_existing_name) {
+            return res.status(422).json({
+                success: false,
+                text: "Name already exists in the list",
+                list_id_ulist_with_existing_name: list_id_ulist_with_existing_name
+            });
+        }
+
+        for (let i = 0; i < ulistDetails.length; i++) {
+            const ulistDetail = ulistDetails[i];
+            ulistDetail.listFood.push(id_food);
+
+            await ulist.findOneAndUpdate(
+                { _id: ulistDetail._id, id_user: id_user },
+                { $set: { listFood: ulistDetail.listFood } },
+                { upsert: true }
+            );
+        }
+
+        res.status(200).json({
+            success: true
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            text: "Internal server error"
+        });
+    }
+};
+
+
 const deleteItemOfList = async (req, res, next) => {
     const { idFood, id_user, id_ulist } = req.body;
 
@@ -272,5 +319,6 @@ module.exports = {
     getSingleList,
     addItemOfList,
     deleteItemOfList,
-    deleteList
+    deleteList,
+    addItemToMutilList
 }
