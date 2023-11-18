@@ -8,10 +8,9 @@ const foodController = async (req, res) => {
     const food = await Food.findOne({_id});
 
     if (!food) {
-        return res.status(401).json({ message: 'Không tìm được món ăn' });
+        return res.status(200).json({ message: 'Không tìm được món ăn' });
     }
 
-    const imageLink = food.image;    
     return res.status(200).json(food);
 }
 

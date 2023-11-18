@@ -23,7 +23,9 @@ const loginController = async (req, res) => {
     return res.status(402).json({ message: "Mật khẩu không đúng" });
   }
 
-  res.status(200).json({ user: { ...user._doc }, message: "Đăng nhập thành công" });
+  res
+    .status(200)
+    .json({ user: { ...user._doc }, message: "Đăng nhập thành công" });
 };
 
 module.exports = {

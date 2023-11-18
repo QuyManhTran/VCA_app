@@ -13,7 +13,7 @@ const sendMailController = async (req, res) => {
 
 
   if (user === null) {
-    res.json({ message: 401 });
+    return res.status(200).json({ message: 'Email người dùng không tồn tại' });
   } else {
     const otp = genrateOTP();
 
@@ -40,7 +40,7 @@ const sendMailController = async (req, res) => {
     // Gửi email
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
-        return res.status(500).json({ message: 'Không gửi được mail. Vui lòng xem lại!' });
+        return res.status(500).json({ error });
       } else {
         console.log('Email đã được gửi: ', info.response);
         await User.findOneAndUpdate(
