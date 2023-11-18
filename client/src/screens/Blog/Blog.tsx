@@ -32,7 +32,7 @@ const upComment = { 0: { top: 1000 }, 1: { top: 0 } };
 const downComment = { 0: { top: 0 }, 1: { top: 1000 } };
 const saveFavoriteAnimation = {
   0: { bottom: -50 },
-  0.05: { bottom: 0 },
+  0.1: { bottom: 0 },
   0.98: { bottom: 0 },
   1: { bottom: -50 },
 };
@@ -446,6 +446,8 @@ const Blog = ({ route, navigation }: RouterProps) => {
             height: 50,
             backgroundColor: isDarkMode ? colors.darkBg : "#fff",
             justifyContent: "center",
+            borderTopColor: isDarkMode ? "tranparent" : "black",
+            borderTopWidth: isDarkMode ? 0 : 1,
           }}
         >
           <Text

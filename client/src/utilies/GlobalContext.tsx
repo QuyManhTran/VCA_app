@@ -98,27 +98,12 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
       });
     }
   };
+  //Note
   const onRemoveBlogList = async (
     position: number,
     listId: string,
     removeList: string[]
   ) => {
-    // let result;
-    // setPersonalLists((prevLists) => {
-    //   return prevLists.map((list, index) => {
-    //     if (index === position) {
-    //       result = list.data.filter(
-    //         (value, index) => !removeList.includes(index)
-    //       );
-    //       return {
-    //         ...list,
-    //         data: result,
-    //       };
-    //     }
-    //     return list;
-    //   });
-    // });
-    // return result;
     const response = await deleteItemListService.deleteItemList(
       deleteItemListService.deleteItemListPath,
       {
@@ -146,7 +131,7 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
         { id_user: userId }
       );
       if (response.message === 200) {
-        setPersonalLists(response.data || fakeData);
+        setPersonalLists(response.data || []);
       }
     }
   };
@@ -203,14 +188,6 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
   }, []);
 
   useEffect(() => {
-    // const getIpAddress = async () => {
-    //   const ip = await Network.getIpAddressAsync();
-    //   const url = `${process.env.EXPO_PUBLIC_API_PROTOCOL}://${ip}:${process.env.EXPO_PUBLIC_SERVER_PORT}`;
-    //   console.log(url);
-    //   setBaseURL(url);
-    // };
-    // getIpAddress();
-
     if (userId) {
       const getAllList = async () => {
         const response = await allListService.getAllList(

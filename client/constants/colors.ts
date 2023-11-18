@@ -13,6 +13,7 @@ const colors = {
   grayBg: "#f5f5f5",
   violet: "#b188ec",
   darkTheme: "#121212",
+  lightPrimary: "#ff5c001a",
 };
 export const linearColors = ["#FF0000", "#FF9900"];
 export const navbarLinearColors = ["#FFD28D", "#FF6666"];

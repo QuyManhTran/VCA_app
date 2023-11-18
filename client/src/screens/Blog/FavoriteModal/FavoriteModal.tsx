@@ -11,13 +11,12 @@ import {
   Keyboard,
   useWindowDimensions,
 } from "react-native";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext, memo } from "react";
 import { colors } from "../../../../constants";
 import styles from "./style";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import ThemeContext from "../../../utilies/theme";
 import { list } from "../../../../assets/img/foods";
-import { addItemListService } from "../../../services/listService";
 
 interface FavoriteModalProps {
   blogId: string;
@@ -72,8 +71,8 @@ const FavoriteModal = ({
   const onSave = async () => {
     // call API
     if (selectedLists.length) {
-      onAddItemList(blogId, selectedLists);
       onFavoriting();
+      onAddItemList(blogId, selectedLists);
     }
     onCloseModal();
   };
@@ -274,4 +273,4 @@ const FavoriteModal = ({
   );
 };
 
-export default FavoriteModal;
+export default memo(FavoriteModal);
