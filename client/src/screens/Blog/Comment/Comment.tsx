@@ -10,7 +10,15 @@ import {
   Animated,
   Easing,
 } from "react-native";
-import { memo, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useContext,
+} from "react";
+import { Audio } from "expo-av";
 import styles from "./style";
 import CommentItem from "../../../components/CommentItem";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,23 +26,47 @@ import { colors } from "../../../../constants";
 //  import { comments } from "../../../../constants/fakeData";
 import socket from "../../../utilies/server";
 import { useWindowDimensions } from "react-native";
+import { commentService } from "../../../services/commentService";
+import ThemeContext from "../../../utilies/theme";
+import { FbNoti } from "../../../../assets/audios";
 
 interface CommentProps {
   isDarkMode: boolean;
   closeComment: any;
-  name: string;
+  blogId: string;
 }
 
-const Comment = ({ isDarkMode, closeComment, name }: CommentProps) => {
+interface CommentItemProps {
+  avatar: any;
+  name: string;
+  content: string;
+  time: string;
+  like: number;
+}
+
+const Comment = ({ isDarkMode, closeComment, blogId }: CommentProps) => {
   const { width } = useWindowDimensions();
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<CommentItemProps[] | null>(null);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [active, setActive] = useState({ index: 2, down: true });
   const [textInput, setTextInput] = useState("");
   const [isComment, setIsComment] = useState(false);
-  const [someone, setSomeOne] = useState(false);
+  const [someone, setSomeOne] = useState<boolean | null>(null);
+  const [likeSound, setLikeSound] = useState<Audio.Sound>();
+  const [firstTime, setFirstTime] = useState(false);
   const bottomValue = useRef(new Animated.Value(-1)).current;
   const timeoutRef: { current: NodeJS.Timeout | null } = useRef(null);
+
+  // sound new comment
+  async function playSound() {
+    try {
+      const { sound } = await Audio.Sound.createAsync(FbNoti);
+      setLikeSound(sound);
+      await sound.playAsync();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const onSending = () => {
     socket.emit("newMessage", {
@@ -95,10 +127,10 @@ const Comment = ({ isDarkMode, closeComment, name }: CommentProps) => {
     }
   }, [textInput]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     socket.on("connection", (message) => {});
-    socket.emit("test", name);
-    socket.on(name, (comments) => {
+    socket.emit("comment", blogId);
+    socket.on(blogId, (comments) => {
       setComments(comments);
     });
   }, []);
@@ -107,7 +139,7 @@ const Comment = ({ isDarkMode, closeComment, name }: CommentProps) => {
     if (!socket.connected) {
       socket.connect();
     }
-    socket.on(name, (comments) => {
+    socket.on(blogId, (comments) => {
       setComments(comments);
     });
     socket.on(
@@ -118,6 +150,7 @@ const Comment = ({ isDarkMode, closeComment, name }: CommentProps) => {
     );
     return () => {
       socket.emit("chatting", false);
+      socket.off("connection");
       socket.disconnect();
     };
   }, [socket]);
@@ -144,6 +177,19 @@ const Comment = ({ isDarkMode, closeComment, name }: CommentProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (comments !== null && someone !== null) {
+      playSound();
+    }
+  }, [comments]);
+
+  useEffect(() => {
+    return likeSound
+      ? () => {
+          likeSound.unloadAsync();
+        }
+      : undefined;
+  }, [likeSound]);
   return (
     <>
       <View>
@@ -181,18 +227,19 @@ const Comment = ({ isDarkMode, closeComment, name }: CommentProps) => {
         </View>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.contentWrapper}>
-            {comments.map((comment, index) => (
-              <CommentItem
-                key={index}
-                img={comment.img}
-                content={comment.content}
-                likeAmount={comment.likeAmount}
-                name={comment.name}
-                time={comment.time}
-                isDarkMode={isDarkMode}
-                width={width}
-              ></CommentItem>
-            ))}
+            {comments !== null &&
+              comments.map((comment, index) => (
+                <CommentItem
+                  key={index}
+                  avatar={comment.avatar}
+                  content={comment.content}
+                  like={comment.like}
+                  name={comment.name}
+                  time={comment.time}
+                  isDarkMode={isDarkMode}
+                  width={width}
+                ></CommentItem>
+              ))}
           </View>
         </ScrollView>
       </View>

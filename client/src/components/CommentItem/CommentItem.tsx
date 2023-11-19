@@ -2,13 +2,14 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import { memo } from "react";
 import { colors } from "../../../constants";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
+import { avatar } from "../../../assets/img/avatars";
 
 interface CommentItemProps {
-  img: any;
+  avatar: any;
   name: string;
   content: string;
   time: string;
-  likeAmount: number;
+  like: number;
   isDarkMode: boolean;
   width: number;
 }
@@ -16,7 +17,7 @@ const CommentItem = ({ ...props }: CommentItemProps) => {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: props.img }}
+        source={props?.avatar ? { uri: props.avatar } : avatar}
         resizeMode="cover"
         style={styles.img}
       ></Image>
@@ -84,7 +85,7 @@ const CommentItem = ({ ...props }: CommentItemProps) => {
               ],
             ]}
           >
-            {props.likeAmount}😆
+            {props.like}😆
           </Text>
         </View>
       </View>

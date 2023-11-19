@@ -15,10 +15,6 @@ interface GlobalContextProps {
   children: React.ReactNode;
 }
 
-interface AllListProps {
-  id: string;
-  name: string;
-}
 const fakeData = [{ img: list, name: "Xem sau", data: mostlySearch }];
 const GlobalContext = ({ children }: GlobalContextProps) => {
   const [userId, setUserId] = useState<string | null>(null);
@@ -27,6 +23,11 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
   const [isHomeScrollDown, setIsHomeScrollDown] = useState(false);
   const [personalLists, setPersonalLists] = useState<any[]>(fakeData);
   const [notifitions, setNotifitions] = useState(notifytions);
+  const [isConnectionSocket, setIsConnectionSocket] = useState(false);
+
+  const onConnectSocket = () => {
+    setIsConnectionSocket(true);
+  };
 
   const onUserId = (userId: string) => {
     setUserId(userId);
@@ -215,6 +216,7 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
         notifitions,
         baseURL,
         userId,
+        isConnectionSocket,
         onUserId,
         setHomeNavbar,
         onAddList,
@@ -224,6 +226,7 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
         onAddItemList,
         onRemoveUnread,
         onDarkTheme,
+        onConnectSocket,
       }}
     >
       {children}
