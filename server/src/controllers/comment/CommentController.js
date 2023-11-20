@@ -7,10 +7,7 @@ const onComment = async (req, res) => {
 const onRealTimeComment = async (socket, io) => {
   let comments = [];
   const raw = {
-    avatar:
-      "https://res.cloudinary.com/dxqd4odva/image/upload/v1700375687/VCA_app/avatars/avatar_s1knnr.png",
-    like: 6,
-    name: "Andrew",
+    like: 0,
   };
   socket.removeAllListeners();
   console.log(`userId: ${socket.id} connected!`);
@@ -37,8 +34,8 @@ const onRealTimeComment = async (socket, io) => {
           },
         }
       );
-      comments = [{ ...newMessage, ...raw }, ...comments];
-      io.to(food).emit(food, comments);
+      // comments = [{ ...newMessage, ...raw }, ...comments];
+      io.to(food).emit("updateMessage", { ...newMessage, ...raw });
     });
     socket.on("chatting", (isChatting) => {
       socket.in(food).emit("someone", { food: food, isChatting: isChatting });
@@ -50,4 +47,28 @@ const onRealTimeComment = async (socket, io) => {
   });
 };
 
-module.exports = { onComment, onRealTimeComment };
+const onToggleLike = async (req, res) => {
+  const { food_id, content, isLike } = req.body;
+  try {
+    await commentModel.updateOne(
+      { food_id: food_id },
+      {
+        $inc: {
+          "conversation.$[item].like": isLike ? 1 : -1,
+        },
+      },
+      {
+        arrayFilters: [
+          {
+            "item.content": content,
+          },
+        ],
+      }
+    );
+    res.status(200).json();
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+module.exports = { onComment, onRealTimeComment, onToggleLike };

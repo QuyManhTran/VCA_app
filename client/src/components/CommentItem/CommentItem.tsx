@@ -1,23 +1,91 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { colors } from "../../../constants";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import { avatar } from "../../../assets/img/avatars";
+import { TimeStamp } from "../../screens/Blog/Comment/Comment";
+import { Audio } from "expo-av";
+import { FbSound } from "../../../assets/audios";
+import { commentLikeService } from "../../services/commentService";
+import { UserInforProps } from "../../utilies/GlobalContext";
 
 interface CommentItemProps {
+  blogId: string;
   avatar: any;
   name: string;
   content: string;
-  time: string;
+  time: TimeStamp;
   like: number;
   isDarkMode: boolean;
   width: number;
+  onLiked: any;
+  isLiked: boolean | null;
+  pos: number;
 }
 const CommentItem = ({ ...props }: CommentItemProps) => {
+  const [likeSound, setLikeSound] = useState<Audio.Sound>();
+  // sound new comment
+  async function playSound() {
+    try {
+      const { sound } = await Audio.Sound.createAsync(FbSound);
+      setLikeSound(sound);
+      await sound.playAsync();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const onToggleLike = async () => {
+    if (!props.isLiked) {
+      playSound();
+    }
+    const response = await commentLikeService.onToggleLike(
+      commentLikeService.commentLikePath,
+      {
+        food_id: props.blogId,
+        content: props.content,
+        isLike: !props.isLiked,
+      }
+    );
+  };
+
+  const timeConvert = () => {
+    const newestTime = new Date();
+    if (newestTime.getFullYear() === props.time.year) {
+      if (newestTime.getMonth() + 1 === props.time.month) {
+        if (newestTime.getDate() === props.time.day) {
+          if (newestTime.getHours() === props.time.hour) {
+            if (newestTime.getMinutes() === props.time.minute) {
+              return `Vừa xong`;
+            } else {
+              return `${newestTime.getMinutes() - props.time.minute} phút`;
+            }
+          } else {
+            return `${newestTime.getHours() - props.time.hour} giờ`;
+          }
+        } else {
+          return `${newestTime.getDate() - props.time.day} ngày`;
+        }
+      } else {
+        return `${newestTime.getMonth() + 1 - props.time.month} tháng`;
+      }
+    } else {
+      return `${newestTime.getFullYear() - props.time.year} năm`;
+    }
+  };
+  // Effect
+  useEffect(() => {
+    return likeSound
+      ? () => {
+          likeSound.unloadAsync();
+        }
+      : undefined;
+  }, [likeSound]);
+
   return (
     <View style={styles.container}>
       <Image
-        source={props?.avatar ? { uri: props.avatar } : avatar}
+        source={props.avatar ? { uri: props.avatar } : avatar}
         resizeMode="cover"
         style={styles.img}
       ></Image>
@@ -56,12 +124,22 @@ const CommentItem = ({ ...props }: CommentItemProps) => {
               },
             ]}
           >
-            {props.time}
+            {timeConvert()}
           </Text>
           <Text
+            onPress={() => {
+              onToggleLike();
+              props.onLiked(props.pos);
+            }}
             style={[
               styles.timeText,
-              { color: props.isDarkMode ? colors.whiteText : "black" },
+              {
+                color: props.isLiked
+                  ? colors.primary
+                  : props.isDarkMode
+                  ? colors.whiteText
+                  : "black",
+              },
             ]}
           >
             Thích
@@ -85,7 +163,7 @@ const CommentItem = ({ ...props }: CommentItemProps) => {
               ],
             ]}
           >
-            {props.like}😆
+            {props.isLiked ? props.like + 1 : props.like}🥰
           </Text>
         </View>
       </View>
@@ -131,12 +209,11 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    gap: 16,
   },
   timeText: {
     fontSize: 16,
-    fontFamily: baloo2Fonts.medium,
+    fontFamily: baloo2Fonts.semi,
     lineHeight: 22,
-    marginLeft: 20,
   },
 });

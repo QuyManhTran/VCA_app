@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import colors, { navbarDarkLinearColors } from "../../../constants/colors";
 import { userAvatar } from "../../../assets/img/icons";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
+import ThemeContext from "../../utilies/theme";
 interface LinearBackGroundProps {
   height: number;
   avatar?: boolean;
@@ -21,6 +22,7 @@ const LinearBackGround = ({
   onPress,
   isDarkMode = false,
 }: LinearBackGroundProps) => {
+  const { userInfor } = useContext(ThemeContext);
   const [time, setTime] = useState("");
   useEffect(() => {
     const hour = new Date().getHours();
@@ -68,7 +70,10 @@ const LinearBackGround = ({
       </Text>
       {avatar && (
         <TouchableOpacity activeOpacity={0.8}>
-          <Image source={userAvatar} style={{ height: 70, width: 70 }}></Image>
+          <Image
+            source={userInfor.avatar ? { uri: userInfor.avatar } : userAvatar}
+            style={{ height: 60, width: 60, marginLeft: 12, marginRight: 4 }}
+          ></Image>
         </TouchableOpacity>
       )}
     </LinearGradient>

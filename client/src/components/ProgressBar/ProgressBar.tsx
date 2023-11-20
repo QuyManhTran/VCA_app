@@ -1,5 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Slider from "@react-native-community/slider";
 import { colors } from "../../../constants";
 interface ProGressBarProps {
@@ -8,8 +7,9 @@ interface ProGressBarProps {
   onSeek: any;
   seekingEvent: any;
   isSeeking: boolean;
+  isFullScreen: boolean;
 }
-const formatTime = (milliseconds: number): string => {
+export const formatTime = (milliseconds: number): string => {
   const seconds = Math.floor(milliseconds / 1000);
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds - minutes * 60;
@@ -21,9 +21,10 @@ const ProgressBar = ({
   onSeek,
   seekingEvent,
   isSeeking,
+  isFullScreen,
 }: ProGressBarProps) => {
   const [value, setValue] = useState<number | null>(null);
-  const onValueChange = (value) => {
+  const onValueChange = (value: number) => {
     onSeek((value / 100) * duration);
   };
   useEffect(() => {
@@ -32,38 +33,22 @@ const ProgressBar = ({
     }
   }, [currentTime]);
   return (
-    <View style={styles.container}>
-      <Text style={styles.time}>{formatTime(currentTime)}</Text>
-      <Slider
-        style={{ flex: 1 }}
-        minimumValue={0}
-        maximumValue={100}
-        step={1}
-        value={value}
-        minimumTrackTintColor={colors.primary}
-        maximumTrackTintColor="#ccc"
-        thumbTintColor={colors.primary}
-        onValueChange={onValueChange}
-        onSlidingStart={() => seekingEvent(true)}
-        onSlidingComplete={(value) => {
-          seekingEvent(false);
-          setValue(value);
-        }}
-      />
-      <Text style={styles.time}>{formatTime(duration)}</Text>
-    </View>
+    <Slider
+      style={{ width: "100%" }}
+      minimumValue={0}
+      maximumValue={100}
+      step={1}
+      value={value}
+      minimumTrackTintColor={colors.primary}
+      maximumTrackTintColor="#ccc"
+      thumbTintColor={colors.primary}
+      onValueChange={onValueChange}
+      onSlidingStart={() => seekingEvent(true)}
+      onSlidingComplete={(value) => {
+        seekingEvent(false);
+        setValue(value);
+      }}
+    />
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    width: "80%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  time: {
-    color: "#fff",
-    fontSize: 12,
-  },
-});
 export default ProgressBar;

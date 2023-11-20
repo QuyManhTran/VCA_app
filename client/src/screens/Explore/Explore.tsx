@@ -22,8 +22,14 @@ import RecommendList from "../../components/RecommendList";
 import { list, recommendLists } from "../../../assets/img/foods";
 
 const Explore = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, setHomeNavbar, personalLists, onAddList, userId } =
-    useContext(ThemeContext);
+  const {
+    isDarkMode,
+    setHomeNavbar,
+    personalLists,
+    onAddList,
+    userId,
+    userInfor,
+  } = useContext(ThemeContext);
   const [newList, setNewList] = useState<string | null>("");
   const [isModal, setIsModal] = useState(false);
   const [isGoBack, setIsGoBack] = useState(true);
@@ -43,6 +49,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
       position: index,
       userId: userId,
       listId: listId,
+      userInfor,
     });
   };
 
@@ -80,7 +87,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
         backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
       }}
     >
-      <LinearBackGround height={100} isDarkMode={isDarkMode}></LinearBackGround>
+      <LinearBackGround height={110} isDarkMode={isDarkMode}></LinearBackGround>
       <TouchableOpacity
         activeOpacity={0.6}
         style={styles.notify}
@@ -196,7 +203,7 @@ const Explore = ({ route, navigation }: RouterProps) => {
                             : colors.gray,
                         }}
                       >
-                        Andrew
+                        {userInfor?.username ? userInfor.username : "Andrew"}
                       </Text>
                     </View>
                   </View>

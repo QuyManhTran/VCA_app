@@ -32,11 +32,10 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     position: "absolute",
-    bottom: 30,
     left: 0,
-    width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
+    transform: [{ translateY: -9 }],
+    zIndex: 999,
   },
   contentWrapper: {
     flex: 1,
@@ -74,6 +73,19 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 8,
     paddingHorizontal: 12,
+  },
+  timeWrapper: {
+    position: "absolute",
+    flexDirection: "row",
+    bottom: 12,
+    left: 0,
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  time: {
+    color: "#fff",
+    fontSize: 12,
   },
 });
 export default styles;

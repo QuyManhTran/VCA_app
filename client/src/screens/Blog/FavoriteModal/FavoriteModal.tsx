@@ -79,7 +79,7 @@ const FavoriteModal = ({
 
   useEffect(() => {
     const initialSlectedLists = personalLists.map((list) => {
-      if (list?.listFood.includes(blogId)) {
+      if (list?.listFood?.includes(blogId)) {
         return list.id;
       }
     });

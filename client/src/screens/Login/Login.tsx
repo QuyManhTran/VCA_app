@@ -24,7 +24,7 @@ import screenWidth from "../../../constants/screenWidth";
 import ThemeContext from "../../utilies/theme";
 import * as loginService from "../../services/loginService";
 const Login = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, onUserId } = useContext(ThemeContext);
+  const { isDarkMode, onUserId, onUserInfor } = useContext(ThemeContext);
   const width = screenWidth();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -46,7 +46,14 @@ const Login = ({ route, navigation }: RouterProps) => {
     } else {
       console.log(response.data?.user);
       if (response.data?.user) {
-        onUserId(response.data.user._id);
+        const { _id, username, email } = response.data.user;
+        onUserId(_id);
+        onUserInfor({
+          username,
+          email,
+          avatar:
+            "https://res.cloudinary.com/dxqd4odva/image/upload/v1700375687/VCA_app/avatars/avatar_s1knnr.png",
+        });
       }
       navigation.navigate("Navbar");
     }

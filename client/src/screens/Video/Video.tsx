@@ -17,7 +17,9 @@ import PlayIcon from "../../../assets/icons/PlayIcon";
 import PauseIcon from "../../../assets/icons/PauseIcon";
 import ForWardIcon from "../../../assets/icons/ForWardIcon";
 import BackWardIcon from "../../../assets/icons/BackWardIcon";
-import ProgressBar from "../../components/ProgressBar/ProgressBar";
+import ProgressBar, {
+  formatTime,
+} from "../../components/ProgressBar/ProgressBar";
 import reviewDuyNen from "../../../assets/videos";
 import { banhMyThumbnail } from "../../../assets/img/thumbnail";
 interface VideoProps {
@@ -46,6 +48,7 @@ const Video = ({
   const [duration, setDuration] = useState<number>(0);
   const [lastPress, setLastPress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMute, setIsMute] = useState(true);
   const [isBuffering, setIsBuffering] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
   const [isTouchStart, setIsTouchStart] = useState(false);
@@ -157,12 +160,23 @@ const Video = ({
 
   useEffect(() => {
     if (isTouchEnd) {
-      timeOutRef.current = setTimeout(() => {
-        setIsTouchStart(false);
-      }, 1000);
+      timeOutRef.current = setTimeout(
+        () => {
+          setIsTouchStart(false);
+        },
+        isFullscreen ? 2500 : 1000
+      );
     }
     return () => clearTimeout(timeOutRef.current as NodeJS.Timeout);
   }, [isTouchEnd]);
+
+  useEffect(() => {
+    if (!isSeeking) {
+      setIsTouchEnd(true);
+    } else {
+      setIsTouchEnd(false);
+    }
+  }, [isSeeking]);
   return (
     <>
       <Pressable
@@ -177,7 +191,11 @@ const Video = ({
           setIsTouchStart(true);
           setIsTouchEnd(false);
         }}
-        onTouchEnd={() => setIsTouchEnd(true)}
+        onTouchEnd={() => {
+          if (!isSeeking) {
+            setIsTouchEnd(true);
+          }
+        }}
         onPress={handleDoubleTab}
       >
         <VideoPlayer
@@ -192,6 +210,7 @@ const Video = ({
             width: "100%",
             height: "100%",
           }}
+          isMuted={isMute}
           isLooping
           onLoad={onLoad}
           onPlaybackStatusUpdate={(status) => {
@@ -218,7 +237,11 @@ const Video = ({
               setIsTouchStart(true);
               setIsTouchEnd(false);
             }}
-            onTouchEnd={() => setIsTouchEnd(true)}
+            onTouchEnd={() => {
+              if (!isSeeking) {
+                setIsTouchEnd(true);
+              }
+            }}
             onPress={handleDoubleTab}
           >
             <TouchableOpacity activeOpacity={0.5} onPress={onBackWard}>
@@ -245,34 +268,88 @@ const Video = ({
                 <ForWardIcon></ForWardIcon>
               </Animatable.View>
             </TouchableOpacity>
-            <View style={styles.progressBar}>
-              <ProgressBar
-                currentTime={currentTime}
-                duration={duration}
-                onSeek={onSeek}
-                seekingEvent={seekingEvent}
-                isSeeking={isSeeking}
-              ></ProgressBar>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                style={styles.fullScreenIcon}
-                onPress={toggleFullscreen}
+            <View
+              style={[
+                styles.timeWrapper,
+                {
+                  bottom: isFullscreen ? "20%" : 12,
+                  left: isFullscreen ? 12 : 0,
+                  paddingRight: isFullscreen ? 24 : 0,
+                },
+              ]}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: 4,
+                  alignItems: "center",
+                  marginLeft: 4,
+                }}
               >
-                {!isFullscreen && (
-                  <FullScreen size={32} color="white"></FullScreen>
-                )}
-                {isFullscreen && (
-                  <MaterialIcons
-                    name="fullscreen-exit"
-                    size={32}
-                    color="white"
-                  ></MaterialIcons>
-                )}
-              </TouchableOpacity>
+                <Text style={styles.time}>{formatTime(currentTime)}</Text>
+                <Text style={styles.time}>/</Text>
+                <Text style={styles.time}>{formatTime(duration)}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: 12,
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={() => setIsMute(!isMute)}
+                >
+                  {isMute && (
+                    <MaterialIcons name="volume-off" size={24} color="white" />
+                  )}
+                  {!isMute && (
+                    <MaterialIcons name="volume-up" size={24} color="white" />
+                  )}
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={toggleFullscreen}
+                >
+                  {!isFullscreen && (
+                    <FullScreen size={32} color="white"></FullScreen>
+                  )}
+                  {isFullscreen && (
+                    <MaterialIcons
+                      name="fullscreen-exit"
+                      size={32}
+                      color="white"
+                    ></MaterialIcons>
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
           </Pressable>
         )}
       </Pressable>
+      {duration !== 0 && (!isFullscreen || (isFullscreen && isTouchStart)) && (
+        <View
+          style={[
+            styles.progressBar,
+            {
+              marginLeft: isFullscreen ? 0 : -20,
+              top: !isFullscreen ? (width < 400 ? 220 + 64 : 220 + 72) : "84%",
+              width: !isFullscreen ? width + 32 : width,
+              justifyContent: isFullscreen ? "center" : "flex-start",
+            },
+          ]}
+        >
+          <ProgressBar
+            isFullScreen={isFullscreen}
+            currentTime={currentTime}
+            duration={duration}
+            onSeek={onSeek}
+            seekingEvent={seekingEvent}
+            isSeeking={isSeeking}
+          ></ProgressBar>
+        </View>
+      )}
     </>
   );
 };

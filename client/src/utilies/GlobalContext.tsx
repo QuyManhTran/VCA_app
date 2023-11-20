@@ -15,9 +15,16 @@ interface GlobalContextProps {
   children: React.ReactNode;
 }
 
+export interface UserInforProps {
+  username: string;
+  avatar: string;
+  email: string;
+}
+
 const fakeData = [{ img: list, name: "Xem sau", data: mostlySearch }];
 const GlobalContext = ({ children }: GlobalContextProps) => {
   const [userId, setUserId] = useState<string | null>(null);
+  const [userInfor, setUserInfor] = useState<UserInforProps>();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [baseURL, setBaseURL] = useState<string | null>(null);
   const [isHomeScrollDown, setIsHomeScrollDown] = useState(false);
@@ -31,6 +38,10 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
 
   const onUserId = (userId: string) => {
     setUserId(userId);
+  };
+
+  const onUserInfor = (userInfor: UserInforProps) => {
+    setUserInfor(userInfor);
   };
 
   const onDarkTheme = (isDarkMode: boolean) => {
@@ -217,7 +228,9 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
         baseURL,
         userId,
         isConnectionSocket,
+        userInfor,
         onUserId,
+        onUserInfor,
         setHomeNavbar,
         onAddList,
         onRemoveList,

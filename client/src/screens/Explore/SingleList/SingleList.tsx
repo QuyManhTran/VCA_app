@@ -56,7 +56,7 @@ const listDown = {
 };
 
 const SingleList = ({ route, navigation }: RouterProps) => {
-  const { name, data, img, position, userId, listId } = route.params;
+  const { name, data, img, position, userId, listId, userInfor } = route.params;
   const { width } = useWindowDimensions();
   const [foodList, setFoodList] = useState<FoodReviewRawProps[]>([]);
   const { isDarkMode, onRemoveList, onAdjustList, onRemoveBlogList } =
@@ -294,7 +294,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
                 marginBottom: 4,
               }}
             >
-              Andrew
+              {userInfor?.username ? userInfor.username : "Andrew"}
             </Text>
             <Text
               style={{

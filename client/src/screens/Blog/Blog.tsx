@@ -49,7 +49,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
     originRate: false,
     isFavorite: false,
   };
-  const { isDarkMode } = useContext(ThemeContext);
+  const { isDarkMode, userId, userInfor } = useContext(ThemeContext);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [description, setDescription] = useState("");
   const [histories, setHistories] = useState<history[]>([]);
@@ -415,6 +415,8 @@ const Blog = ({ route, navigation }: RouterProps) => {
             isDarkMode={isDarkMode}
             closeComment={closeComment}
             blogId={id}
+            userId={userId}
+            userInfor={userInfor}
           ></Comment>
         </Animatable.View>
       </View>

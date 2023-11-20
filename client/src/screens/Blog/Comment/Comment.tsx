@@ -10,14 +10,7 @@ import {
   Animated,
   Easing,
 } from "react-native";
-import {
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  useContext,
-} from "react";
+import { memo, useEffect, useRef, useState, useCallback } from "react";
 import { Audio } from "expo-av";
 import styles from "./style";
 import CommentItem from "../../../components/CommentItem";
@@ -26,25 +19,44 @@ import { colors } from "../../../../constants";
 //  import { comments } from "../../../../constants/fakeData";
 import socket from "../../../utilies/server";
 import { useWindowDimensions } from "react-native";
-import { commentService } from "../../../services/commentService";
-import ThemeContext from "../../../utilies/theme";
 import { FbNoti } from "../../../../assets/audios";
+import { UserInforProps } from "../../../utilies/GlobalContext";
 
 interface CommentProps {
   isDarkMode: boolean;
   closeComment: any;
   blogId: string;
+  userId: string;
+  userInfor: UserInforProps;
 }
 
 interface CommentItemProps {
   avatar: any;
   name: string;
   content: string;
-  time: string;
+  time: TimeStamp;
   like: number;
 }
 
-const Comment = ({ isDarkMode, closeComment, blogId }: CommentProps) => {
+export interface TimeStamp {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+}
+
+interface LikeProps {
+  isLiked: boolean | null;
+}
+
+const Comment = ({
+  isDarkMode,
+  closeComment,
+  blogId,
+  userId,
+  userInfor,
+}: CommentProps) => {
   const { width } = useWindowDimensions();
   const [comments, setComments] = useState<CommentItemProps[] | null>(null);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -53,7 +65,7 @@ const Comment = ({ isDarkMode, closeComment, blogId }: CommentProps) => {
   const [isComment, setIsComment] = useState(false);
   const [someone, setSomeOne] = useState<boolean | null>(null);
   const [likeSound, setLikeSound] = useState<Audio.Sound>();
-  const [firstTime, setFirstTime] = useState(false);
+  const [isLikeds, setIsLikeds] = useState<LikeProps[]>([]);
   const bottomValue = useRef(new Animated.Value(-1)).current;
   const timeoutRef: { current: NodeJS.Timeout | null } = useRef(null);
 
@@ -70,14 +82,36 @@ const Comment = ({ isDarkMode, closeComment, blogId }: CommentProps) => {
 
   const onSending = () => {
     socket.emit("newMessage", {
-      time: `${new Date().getSeconds()}`,
+      time: {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
+        day: new Date().getDate(),
+        hour: new Date().getHours(),
+        minute: new Date().getMinutes(),
+      },
       content: textInput,
+      userId: userId,
+      name: userInfor?.username || "Andrew",
+      avatar:
+        userInfor?.avatar ||
+        "https://res.cloudinary.com/dxqd4odva/image/upload/v1700375687/VCA_app/avatars/avatar_s1knnr.png",
     });
     setTextInput("");
     if (isComment) {
       Keyboard.dismiss();
     }
   };
+
+  const onLiked = useCallback((pos: number) => {
+    setIsLikeds((prev) =>
+      prev.map((item, index) => {
+        if (index === pos) {
+          return { isLiked: !item.isLiked };
+        }
+        return item;
+      })
+    );
+  }, []);
 
   useEffect(() => {
     if (someone) {
@@ -139,8 +173,13 @@ const Comment = ({ isDarkMode, closeComment, blogId }: CommentProps) => {
     if (!socket.connected) {
       socket.connect();
     }
-    socket.on(blogId, (comments) => {
+    socket.on(blogId, (comments: any[]) => {
       setComments(comments);
+      setIsLikeds(comments.map((item) => ({ isLiked: false })));
+    });
+    socket.on("updateMessage", (newMessage) => {
+      setComments((prev) => [newMessage, ...prev]);
+      setIsLikeds((prev) => [{ isLiked: false }, ...prev]);
     });
     socket.on(
       "someone",
@@ -230,6 +269,12 @@ const Comment = ({ isDarkMode, closeComment, blogId }: CommentProps) => {
             {comments !== null &&
               comments.map((comment, index) => (
                 <CommentItem
+                  pos={index}
+                  isLiked={
+                    isLikeds.length > 0 ? isLikeds[index]?.isLiked : false
+                  }
+                  onLiked={onLiked}
+                  blogId={blogId}
                   key={index}
                   avatar={comment.avatar}
                   content={comment.content}
