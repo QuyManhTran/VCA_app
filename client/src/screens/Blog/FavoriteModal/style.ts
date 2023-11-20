@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     alignItems: "center",
     justifyContent: "center",
+    zIndex: 2,
   },
   wrapper: {
     width: 320,

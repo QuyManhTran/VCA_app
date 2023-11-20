@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     left: 0,
     flexDirection: "row",
     transform: [{ translateY: -9 }],
-    zIndex: 999,
+    zIndex: 1,
   },
   contentWrapper: {
     flex: 1,
