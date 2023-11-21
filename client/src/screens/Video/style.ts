@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   time: {
     color: "#fff",
-    fontSize: 12,
+    fontSize: 14,
   },
 });
 export default styles;

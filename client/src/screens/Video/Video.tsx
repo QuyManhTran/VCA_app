@@ -10,9 +10,8 @@ import {
 import { useState, useEffect, useRef, memo } from "react";
 import * as Animatable from "react-native-animatable";
 import { Video as VideoPlayer, ResizeMode } from "expo-av";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, Octicons } from "@expo/vector-icons";
 import styles from "./style";
-import FullScreen from "../../../assets/icons/FullScreen";
 import PlayIcon from "../../../assets/icons/PlayIcon";
 import PauseIcon from "../../../assets/icons/PauseIcon";
 import ForWardIcon from "../../../assets/icons/ForWardIcon";
@@ -20,8 +19,6 @@ import BackWardIcon from "../../../assets/icons/BackWardIcon";
 import ProgressBar, {
   formatTime,
 } from "../../components/ProgressBar/ProgressBar";
-import reviewDuyNen from "../../../assets/videos";
-import { banhMyThumbnail } from "../../../assets/img/thumbnail";
 interface VideoProps {
   toggleFullscreen: any;
   isFullscreen: boolean;
@@ -160,12 +157,9 @@ const Video = ({
 
   useEffect(() => {
     if (isTouchEnd) {
-      timeOutRef.current = setTimeout(
-        () => {
-          setIsTouchStart(false);
-        },
-        isFullscreen ? 2500 : 1000
-      );
+      timeOutRef.current = setTimeout(() => {
+        setIsTouchStart(false);
+      }, 2500);
     }
     return () => clearTimeout(timeOutRef.current as NodeJS.Timeout);
   }, [isTouchEnd]);
@@ -313,14 +307,19 @@ const Video = ({
                   onPress={toggleFullscreen}
                 >
                   {!isFullscreen && (
-                    <FullScreen size={32} color="white"></FullScreen>
+                    <Octicons
+                      name="screen-full"
+                      size={24}
+                      color={"#fff"}
+                      style={{ marginRight: 4 }}
+                    ></Octicons>
                   )}
                   {isFullscreen && (
-                    <MaterialIcons
-                      name="fullscreen-exit"
-                      size={32}
-                      color="white"
-                    ></MaterialIcons>
+                    <Octicons
+                      name="screen-normal"
+                      size={24}
+                      color={"#fff"}
+                    ></Octicons>
                   )}
                 </TouchableOpacity>
               </View>
