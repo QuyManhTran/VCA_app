@@ -65,7 +65,7 @@ const FoodSchema = new Schema ({
     },
     rate: {
         type: Number,
-        format: "double",
+        format: "int32",
         default: 0
     },
     tags: {
@@ -90,9 +90,12 @@ const FoodSchema = new Schema ({
                 }
             }
         }
-    }
-
-
+    },
+    createdAt: Date,
+    updatedAt: Date
+    
+},{
+    timestamps: true
 })
 
 module.exports = mongoose.model('food', FoodSchema)
