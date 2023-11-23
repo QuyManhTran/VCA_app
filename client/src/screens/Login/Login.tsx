@@ -35,18 +35,18 @@ const Login = ({ route, navigation }: RouterProps) => {
   const debounce = useDebounce(password, 500);
   const userDebounce = useDebounce(userName, 500);
   const onLogin = async () => {
-    // const response = await loginService.login(loginService.loginPath, {
-    //   email: userName,
-    //   password: password,
-    // });
-    // console.log(response.message);
+    const response = await loginService.login(loginService.loginPath, {
+      email: userName,
+      password: password,
+    });
+    console.log(response.message);
 
-    // if (response.message !== 200) {
-    //   alert("Tài khoản không tồn tại");
-    // } else {
-    //   navigation.navigate("Navbar");
-    // }
-    navigation.navigate("Navbar");
+    if (response.message !== 200) {
+      alert("Tài khoản không tồn tại");
+    } else {
+      navigation.navigate("Navbar");
+    }
+    // navigation.navigate("Navbar");
   };
 
   const onForgotPassword = () => {

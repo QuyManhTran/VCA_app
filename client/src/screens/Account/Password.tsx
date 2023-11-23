@@ -1,12 +1,8 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  Image,
-  ImageBackground,
-  Dimensions,
-  Modal,
   Pressable,
   TouchableWithoutFeedback,
   TouchableOpacity,
@@ -17,12 +13,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import ImageViewer from "react-native-image-zoom-viewer";
 import { AntDesign } from "@expo/vector-icons";
-import { Foundation } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-
 import LinearBackGround from "../../components/LinearBackGround";
 import { colors } from "../../../constants";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
@@ -68,80 +60,99 @@ const Password = ({ navigation, ...props }) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View>
-        <ScrollView>
-          <Pressable onPress={Keyboard.dismiss}>
-            <LinearBackGround
-              height={70}
-              back={true}
-              avatar={false}
-              onPress={onBack}
-              // isDarkMode={isDarkMode}
-            ></LinearBackGround>
+      <ScrollView>
+        <Pressable onPress={Keyboard.dismiss}>
+          <LinearBackGround
+            height={110}
+            back={true}
+            avatar={false}
+            onPress={onBack}
+            // isDarkMode={isDarkMode}
+          ></LinearBackGround>
 
-            <Text style={styles.title}>Thay đổi mật khẩu </Text>
-            <Text style={styles.textLable}>Nhập mật khẩu cũ </Text>
-            <View style={styles.wapperEdit}>
-              <TextInput style={styles.textEdit}></TextInput>
-              <TouchableOpacity
-                onPress={() => setIsPressEyeOld(!isPressEyeOld)}
-              >
-                {!isPressEyeOld && (
-                  <AntDesign name="eyeo" size={24} color="black" />
-                )}
-                {isPressEyeOld && (
-                  <Feather name="eye-off" size={24} color="black" />
-                )}
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.textLable}>Nhập mật khẩu mới </Text>
-            <Text
-              style={{
-                fontFamily: baloo2Fonts.medium,
-                marginHorizontal: 10,
-                paddingBottom: 10,
-              }}
+          <Text style={styles.title}>Thay đổi mật khẩu </Text>
+          <Text style={styles.textLable}>Nhập mật khẩu cũ </Text>
+          <View style={styles.wapperEdit}>
+            <TextInput
+              style={styles.textEdit}
+              placeholder="old password"
+              spellCheck={false}
+              selectionColor={colors.primary}
+            ></TextInput>
+            <TouchableOpacity
+              onPress={() => setIsPressEyeOld(!isPressEyeOld)}
+              style={styles.eyeIcon}
+              activeOpacity={0.5}
             >
-              Mật khẩu phải bao gồm cả chữ cái (a-z, A-Z) và số (0-9)
-            </Text>
-            <View style={styles.wapperEdit}>
-              <TextInput style={styles.textEdit}></TextInput>
-              <TouchableOpacity
-                onPress={() => setIsPressEyeNew(!isPressEyeNew)}
-              >
-                {!isPressEyeNew && (
-                  <AntDesign name="eyeo" size={24} color="black" />
-                )}
-                {isPressEyeNew && (
-                  <Feather name="eye-off" size={24} color="black" />
-                )}
-              </TouchableOpacity>
-            </View>
+              {!isPressEyeOld && (
+                <AntDesign name="eyeo" size={24} color="black" />
+              )}
+              {isPressEyeOld && (
+                <Feather name="eye-off" size={24} color="black" />
+              )}
+            </TouchableOpacity>
+          </View>
 
-            <Text style={styles.textLable}>Xác nhận mật khẩu mới </Text>
-            <View style={styles.wapperEdit}>
-              <TextInput style={styles.textEdit}></TextInput>
-              <TouchableOpacity
-                onPress={() => setIsPressEyeConfirm(!isPressEyeConfirm)}
-              >
-                {!isPressEyeConfirm && (
-                  <AntDesign name="eyeo" size={24} color="black" />
-                )}
-                {isPressEyeConfirm && (
-                  <Feather name="eye-off" size={24} color="black" />
-                )}
-              </TouchableOpacity>
-            </View>
+          <Text style={styles.textLable}>Nhập mật khẩu mới </Text>
+          <Text
+            style={{
+              fontFamily: baloo2Fonts.medium,
+              marginHorizontal: 10,
+              paddingBottom: 10,
+            }}
+          >
+            Mật khẩu phải bao gồm cả chữ cái (a-z, A-Z) và số (0-9)
+          </Text>
+          <View style={styles.wapperEdit}>
+            <TextInput
+              style={styles.textEdit}
+              placeholder="new password"
+              spellCheck={false}
+              selectionColor={colors.primary}
+            ></TextInput>
+            <TouchableOpacity
+              onPress={() => setIsPressEyeNew(!isPressEyeNew)}
+              style={styles.eyeIcon}
+              activeOpacity={0.5}
+            >
+              {!isPressEyeNew && (
+                <AntDesign name="eyeo" size={24} color="black" />
+              )}
+              {isPressEyeNew && (
+                <Feather name="eye-off" size={24} color="black" />
+              )}
+            </TouchableOpacity>
+          </View>
 
-            <View style={styles.summitWapper}>
-              <TouchableOpacity onPress={saveDate}>
-                <Text style={styles.summitText}>Lưu thay đổi</Text>
-              </TouchableOpacity>
-            </View>
-          </Pressable>
-        </ScrollView>
-      </View>
+          <Text style={styles.textLable}>Xác nhận mật khẩu mới </Text>
+          <View style={styles.wapperEdit}>
+            <TextInput
+              style={styles.textEdit}
+              placeholder="confirm password"
+              spellCheck={false}
+              selectionColor={colors.primary}
+            ></TextInput>
+            <TouchableOpacity
+              onPress={() => setIsPressEyeConfirm(!isPressEyeConfirm)}
+              style={styles.eyeIcon}
+              activeOpacity={0.5}
+            >
+              {!isPressEyeConfirm && (
+                <AntDesign name="eyeo" size={24} color="black" />
+              )}
+              {isPressEyeConfirm && (
+                <Feather name="eye-off" size={24} color="black" />
+              )}
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.summitWapper}>
+            <TouchableOpacity onPress={saveDate}>
+              <Text style={styles.summitText}>Lưu thay đổi</Text>
+            </TouchableOpacity>
+          </View>
+        </Pressable>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -160,23 +171,27 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   wapperEdit: {
+    flex: 1,
     marginHorizontal: 10,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     backgroundColor: "#D9D9D9",
     alignItems: "center",
     borderRadius: 15,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    height: 60,
   },
   textEdit: {
-    position: "relative",
-    display: "flex",
-    justifyContent: "flex-end",
     flex: 1,
+    height: "100%",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     color: colors.black,
     fontFamily: baloo2Fonts.regular,
-    fontSize: 25,
+    fontSize: 22,
+  },
+
+  eyeIcon: {
+    paddingHorizontal: 12,
   },
 
   summitWapper: {

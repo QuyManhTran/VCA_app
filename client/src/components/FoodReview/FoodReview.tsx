@@ -5,30 +5,26 @@ import React from "react";
 import { colors } from "../../../constants";
 
 interface FoodReviewProps {
+  id: string;
   name: string;
   like: number;
   rate: number;
   tags: string[];
-  img: any;
+  image: any;
   isDarkMode: boolean;
-  isLiked: boolean;
-  isRate: boolean;
-  isFavorite: boolean;
   onTag?: any;
   onBlog: any;
 }
 const FoodReview = ({
+  id,
   name,
   like,
   rate,
   tags,
-  img,
+  image,
   isDarkMode = false,
   onTag = () => {},
   onBlog = () => {},
-  isLiked = false,
-  isRate = false,
-  isFavorite = false,
 }: FoodReviewProps) => {
   const onNavigateBlog = ({ ...props }) => {
     onBlog({ ...props });
@@ -39,18 +35,16 @@ const FoodReview = ({
         activeOpacity={0.6}
         onPress={() =>
           onNavigateBlog({
+            id,
             name,
             like,
+            image,
             rate,
-            img,
-            isLiked,
-            isFavorite,
-            isRate,
           })
         }
       >
         <Image
-          source={img}
+          source={{ uri: image }}
           style={{ width: 150, height: 100, borderRadius: 12 }}
           resizeMode="cover"
         ></Image>
@@ -60,13 +54,7 @@ const FoodReview = ({
           activeOpacity={0.6}
           onPress={() =>
             onNavigateBlog({
-              name,
-              like,
-              rate,
-              img,
-              isLiked,
-              isFavorite,
-              isRate,
+              id,
             })
           }
         >
@@ -143,7 +131,7 @@ const FoodReview = ({
                 { color: isDarkMode ? colors.whiteText : "black" },
               ]}
             >
-              {like}k
+              {like === 0 ? 2.5 : like}k
             </Text>
           </View>
           <View

@@ -5,7 +5,7 @@ const FoodSchema = new Schema ({
     name: {
         type: String,
     },
-    describe: {
+    description: {
         type: String,
     },
     history: {
@@ -38,6 +38,9 @@ const FoodSchema = new Schema ({
     video: {
         type: String,
     },
+    thumbnail: {
+        type: String,
+    },
     ingredient_list: {
         type: Array,
         items: {
@@ -62,10 +65,10 @@ const FoodSchema = new Schema ({
     },
     rate: {
         type: Number,
-        format: "double",
+        format: "int32",
         default: 0
     },
-    tag: {
+    tags: {
         type: Array,
         items: {
             type: String
@@ -87,9 +90,12 @@ const FoodSchema = new Schema ({
                 }
             }
         }
-    }
-
-
+    },
+    createdAt: Date,
+    updatedAt: Date
+    
+},{
+    timestamps: true
 })
 
 module.exports = mongoose.model('food', FoodSchema)

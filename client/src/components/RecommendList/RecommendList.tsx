@@ -6,12 +6,12 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { useContext, memo } from "react";
+import { memo } from "react";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
 import { colors } from "../../../constants";
-import exploreData, { banhmy, recommendLists } from "../../../assets/img/foods";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { recommendLists } from "../../../assets/img/foods";
+import { Ionicons } from "@expo/vector-icons";
 interface RecommendListProps {
   heading: string;
   explore?: boolean;
