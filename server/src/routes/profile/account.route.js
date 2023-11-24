@@ -29,7 +29,7 @@ accountRouter.post('/forgot', sendMailController);
 accountRouter.post('/confirm', comfirnOtpController);
 accountRouter.post('/change-password', changePasswordController);
 accountRouter.put('/delete', deleteAccount);
-accountRouter.post('/add-image', upload.single('image'), addImageController);
+accountRouter.patch('/add-image', addImageController);
 accountRouter.patch('/delete-image', deleteImageController)
 
 
