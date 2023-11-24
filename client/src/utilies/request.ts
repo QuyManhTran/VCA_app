@@ -18,16 +18,20 @@ export const post = async (path: string, options = {}) => {
     const response = await request.post(path, options, { timeout: 5000 });
     return { message: 200, data: response.data };
   } catch (error) {
-    return { message: error?.response?.status || "Error network" };
+    return {
+      message: error?.response?.data?.text || "Có lỗi, vui lòng thử lại",
+    };
   }
 };
 
 export const patch = async (path: string, options = {}) => {
   try {
-    const response = await request.patch(path, options);
+    const response = await request.patch(path, options, { timeout: 5000 });
     return { message: 200, data: response.data };
   } catch (error) {
-    return { message: error?.response?.status || "Error network" };
+    return {
+      message: error?.response?.data?.text || "Có lỗi, vui lòng thử lại",
+    };
   }
 };
 

@@ -14,6 +14,8 @@ const colors = {
   violet: "#b188ec",
   darkTheme: "#121212",
   lightPrimary: "#ff5c001a",
+  success: "#07bc0c",
+  error: "#e74c3c",
 };
 export const linearColors = ["#FF0000", "#FF9900"];
 export const navbarLinearColors = ["#FFD28D", "#FF6666"];

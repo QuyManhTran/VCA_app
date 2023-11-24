@@ -23,6 +23,7 @@ import { montserratFonts } from "../../../constants/fontFamiles";
 import screenWidth from "../../../constants/screenWidth";
 import ThemeContext from "../../utilies/theme";
 import * as loginService from "../../services/loginService";
+import { defaultAvatar, defaultCover } from "../../../constants/image";
 const Login = ({ route, navigation }: RouterProps) => {
   const { isDarkMode, onUserId, onUserInfor } = useContext(ThemeContext);
   const width = screenWidth();
@@ -51,8 +52,8 @@ const Login = ({ route, navigation }: RouterProps) => {
         onUserInfor({
           username,
           email,
-          avatar:
-            "https://res.cloudinary.com/dxqd4odva/image/upload/v1700375687/VCA_app/avatars/avatar_s1knnr.png",
+          avatar: defaultAvatar,
+          cover: defaultCover,
         });
       }
       navigation.navigate("Navbar");

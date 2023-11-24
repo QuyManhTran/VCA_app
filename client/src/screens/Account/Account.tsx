@@ -7,25 +7,42 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import ThemeContext from "../../utilies/theme";
 import * as ImagePicker from "expo-image-picker";
-import { EvilIcons } from "@expo/vector-icons";
+import {
+  EvilIcons,
+  FontAwesome,
+  FontAwesome5,
+  Ionicons,
+} from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { colors } from "../../../constants";
 import styles from "./style";
+import RecommendList from "../../components/RecommendList";
+import { recommendLists } from "../../../assets/img/foods";
+import { RouterProps } from "../Splash/Splash";
+import {
+  changeAvatarService,
+  changeCoverPhotoService,
+} from "../../services/profileService";
+import ToastNotify, { Status } from "../../components/ToastNotify/ToastNotify";
 const uriBase64 = "data:image/jpeg;base64,";
-const Account = ({ navigation, ...props }) => {
-  const { isDarkMode } = useContext(ThemeContext);
-  const [avatar, setAvatar] = useState(null);
+const Account = ({ navigation, ...props }: RouterProps) => {
+  const { isDarkMode, userInfor, userId, setHomeNavbar, onUserInfor } =
+    useContext(ThemeContext);
+  const { avatar, cover } = userInfor;
+  const [isLoading, setIsLoading] = useState<boolean | null>(null);
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<Status | null>(null);
   const [dataAvatar, setDataAvatar] = useState(null);
-  const [coverphoto, setCoverPhoto] = useState(null);
   const [dataCoverphoto, setDataCoverphoto] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [pressAvatar, setPressAvatar] = useState(false);
   const [pressCoverPhoto, setPressCoverPhoto] = useState(false);
+  const [prevOffSetY, setPrevOffSetY] = useState(0);
 
   const setActionChooseAvatar = () => {
     setPressCoverPhoto(false);
@@ -45,7 +62,6 @@ const Account = ({ navigation, ...props }) => {
       result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        // aspect: [4, 3],
         quality: 1,
         base64: true,
       });
@@ -53,7 +69,6 @@ const Account = ({ navigation, ...props }) => {
       result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        // aspect: [4, 3],
         quality: 1,
         base64: true,
       });
@@ -64,7 +79,6 @@ const Account = ({ navigation, ...props }) => {
       setModalVisible(!modalVisible);
       if (isConfirmed) {
         setDataAvatar(result.assets[0]);
-        setAvatar(result.assets[0].uri);
       }
     }
   };
@@ -74,7 +88,6 @@ const Account = ({ navigation, ...props }) => {
     setModalVisible(!modalVisible);
 
     if (isComfirmed) {
-      setCoverPhoto(null);
       setDataCoverphoto(null);
     }
   };
@@ -84,7 +97,6 @@ const Account = ({ navigation, ...props }) => {
     setModalVisible(!modalVisible);
 
     if (isComfirmed) {
-      setAvatar(null);
       setDataAvatar(null);
     }
   };
@@ -111,11 +123,9 @@ const Account = ({ navigation, ...props }) => {
 
     if (!result.canceled) {
       const isConfirmed = await showConfirmationDialog(); // Hàm xác nhận
-
       setModalVisible(!modalVisible);
       if (isConfirmed) {
         setDataCoverphoto(result.assets[0]);
-        setCoverPhoto(result.assets[0].uri);
       }
     }
   };
@@ -162,29 +172,118 @@ const Account = ({ navigation, ...props }) => {
     });
   };
 
+  const onNavigateSearch = useCallback((params: object) => {
+    navigation.navigate("Search", params);
+  }, []);
+
+  const onBlog = useCallback(({ ...props }) => {
+    navigation.navigate("Blog", { ...props });
+  }, []);
+
+  const onNavigateEditInfor = () =>
+    navigation.navigate("EditInfor", {
+      username: userInfor?.username || "Andrew",
+      birthday: userInfor?.birthday || "04 tháng 5 năm 2003",
+      phoneNumber: userInfor?.phoneNumber || "0123456789",
+      isDarkMode: isDarkMode,
+      userId: userId,
+    });
+
+  const onNavigatePassword = () => {
+    navigation.navigate("Password", {
+      isDarkMode: isDarkMode,
+      email: userInfor.email,
+    });
+  };
+  const onScroll = (scrollY: number) => {
+    if (scrollY > prevOffSetY) {
+      setHomeNavbar(true);
+    } else {
+      setHomeNavbar(false);
+    }
+  };
+
+  const onToggleLoading = (result: boolean | null) => {
+    setIsLoading(result);
+  };
+
   useEffect(() => {
     if (dataAvatar) {
-      // api avatar image
-      // const data = uriBase64 + dataAvatar?.base64;
+      const data = uriBase64 + dataAvatar?.base64;
+      const requestAvatar = async () => {
+        const response = await changeAvatarService.changeAvatar(
+          changeAvatarService.changeAvatarPath,
+          {
+            avatar: data,
+            id_user: userId,
+            typeImage: "avatar",
+          }
+        );
+        if (response.message !== 200) {
+          setMessage(response.message);
+          setIsLoading(false);
+          setStatus("error");
+        } else {
+          onUserInfor({ ...userInfor, avatar: data });
+          setMessage("Đổi ảnh đại diện thành công");
+          setIsLoading(false);
+          setStatus("success");
+        }
+      };
+      requestAvatar();
     }
   }, [dataAvatar]);
 
   useEffect(() => {
     if (dataCoverphoto) {
-      // api cover photo image
-      // const data = uriBase64 + dataAvatar?.base64;
+      const data = uriBase64 + dataAvatar?.base64;
+      const requestAvatar = async () => {
+        const response = await changeCoverPhotoService.changeCoverPhoto(
+          changeCoverPhotoService.changCoverPhotoPath,
+          {
+            cover: data,
+            id_user: userId,
+            typeImage: "cover",
+          }
+        );
+        if (response.message !== 200) {
+          setMessage(response.message);
+          setIsLoading(false);
+          setStatus("error");
+        } else {
+          onUserInfor({ ...userInfor, cover: data });
+          setMessage("Đổi ảnh bìa thành công");
+          setIsLoading(false);
+          setStatus("success");
+        }
+      };
+      requestAvatar();
     }
   }, [dataCoverphoto]);
 
   return (
     <View style={styles.container}>
-      <ScrollView style={{ marginTop: 40 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ marginTop: 40 }}
+        onScroll={(e) => onScroll(e.nativeEvent.contentOffset.y)}
+      >
         <View style={styles.header}>
-          <View style={{ alignItems: "flex-end" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={styles.headerTextName}>
+              {userInfor?.username || "Andrew"}
+            </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate("Setting")}
               style={{
-                marginRight: 10,
+                position: "absolute",
+                right: 10,
                 padding: 6,
                 borderWidth: 1,
                 borderColor: colors.black,
@@ -210,13 +309,13 @@ const Account = ({ navigation, ...props }) => {
                 style={[
                   styles.headerImageDetail,
                   {
-                    borderTopLeftRadius: coverphoto ? 999 : 0,
-                    borderTopRightRadius: coverphoto ? 999 : 0,
+                    borderTopLeftRadius: cover ? 999 : 0,
+                    borderTopRightRadius: cover ? 999 : 0,
                   },
                 ]}
                 source={
-                  coverphoto
-                    ? { uri: coverphoto }
+                  cover
+                    ? { uri: cover }
                     : require("../../../assets/img/accounts/anhNenAccount.png")
                 }
               />
@@ -272,45 +371,86 @@ const Account = ({ navigation, ...props }) => {
               </TouchableOpacity>
             </View>
           </View>
-
-          <View style={styles.headerText}>
-            <Text style={styles.headerTextName}>Charlie Puth</Text>
-            <Text style={styles.headerTextEmail}>user12345@gmail.com</Text>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              onPress={() => navigation.navigate("EditInfo")}
-            >
-              <View style={styles.headerTextEdit}>
-                <Text style={styles.headerTextEditText}>
-                  Chỉnh sửa thông tin
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
         </View>
 
         <View style={styles.menuContainer}>
           <View style={styles.content}>
-            <Text style={styles.contentTitle}>Nội dung</Text>
-            <TouchableOpacity style={styles.contentContent}>
-              <View
-                style={{
-                  paddingLeft: 17,
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
+            <View style={styles.contentHeading}>
+              <Text style={styles.contentTitle}>Tiểu sử</Text>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={onNavigateEditInfor}
+                style={{ marginRight: 12 }}
               >
-                <EvilIcons name="heart" size={30} color="black" />
-                <Text style={styles.contentHeart}>Yêu thích</Text>
+                <AntDesign name="edit" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.contentContent}>
+              <View style={styles.itemWrapper}>
+                <FontAwesome name="birthday-cake" size={24} color="black" />
+                <Text style={styles.contentItem}>04/05/2003</Text>
               </View>
-
-              <Entypo name="chevron-right" size={25} color="black" />
-            </TouchableOpacity>
+              <View style={styles.itemWrapper}>
+                <Ionicons name="call" size={24} color="black" />
+                <Text style={styles.contentItem}>0123456789</Text>
+              </View>
+            </View>
           </View>
-
-          <View style={{ height: 150 }}></View>
+          <View style={styles.content}>
+            <View style={styles.contentHeading}>
+              <Text style={styles.contentTitle}>Tài khoản cá nhân</Text>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={onNavigatePassword}
+                style={{ marginRight: 12 }}
+              >
+                <AntDesign name="edit" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.contentContent}>
+              <View style={styles.itemWrapper}>
+                <MaterialIcons name="alternate-email" size={24} color="black" />
+                <Text style={styles.contentItem}>
+                  {userInfor?.email || "andrew03@gmail.com"}
+                </Text>
+              </View>
+              <View style={styles.itemWrapper}>
+                <FontAwesome5 name="lock" size={24} color="black" />
+                <Text style={styles.contentItem}>***********</Text>
+              </View>
+            </View>
+          </View>
+          <View style={[styles.content, { gap: 12 }]}>
+            <View style={styles.contentHeading}>
+              <Text style={styles.contentTitle}>Hoạt động gần đây</Text>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => navigation.navigate("EditInfo")}
+                style={{ marginRight: 12 }}
+              >
+                <AntDesign name="right" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+            <RecommendList
+              trending="Tết"
+              isDarkMode={isDarkMode}
+              onNavigateSearch={onNavigateSearch}
+              heading="Thêm gần đây"
+              data={recommendLists}
+              onBlog={onBlog}
+              isAccount
+            ></RecommendList>
+          </View>
         </View>
       </ScrollView>
+      {isLoading === false && (
+        <ToastNotify
+          isLoading={isLoading}
+          onToggleLoading={onToggleLoading}
+          status={status}
+          text={message}
+        ></ToastNotify>
+      )}
       {modalVisible && (
         <Pressable
           onPress={() => setModalVisible(!modalVisible)}
@@ -336,7 +476,9 @@ const Account = ({ navigation, ...props }) => {
               <TouchableOpacity
                 style={styles.modalWapper}
                 onPress={() =>
-                  navigation.navigate("showImage", { data: dataAvatar })
+                  navigation.navigate("showImage", {
+                    data: { uri: avatar || "" },
+                  })
                 }
               >
                 <MaterialIcons name="account-circle" size={25} color="black" />
@@ -385,7 +527,11 @@ const Account = ({ navigation, ...props }) => {
               <TouchableOpacity
                 style={styles.modalWapper}
                 onPress={() =>
-                  navigation.navigate("showImage", { data: dataCoverphoto })
+                  navigation.navigate("showImage", {
+                    data: {
+                      uri: cover,
+                    },
+                  })
                 }
               >
                 <Entypo name="image" size={24} color="black" />
@@ -412,7 +558,7 @@ const Account = ({ navigation, ...props }) => {
                 </Text>
               </TouchableOpacity>
 
-              {coverphoto && (
+              {cover && (
                 <TouchableOpacity
                   style={styles.modalWapper}
                   onPress={deleteCoverPhoto}
@@ -430,39 +576,3 @@ const Account = ({ navigation, ...props }) => {
 };
 
 export default Account;
-
-{
-  /* <View style={styles.option}>
-            <Text style={styles.optionTitle}>Tùy chọn</Text>
-
-            <TouchableOpacity style={styles.optionLanguage}>
-              <View style={styles.optionLanguageTitle}>
-                <MaterialIcons name="language" size={25} color="black" />
-                <Text style={styles.contentHeart}>Ngôn ngữ</Text>
-              </View>
-              <View style={styles.optionLanguageContent}>
-                <Text style={styles.optionLanguageContentText}>Tiếng việt</Text>
-                <Entypo name="chevron-right" size={25} color="black" />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.optionDisplay} onPress={() => navigation.navigate('Display')}>
-              <View style={styles.optionLanguageTitle}>
-                <MaterialIcons name="settings-display" size={24} color="black" />
-                <Text style={styles.contentHeart}>Giao diện</Text>
-              </View>
-              <Entypo name="chevron-right" size={25} color="black" />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.privacy}>
-            <Text style={styles.optionTitle}>Bảo mật</Text>
-            <TouchableOpacity style={styles.optionLanguage} onPress={() => navigation.navigate('Password')}>
-              <View style={styles.optionLanguageTitle}>
-                <Entypo name="lock" size={25} color="black" />
-                <Text style={styles.contentHeart} >Thay đổi mật khẩu</Text>
-              </View>
-              <Entypo name="chevron-right" size={25} color="black" />
-            </TouchableOpacity>
-          </View> */
-}

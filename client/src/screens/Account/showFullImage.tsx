@@ -27,14 +27,6 @@ const showFullImage = ({ navigation, ...props }) => {
       animationType="slide"
       onRequestClose={() => onBack()}
     >
-      {/* {isTouchScreen && <View>
-                    <AntDesign name="back" size={24} color="black" />
-                </View>}
-                 */}
-      {/* <Pressable onPress={() => setIsTouchScreen(!isTouchScreen)}>
-                
-            </Pressable> */}
-
       <ImageViewer
         style={{
           width: windowWidth.width,

@@ -9,34 +9,51 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Pressable,
+  ActivityIndicator,
+  Animated,
+  Easing,
+  useWindowDimensions,
 } from "react-native";
 import LinearBackGround from "../../../components/LinearBackGround";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { memo, useEffect, useState } from "react";
-import { Entypo } from "@expo/vector-icons";
+import { memo, useEffect, useRef, useState } from "react";
 import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../../../../constants";
+import { RouterProps } from "../../Splash/Splash";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  linearColors,
+  navbarDarkLinearColors,
+  navbarLinearColors,
+} from "../../../../constants/colors";
+import ToastNotify, {
+  Status,
+} from "../../../components/ToastNotify/ToastNotify";
+import { editInforService } from "../../../services/profileService";
 
-const EditInfo = ({ navigation }) => {
-  const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [dataImage, setDataImage] = useState(null);
-  const [selectImage, setSelectImage] = useState(null);
-  const [fullName, setFullName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+const EditInfor = ({ route, navigation }: RouterProps) => {
+  const { width } = useWindowDimensions();
+  const { isDarkMode, userId } = route.params;
+  const [isLoading, setIsLoading] = useState<boolean | null>(null);
+  const [status, setStatus] = useState<Status | null>(null);
+  const [fullName, setFullName] = useState(route.params?.username || "");
+  const [phoneNumber, setPhoneNumber] = useState(
+    route.params?.phoneNumber || ""
+  );
   const [date, setDate] = useState(new Date());
-  const [selectedStartDate, setSelectedStartDate] =
-    useState("25 tháng 10, 2023");
+  const [selectedStartDate, setSelectedStartDate] = useState<string>(
+    route.params?.birthday || "04 tháng 05 năm 2003"
+  );
   const [showPicker, setShowPicker] = useState(false);
-
+  const [message, setMessage] = useState("");
   // birthday
   const toggleDatapicker = () => {
     setShowPicker(!showPicker);
   };
 
   const onChange = ({ type }, selectedDate) => {
-    if (type == "set") {
+    if (type === "set") {
       const currentDate = selectedDate;
       setDate(currentDate);
       if (Platform.OS === "android") {
@@ -55,55 +72,33 @@ const EditInfo = ({ navigation }) => {
   };
 
   // Post all data to api
-  const onSaveData = () => {
-    const formData = new FormData();
-
-    formData.append("name", fullName);
-    formData.append("phone", phoneNumber);
-    formData.append("birthdate", selectedStartDate);
-    formData.append("images", JSON.stringify(dataImage));
-
-    console.log(formData);
-
-    fetch("http://192.147.66.100:4000/edit-list-user", {
-      method: "POST",
-      body: JSON.stringify({
-        data: dataImage,
-      }),
-    })
-      .then((response) => response.json()) // Parse the response as JSON
-      .then((data) => {
-        console.log("Response data:", data);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      });
-  };
-
-  // fetch
-  const getListUser = async () => {
-    try {
-      const response = await fetch("http://192.147.66.100:4000/list-user");
-      const json = await response.json();
-      setData(json);
-      setFullName(json[0].name);
-      setPhoneNumber(json[0].phone);
-      setSelectImage(
-        "http://192.168.0.64:4000" +
-          json[0].image.substring(2, json[0].image.length)
-      );
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+  const onSaveData = async () => {
+    setIsLoading(true);
+    const response = await editInforService.editInfor(
+      editInforService.editInforPath,
+      {
+        birthday: selectedStartDate,
+        id_user: userId,
+        phoneNumber: phoneNumber,
+        username: fullName,
+      }
+    );
+    if (response.message !== 200) {
+      console.log(response.message);
+      setMessage(response.message);
+      setIsLoading(false);
+      setStatus("error");
+    } else {
+      console.log(response.message);
+      setIsLoading(false);
+      setStatus("success");
+      setMessage("Thay đổi thành công");
     }
   };
 
-  useEffect(() => {
-    // getListUser();
-  }, []);
-
-  // avatar
+  const onToggleLoading = (result: boolean | null) => {
+    setIsLoading(result);
+  };
 
   // goback
   const onBack = () => {
@@ -121,7 +116,7 @@ const EditInfo = ({ navigation }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flexGrow: 1 }}>
           <LinearBackGround
-            height={100}
+            height={120}
             back={true}
             avatar={false}
             onPress={onBack}
@@ -132,14 +127,13 @@ const EditInfo = ({ navigation }) => {
           <Text style={styles.textLable}>Tên</Text>
           <View style={styles.wapperEdit}>
             <TextInput
+              defaultValue={route.params?.username || "Andrew"}
               style={styles.textEdit}
               editable={true}
               onChangeText={(value) => setFullName(value)}
               placeholder="Tên của bạn"
               selectionColor={colors.primary}
-            >
-              {fullName}
-            </TextInput>
+            ></TextInput>
           </View>
 
           <Text style={styles.textLable}>Số điện thoại</Text>
@@ -149,9 +143,8 @@ const EditInfo = ({ navigation }) => {
               onChangeText={(value) => setPhoneNumber(value)}
               placeholder="0123456789"
               selectionColor={colors.primary}
-            >
-              {phoneNumber}
-            </TextInput>
+              defaultValue={route.params?.phoneNumber || "0123456789"}
+            ></TextInput>
           </View>
           <Text style={styles.textLable}>Ngày sinh</Text>
           {showPicker && (
@@ -162,7 +155,6 @@ const EditInfo = ({ navigation }) => {
               value={date}
             />
           )}
-
           <Pressable onPress={toggleDatapicker} style={styles.wapperEdit}>
             <TextInput
               editable={false}
@@ -173,45 +165,51 @@ const EditInfo = ({ navigation }) => {
               selectionColor={colors.primary}
             ></TextInput>
           </Pressable>
-
-          <TouchableOpacity
+          <View
             style={{
-              height: 70,
-              marginLeft: 10,
-              marginTop: 10,
-              borderTopWidth: 1,
-              borderTopColor: "#D9D9D9",
               flexDirection: "row",
-              borderBottomColor: "#D9D9D9",
-              borderBottomWidth: 1,
-              justifyContent: "space-between",
+              justifyContent: "center",
               alignItems: "center",
             }}
-            onPress={() => navigation.navigate("Password")}
           >
-            <Text
-              style={{
-                fontFamily: baloo2Fonts.bold,
-
-                fontSize: 20,
-              }}
+            <LinearGradient
+              colors={isDarkMode ? navbarDarkLinearColors : linearColors}
+              style={[
+                styles.summitWrapper,
+                { gap: isLoading ? 12 : 0, opacity: isLoading ? 0.6 : 1 },
+              ]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
             >
-              Thay đổi mật khẩu
-            </Text>
-
-            <Entypo
-              style={{ marginRight: 5 }}
-              name="chevron-right"
-              size={25}
-              color="black"
-            />
-          </TouchableOpacity>
-
-          <View style={styles.summitWapper}>
-            <TouchableOpacity onPress={onSaveData}>
-              <Text style={styles.summitText}>Lưu thay đổi</Text>
-            </TouchableOpacity>
+              {isLoading && (
+                <ActivityIndicator
+                  size={"large"}
+                  color={colors.whiteText}
+                ></ActivityIndicator>
+              )}
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={onSaveData}
+                disabled={isLoading}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={styles.summitText}>
+                  {isLoading ? "Đang lưu" : "Lưu thay đổi"}
+                </Text>
+              </TouchableOpacity>
+            </LinearGradient>
           </View>
+          {isLoading === false && (
+            <ToastNotify
+              isLoading={isLoading}
+              onToggleLoading={onToggleLoading}
+              status={status}
+              text={message}
+            ></ToastNotify>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -258,20 +256,21 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
 
-  summitWapper: {
+  summitWrapper: {
+    borderRadius: 15,
     marginTop: 50,
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
+    paddingVertical: 6,
+    paddingHorizontal: 16,
   },
 
   summitText: {
-    paddingHorizontal: 10,
-    backgroundColor: "#FF9900",
-    borderRadius: 15,
     fontFamily: baloo2Fonts.bold,
     fontSize: 25,
     color: colors.whiteText,
   },
 });
 
-export default memo(EditInfo);
+export default memo(EditInfor);

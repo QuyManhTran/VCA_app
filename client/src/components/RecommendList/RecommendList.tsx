@@ -22,6 +22,7 @@ interface RecommendListProps {
   onNavigateSearch: any;
   onBlog: any;
   trending?: string;
+  isAccount?: boolean;
   data: {
     name: string;
     img: any;
@@ -39,6 +40,7 @@ const RecommendList = ({
   onNavigateSearch,
   isDarkMode = false,
   isLibrary = false,
+  isAccount = false,
   onBlog = () => {},
   data: fallBackData = mostlySearch,
 }: RecommendListProps) => {
@@ -68,36 +70,38 @@ const RecommendList = ({
   };
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        disabled={explore ? true : false}
-        activeOpacity={0.6}
-        style={{
-          paddingBottom: isLibrary ? 8 : 0,
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-        onPress={() => onNavigateSearch({ keyword: heading, status: "tag" })}
-      >
-        <Text
-          style={[
-            styles.heading,
-            {
-              fontSize: isLibrary ? 28 : 26,
-              paddingLeft: isLibrary ? 0 : 12,
-              color: isDarkMode ? colors.whiteText : "black",
-            },
-          ]}
+      {!isAccount && (
+        <TouchableOpacity
+          disabled={explore ? true : false}
+          activeOpacity={0.6}
+          style={{
+            paddingBottom: isLibrary ? 8 : 0,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+          onPress={() => onNavigateSearch({ keyword: heading, status: "tag" })}
         >
-          {heading}
-        </Text>
-        {!explore && (
-          <Ionicons
-            name="chevron-forward-outline"
-            size={24}
-            color={isDarkMode ? colors.whiteText : "black"}
-          ></Ionicons>
-        )}
-      </TouchableOpacity>
+          <Text
+            style={[
+              styles.heading,
+              {
+                fontSize: isLibrary ? 28 : 26,
+                paddingLeft: isLibrary ? 0 : 12,
+                color: isDarkMode ? colors.whiteText : "black",
+              },
+            ]}
+          >
+            {heading}
+          </Text>
+          {!explore && (
+            <Ionicons
+              name="chevron-forward-outline"
+              size={24}
+              color={isDarkMode ? colors.whiteText : "black"}
+            ></Ionicons>
+          )}
+        </TouchableOpacity>
+      )}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {data.map((blog, index) => {
           return (
@@ -143,7 +147,7 @@ const RecommendList = ({
             </TouchableOpacity>
           );
         })}
-        {!explore && (
+        {!explore && data.length >= 5 && (
           <View
             style={{ marginTop: 12, alignItems: "center", paddingRight: 12 }}
           >

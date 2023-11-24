@@ -14,7 +14,7 @@ import Search from "./src/screens/Search";
 import SingleList from "./src/screens/Explore/SingleList";
 import GlobalContext from "./src/utilies/GlobalContext";
 import Setting from "./src/screens/Account/Setting/Setting";
-import EditInfo from "./src/screens/Account/Setting/EditInfo";
+import EditInfor from "./src/screens/Account/Setting/EditInfor";
 import Notification from "./src/screens/Notification";
 import Blog from "./src/screens/Blog";
 import showFullImage from "./src/screens/Account/showFullImage";
@@ -52,12 +52,12 @@ export default function App() {
           <Stack.Screen name="Video" component={Video} />
 
           <Stack.Screen name="Setting" component={Setting} />
-          <Stack.Screen name="EditInfo" component={EditInfo} />
+          <Stack.Screen name="EditInfor" component={EditInfor} />
           <Stack.Screen name="Blog" component={Blog} />
           <Stack.Screen name="showImage" component={showFullImage} />
           <Stack.Screen name="Display" component={Display} />
           <Stack.Screen name="Password" component={Password} />
-          <Stack.Screen name="TermsOfService" component={TermsOfService}/>
+          <Stack.Screen name="TermsOfService" component={TermsOfService} />
           <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
           <Stack.Screen name="Language" component={Language} />
         </Stack.Navigator>

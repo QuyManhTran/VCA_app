@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   Pressable,
-  TouchableWithoutFeedback,
+  ActivityIndicator,
   TouchableOpacity,
   ScrollView,
   TextInput,
@@ -18,22 +18,67 @@ import { Feather } from "@expo/vector-icons";
 import LinearBackGround from "../../components/LinearBackGround";
 import { colors } from "../../../constants";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  linearColors,
+  navbarDarkLinearColors,
+} from "../../../constants/colors";
+import ToastNotify, { Status } from "../../components/ToastNotify/ToastNotify";
+import { addListService } from "../../services/listService";
+import { changePasswordService } from "../../services/profileService";
 
-const Password = ({ navigation, ...props }) => {
+const Password = ({ route, navigation }) => {
+  const { isDarkMode, email } = route.params;
+  const [isLoading, setIsLoading] = useState<boolean | null>(null);
+  const [status, setStatus] = useState<Status | null>(null);
   const [isPressEyeOld, setIsPressEyeOld] = useState(true);
   const [isPressEyeNew, setIsPressEyeNew] = useState(true);
   const [isPressEyeConfirm, setIsPressEyeConfirm] = useState(true);
-
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
   const onBack = () => {
     navigation.goBack();
   };
-
-  const saveDate = async () => {
-    const isComfirmed = await showConfirmationDialog();
+  // call API
+  const onSaveData = async () => {
+    if (!newPassword.trim() || !confirmPassword.trim() || !oldPassword.trim()) {
+      setIsLoading(false);
+      setStatus("error");
+      setMessage("Vui lòng nhập đủ thông tin");
+    } else if (
+      newPassword.trim() &&
+      confirmPassword.trim() &&
+      newPassword !== confirmPassword
+    ) {
+      setIsLoading(false);
+      setStatus("error");
+      setMessage("Mật khẩu không khớp");
+    } else {
+      setIsLoading(true);
+      const response = await changePasswordService.changePassword(
+        changePasswordService.changePasswordPath,
+        {
+          email: email,
+          newPassword: newPassword,
+          oldPassword: oldPassword,
+        }
+      );
+      if (response.message !== 200) {
+        setMessage(response.message);
+        setIsLoading(false);
+        setStatus("error");
+      } else {
+        setIsLoading(false);
+        setStatus("success");
+        setMessage("Thay đổi mật khẩu thành công");
+      }
+    }
   };
 
-  const dismissKeyboard = () => {
-    Keyboard.dismiss();
+  const onToggleLoading = (result: boolean | null) => {
+    setIsLoading(result);
   };
 
   const showConfirmationDialog = () => {
@@ -63,7 +108,7 @@ const Password = ({ navigation, ...props }) => {
       <ScrollView>
         <Pressable onPress={Keyboard.dismiss}>
           <LinearBackGround
-            height={110}
+            height={120}
             back={true}
             avatar={false}
             onPress={onBack}
@@ -78,6 +123,8 @@ const Password = ({ navigation, ...props }) => {
               placeholder="old password"
               spellCheck={false}
               selectionColor={colors.primary}
+              secureTextEntry={isPressEyeOld}
+              onChangeText={(text) => setOldPassword(text)}
             ></TextInput>
             <TouchableOpacity
               onPress={() => setIsPressEyeOld(!isPressEyeOld)}
@@ -109,6 +156,8 @@ const Password = ({ navigation, ...props }) => {
               placeholder="new password"
               spellCheck={false}
               selectionColor={colors.primary}
+              secureTextEntry={isPressEyeNew}
+              onChangeText={(text) => setNewPassword(text)}
             ></TextInput>
             <TouchableOpacity
               onPress={() => setIsPressEyeNew(!isPressEyeNew)}
@@ -131,6 +180,8 @@ const Password = ({ navigation, ...props }) => {
               placeholder="confirm password"
               spellCheck={false}
               selectionColor={colors.primary}
+              secureTextEntry={isPressEyeConfirm}
+              onChangeText={(text) => setConfirmPassword(text)}
             ></TextInput>
             <TouchableOpacity
               onPress={() => setIsPressEyeConfirm(!isPressEyeConfirm)}
@@ -146,11 +197,51 @@ const Password = ({ navigation, ...props }) => {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.summitWapper}>
-            <TouchableOpacity onPress={saveDate}>
-              <Text style={styles.summitText}>Lưu thay đổi</Text>
-            </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <LinearGradient
+              colors={isDarkMode ? navbarDarkLinearColors : linearColors}
+              style={[
+                styles.summitWrapper,
+                { gap: isLoading ? 12 : 0, opacity: isLoading ? 0.6 : 1 },
+              ]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              {isLoading && (
+                <ActivityIndicator
+                  size={"large"}
+                  color={colors.whiteText}
+                ></ActivityIndicator>
+              )}
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={onSaveData}
+                disabled={isLoading}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={styles.summitText}>
+                  {isLoading ? "Đang lưu" : "Lưu thay đổi"}
+                </Text>
+              </TouchableOpacity>
+            </LinearGradient>
           </View>
+          {isLoading === false && (
+            <ToastNotify
+              isLoading={isLoading}
+              onToggleLoading={onToggleLoading}
+              status={status}
+              text={message}
+            ></ToastNotify>
+          )}
         </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -194,16 +285,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
 
-  summitWapper: {
+  summitWrapper: {
+    borderRadius: 15,
     marginTop: 50,
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
+    paddingVertical: 6,
+    paddingHorizontal: 16,
   },
 
   summitText: {
-    paddingHorizontal: 10,
-    backgroundColor: "#FF9900",
-    borderRadius: 15,
     fontFamily: baloo2Fonts.bold,
     fontSize: 25,
     color: colors.whiteText,

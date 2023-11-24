@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
 
   headerTextName: {
-    fontFamily: baloo2Fonts.extra,
+    fontFamily: baloo2Fonts.bold,
     fontSize: 30,
   },
 
@@ -65,33 +65,46 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
 
-  menuContainer: {},
+  menuContainer: {
+    marginVertical: 60,
+    gap: 20,
+  },
 
   content: {
     borderTopWidth: 1,
     borderTopColor: "#D9D9D9",
   },
 
-  contentTitle: {
+  contentHeading: {
     marginTop: 5,
     backgroundColor: "#D9D9D9",
-    fontFamily: baloo2Fonts.regular,
-    fontSize: 20,
     paddingLeft: 20,
-  },
-
-  contentContent: {
-    marginTop: 10,
-    display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
 
-  contentHeart: {
-    marginLeft: 10,
+  contentTitle: {
     fontFamily: baloo2Fonts.bold,
     fontSize: 20,
+  },
+
+  contentContent: {
+    marginTop: 10,
+    gap: 12,
+  },
+
+  itemWrapper: {
+    paddingLeft: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+  },
+
+  contentItem: {
+    fontFamily: baloo2Fonts.bold,
+    fontSize: 20,
+    letterSpacing: 1.5,
   },
 
   option: {},
