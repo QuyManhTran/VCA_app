@@ -4,7 +4,7 @@ const deleteImageController = async (rep, res) => {
     const {id_user, typeImage} = rep.body;
     if (!(typeImage === "avatar" || typeImage === "cover"))  {
         return res.status(401).json({
-            text: "errot type. type only is avatar or cover",
+            text: "Lỗi kiểu, chỉ nhận avatar hoặc cover",
         })
     }
 
@@ -25,11 +25,11 @@ const deleteImageController = async (rep, res) => {
         }
         res.status(200).json({
             image: null,
-            text: "delete image ok"
+            text: "Xóa ảnh thành công"
         })
     } catch (error) {
         res.status(400).json({
-            text: "error delete image"
+            text: "Xóa ảnh thất bại"
         })
     }
 }

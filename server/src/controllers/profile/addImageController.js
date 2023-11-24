@@ -6,7 +6,7 @@ const addImageController = async (req, res, next) => {
 
     if (!(typeImage === "avatar" || typeImage === "cover"))  {
         return res.status(401).json({
-            text: "errot type. type only is avatar or cover",
+            text: "Lỗi kiểu, chỉ nhận avatar hoặc cover",
         })
     }
 
@@ -32,13 +32,14 @@ const addImageController = async (req, res, next) => {
                 { upsert: true },
             ). then ((user) => {
                 return res.status(200).json({
-                    cover: image
+                    cover: image,
+                    text: "Thêm ảnh thành công"
                 })
             })
         }
     } catch {
         return res.status(400).json({
-            text: "add image error",
+            text: "Thêm ảnh thất bại",
         })
     }
 
