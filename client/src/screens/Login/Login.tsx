@@ -45,15 +45,15 @@ const Login = ({ route, navigation }: RouterProps) => {
     if (response.message !== 200) {
       alert("Tài khoản không tồn tại");
     } else {
-      console.log(response.data?.user);
+      console.log(response.data?.user?._id);
       if (response.data?.user) {
-        const { _id, username, email } = response.data.user;
+        const { _id, username, email, avatar, cover } = response.data.user;
         onUserId(_id);
         onUserInfor({
           username,
           email,
-          avatar: defaultAvatar,
-          cover: defaultCover,
+          avatar: avatar || "",
+          cover: cover || "",
         });
       }
       navigation.navigate("Navbar");

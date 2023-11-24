@@ -1,56 +1,57 @@
-const path = require('path');
-const logger = require('morgan');
-const bodyParser = require('body-parser');
+const path = require("path");
+const logger = require("morgan");
+const bodyParser = require("body-parser");
 const cors = require("cors");
-const express = require('express');
-const passport = require('passport');
-const session = require('express-session');
-const route = require('../routes/index');
-const cookieParser = require('cookie-parser');
-const db = require('../models/database');
+const express = require("express");
+const passport = require("passport");
+const session = require("express-session");
+const route = require("../routes/index");
+const cookieParser = require("cookie-parser");
+const db = require("../models/database");
 
 // view engine setup
 const config = (app) => {
-    app.set('views', path.join(__dirname, 'views'));
-    app.set('view engine', 'ejs');
+  app.set("views", path.join(__dirname, "views"));
+  app.set("view engine", "ejs");
 
-    // app.use(logger('dev'));
-    app.use(express.json()); 
-    app.use(express.static('public'));
-    app.use(cors());
-    app.use(express.urlencoded({
-        extended: true,
-    }));
-    app.use(cookieParser());
+  // app.use(logger('dev'));
+  app.use(express.json({ limit: "50mb" }));
+  app.use(express.static("public"));
+  app.use(cors());
+  app.use(
+    express.urlencoded({
+      extended: true,
+      limit: "50mb",
+    })
+  );
+  app.use(cookieParser());
 
-    app.use(bodyParser.json());
-    // parse application/x-www-form-urlencoded
-    app.use(bodyParser.urlencoded({ extended: false }));
-    // parse the raw data
-    app.use(bodyParser.raw());
-    // parse text
-    app.use(bodyParser.text());
+  app.use(bodyParser.json());
+  // parse application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({ extended: false }));
+  // parse the raw data
+  app.use(bodyParser.raw());
+  // parse text
+  app.use(bodyParser.text());
 
+  // connect to database
+  db.connect();
 
-    // connect to database
-    db.connect();
+  // connect to route index
+  route(app);
+  // app.use('/', accountRouter);
 
-    // connect to route index
-    route(app);
-    // app.use('/', accountRouter);
-
-    // // Sử dụng Passport và session
-    // Đặt up phiên làm việc (session)
-    // app.use(session({
-    //     secret: 'eglv bxko aqbh eyws',
-    //     resave: true,
-    //     saveUninitialized: true
-    // }));
-    // app.use(passport.initialize());
-    // app.use(passport.session());
-
-}
+  // // Sử dụng Passport và session
+  // Đặt up phiên làm việc (session)
+  // app.use(session({
+  //     secret: 'eglv bxko aqbh eyws',
+  //     resave: true,
+  //     saveUninitialized: true
+  // }));
+  // app.use(passport.initialize());
+  // app.use(passport.session());
+};
 
 module.exports = {
-    config,
-}
+  config,
+};

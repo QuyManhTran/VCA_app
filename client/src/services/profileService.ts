@@ -16,13 +16,13 @@ type ImageType = "avatar" | "cover";
 
 interface ChangeAvatarProps {
   id_user: string;
-  avatar: string;
+  image: string;
   typeImage: ImageType;
 }
 
 interface ChangeCoverPhotoProps {
   id_user: string;
-  cover: string;
+  image: string;
   typeImage: ImageType;
 }
 
@@ -60,7 +60,7 @@ const changePasswordPath = "/account/change-password";
  * @returns
  */
 const changeAvatar = async (path: string, body: ChangeAvatarProps) => {
-  const response = await request.post(path, body);
+  const response = await request.patch(path, body);
   return response;
 };
 const changeAvatarPath = "account/add-image";
@@ -71,7 +71,7 @@ const changeAvatarPath = "account/add-image";
  * @returns
  */
 const changeCoverPhoto = async (path: string, body: ChangeCoverPhotoProps) => {
-  const response = await request.post(path, body);
+  const response = await request.patch(path, body);
   return response;
 };
 const changCoverPhotoPath = "account/add-image";

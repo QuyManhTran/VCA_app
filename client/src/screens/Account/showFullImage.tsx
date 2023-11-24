@@ -6,7 +6,7 @@ const showFullImage = ({ navigation, ...props }) => {
   const onBack = () => {
     navigation.goBack();
   };
-  const images = props.route.params.data
+  const images = props?.route?.params?.data
     ? [{ url: props.route.params.data.uri }]
     : [
         {

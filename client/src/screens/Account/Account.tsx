@@ -6,6 +6,7 @@ import {
   ScrollView,
   Alert,
   Pressable,
+  useWindowDimensions,
 } from "react-native";
 import { useState, useEffect, useContext, useCallback } from "react";
 import ThemeContext from "../../utilies/theme";
@@ -27,18 +28,20 @@ import { RouterProps } from "../Splash/Splash";
 import {
   changeAvatarService,
   changeCoverPhotoService,
+  deletePhotoService,
 } from "../../services/profileService";
 import ToastNotify, { Status } from "../../components/ToastNotify/ToastNotify";
 const uriBase64 = "data:image/jpeg;base64,";
 const Account = ({ navigation, ...props }: RouterProps) => {
+  const { width } = useWindowDimensions();
   const { isDarkMode, userInfor, userId, setHomeNavbar, onUserInfor } =
     useContext(ThemeContext);
   const { avatar, cover } = userInfor;
   const [isLoading, setIsLoading] = useState<boolean | null>(null);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<Status | null>(null);
-  const [dataAvatar, setDataAvatar] = useState(null);
-  const [dataCoverphoto, setDataCoverphoto] = useState(null);
+  const [dataAvatar, setDataAvatar] = useState<any>();
+  const [dataCoverphoto, setDataCoverphoto] = useState<any>();
   const [modalVisible, setModalVisible] = useState(false);
   const [pressAvatar, setPressAvatar] = useState(false);
   const [pressCoverPhoto, setPressCoverPhoto] = useState(false);
@@ -89,6 +92,23 @@ const Account = ({ navigation, ...props }: RouterProps) => {
 
     if (isComfirmed) {
       setDataCoverphoto(null);
+      const response = await deletePhotoService.deletePhoto(
+        deletePhotoService.deletePhotoPath,
+        {
+          id_user: userId,
+          typeImage: "cover",
+        }
+      );
+      if (response.message !== 200) {
+        setMessage(response.message);
+        setIsLoading(false);
+        setStatus("error");
+      } else {
+        onUserInfor({ ...userInfor, cover: "" });
+        setMessage("Xóa ảnh bìa thành công");
+        setIsLoading(false);
+        setStatus("success");
+      }
     }
   };
 
@@ -98,6 +118,23 @@ const Account = ({ navigation, ...props }: RouterProps) => {
 
     if (isComfirmed) {
       setDataAvatar(null);
+      const response = await deletePhotoService.deletePhoto(
+        deletePhotoService.deletePhotoPath,
+        {
+          id_user: userId,
+          typeImage: "avatar",
+        }
+      );
+      if (response.message !== 200) {
+        setMessage(response.message);
+        setIsLoading(false);
+        setStatus("error");
+      } else {
+        onUserInfor({ ...userInfor, avatar: "" });
+        setMessage("Xóa avatar thành công");
+        setIsLoading(false);
+        setStatus("success");
+      }
     }
   };
 
@@ -214,7 +251,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
         const response = await changeAvatarService.changeAvatar(
           changeAvatarService.changeAvatarPath,
           {
-            avatar: data,
+            image: data,
             id_user: userId,
             typeImage: "avatar",
           }
@@ -225,7 +262,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
           setStatus("error");
         } else {
           onUserInfor({ ...userInfor, avatar: data });
-          setMessage("Đổi ảnh đại diện thành công");
+          setMessage("Đổi avatar thành công");
           setIsLoading(false);
           setStatus("success");
         }
@@ -236,12 +273,12 @@ const Account = ({ navigation, ...props }: RouterProps) => {
 
   useEffect(() => {
     if (dataCoverphoto) {
-      const data = uriBase64 + dataAvatar?.base64;
+      const data = uriBase64 + dataCoverphoto?.base64;
       const requestAvatar = async () => {
         const response = await changeCoverPhotoService.changeCoverPhoto(
           changeCoverPhotoService.changCoverPhotoPath,
           {
-            cover: data,
+            image: data,
             id_user: userId,
             typeImage: "cover",
           }
@@ -375,7 +412,12 @@ const Account = ({ navigation, ...props }: RouterProps) => {
 
         <View style={styles.menuContainer}>
           <View style={styles.content}>
-            <View style={styles.contentHeading}>
+            <View
+              style={[
+                styles.contentHeading,
+                { paddingLeft: width < 400 ? 8 : 20 },
+              ]}
+            >
               <Text style={styles.contentTitle}>Tiểu sử</Text>
               <TouchableOpacity
                 activeOpacity={0.6}
@@ -386,18 +428,33 @@ const Account = ({ navigation, ...props }: RouterProps) => {
               </TouchableOpacity>
             </View>
             <View style={styles.contentContent}>
-              <View style={styles.itemWrapper}>
+              <View
+                style={[
+                  styles.itemWrapper,
+                  { paddingLeft: width < 400 ? 8 : 20 },
+                ]}
+              >
                 <FontAwesome name="birthday-cake" size={24} color="black" />
                 <Text style={styles.contentItem}>04/05/2003</Text>
               </View>
-              <View style={styles.itemWrapper}>
+              <View
+                style={[
+                  styles.itemWrapper,
+                  { paddingLeft: width < 400 ? 8 : 20 },
+                ]}
+              >
                 <Ionicons name="call" size={24} color="black" />
                 <Text style={styles.contentItem}>0123456789</Text>
               </View>
             </View>
           </View>
           <View style={styles.content}>
-            <View style={styles.contentHeading}>
+            <View
+              style={[
+                styles.contentHeading,
+                { paddingLeft: width < 400 ? 8 : 20 },
+              ]}
+            >
               <Text style={styles.contentTitle}>Tài khoản cá nhân</Text>
               <TouchableOpacity
                 activeOpacity={0.6}
@@ -408,20 +465,35 @@ const Account = ({ navigation, ...props }: RouterProps) => {
               </TouchableOpacity>
             </View>
             <View style={styles.contentContent}>
-              <View style={styles.itemWrapper}>
+              <View
+                style={[
+                  styles.itemWrapper,
+                  { paddingLeft: width < 400 ? 8 : 20 },
+                ]}
+              >
                 <MaterialIcons name="alternate-email" size={24} color="black" />
                 <Text style={styles.contentItem}>
                   {userInfor?.email || "andrew03@gmail.com"}
                 </Text>
               </View>
-              <View style={styles.itemWrapper}>
+              <View
+                style={[
+                  styles.itemWrapper,
+                  { paddingLeft: width < 400 ? 8 : 20 },
+                ]}
+              >
                 <FontAwesome5 name="lock" size={24} color="black" />
                 <Text style={styles.contentItem}>***********</Text>
               </View>
             </View>
           </View>
           <View style={[styles.content, { gap: 12 }]}>
-            <View style={styles.contentHeading}>
+            <View
+              style={[
+                styles.contentHeading,
+                { paddingLeft: width < 400 ? 8 : 20 },
+              ]}
+            >
               <Text style={styles.contentTitle}>Hoạt động gần đây</Text>
               <TouchableOpacity
                 activeOpacity={0.6}
@@ -477,7 +549,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                 style={styles.modalWapper}
                 onPress={() =>
                   navigation.navigate("showImage", {
-                    data: { uri: avatar || "" },
+                    data: avatar ? { uri: avatar } : undefined,
                   })
                 }
               >
@@ -528,9 +600,11 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                 style={styles.modalWapper}
                 onPress={() =>
                   navigation.navigate("showImage", {
-                    data: {
-                      uri: cover,
-                    },
+                    data: cover
+                      ? {
+                          uri: cover,
+                        }
+                      : undefined,
                   })
                 }
               >
