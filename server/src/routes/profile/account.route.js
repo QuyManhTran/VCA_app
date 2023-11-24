@@ -7,13 +7,15 @@ const {ggLoginController, ggCallbackController, ggInfor} = require('../../contro
 const {deleteAccount} = require('../../controllers/profile/deleteAccount');
 const {comfirnOtpController } = require('../../controllers/profile/confirmOtpController');
 const { changePasswordController } = require('../../controllers/profile/changePasswordController');
+const { editInfoController } = require('../../controllers/profile/editInfoController');
 
 accountRouter.get('/login', loginController);
 accountRouter.post('/signup', signUpController);
 accountRouter.post('/forgot', sendMailController);
 accountRouter.post('/confirm', comfirnOtpController);
-accountRouter.post('/change-password', changePasswordController);
+accountRouter.patch('/change-password', changePasswordController);
 accountRouter.put('/delete', deleteAccount);
+accountRouter.patch('/edit-infor', editInfoController);
 
 
 // Đăng nhập bằng tài khoản Google

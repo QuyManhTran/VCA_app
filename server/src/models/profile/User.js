@@ -14,6 +14,19 @@ const UserSchema = new Schema ({
         unique: true,
         format: "email"
     },
+    avatar: {
+        type: String,
+    },
+    cover: {
+        type: String,
+    },
+    birthday: {
+        type: String,
+    },
+    phoneNumber: {
+        type: String,
+        unique: true,
+    },
     otp: {
         type: String,
     },
