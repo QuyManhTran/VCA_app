@@ -47,13 +47,16 @@ const Login = ({ route, navigation }: RouterProps) => {
     } else {
       console.log(response.data?.user?._id);
       if (response.data?.user) {
-        const { _id, username, email, avatar, cover } = response.data.user;
+        const { _id, username, email, avatar, cover, birthday, phoneNumber } =
+          response.data.user;
         onUserId(_id);
         onUserInfor({
           username,
           email,
-          avatar: avatar || "",
-          cover: cover || "",
+          avatar: avatar?.url || "",
+          cover: cover?.url || "",
+          birthday: birthday || "",
+          phoneNumber: phoneNumber || "",
         });
       }
       navigation.navigate("Navbar");

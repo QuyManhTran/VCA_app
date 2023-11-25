@@ -16,7 +16,7 @@ const signUpController = async (req, res) => {
     .then(async (user) => {
       console.log(user);
       try {
-        const newUList = new ulist({
+        const newUList = new ulistModel({
           id_user: user._id,
           name: "Xem sau",
           image: "path",

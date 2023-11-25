@@ -18,6 +18,7 @@ interface ToastProps {
   isLoading: boolean | null;
   onToggleLoading: any;
   text?: string;
+  isDarkMode?: boolean;
 }
 
 const popupAnimation = {
@@ -30,6 +31,7 @@ const popupAnimation = {
 
 const ToastNotify = ({
   status = "error",
+  isDarkMode = false,
   isLoading,
   onToggleLoading,
   text,
@@ -58,19 +60,33 @@ const ToastNotify = ({
   }, [isLoading]);
   return (
     <Animatable.View
+      animation={"bounceInDown"}
       easing={"linear"}
       ref={animatableRef}
       duration={3000}
       style={styles.popupWrapper}
     >
-      <View style={styles.popupContent}>
+      <View
+        style={[
+          styles.popupContent,
+          { backgroundColor: isDarkMode ? colors.darkTheme : "#fff" },
+        ]}
+      >
         <View style={styles.popupContentText}>
           <Ionicons
             name={status === "success" ? "checkmark-circle" : "alert-circle"}
             color={status === "success" ? colors.success : colors.error}
             size={36}
           ></Ionicons>
-          <Text style={[styles.popupText, { fontSize: width < 400 ? 20 : 22 }]}>
+          <Text
+            style={[
+              styles.popupText,
+              {
+                color: isDarkMode ? colors.whiteText : "black",
+                fontSize: width < 400 ? 20 : 22,
+              },
+            ]}
+          >
             {status === "success"
               ? `${text} 👌`
               : text

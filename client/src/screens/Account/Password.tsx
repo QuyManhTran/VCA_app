@@ -24,7 +24,7 @@ import {
   navbarDarkLinearColors,
 } from "../../../constants/colors";
 import ToastNotify, { Status } from "../../components/ToastNotify/ToastNotify";
-import { addListService } from "../../services/listService";
+import { useHeaderHeight } from "@react-navigation/elements";
 import { changePasswordService } from "../../services/profileService";
 
 const Password = ({ route, navigation }) => {
@@ -101,150 +101,256 @@ const Password = ({ route, navigation }) => {
       );
     });
   };
+  const height = useHeaderHeight();
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView>
-        <Pressable onPress={Keyboard.dismiss}>
-          <LinearBackGround
-            height={120}
-            back={true}
-            avatar={false}
-            onPress={onBack}
-            // isDarkMode={isDarkMode}
-          ></LinearBackGround>
-
-          <Text style={styles.title}>Thay đổi mật khẩu </Text>
-          <Text style={styles.textLable}>Nhập mật khẩu cũ </Text>
-          <View style={styles.wapperEdit}>
-            <TextInput
-              style={styles.textEdit}
-              placeholder="old password"
-              spellCheck={false}
-              selectionColor={colors.primary}
-              secureTextEntry={isPressEyeOld}
-              onChangeText={(text) => setOldPassword(text)}
-            ></TextInput>
-            <TouchableOpacity
-              onPress={() => setIsPressEyeOld(!isPressEyeOld)}
-              style={styles.eyeIcon}
-              activeOpacity={0.5}
-            >
-              {!isPressEyeOld && (
-                <AntDesign name="eyeo" size={24} color="black" />
-              )}
-              {isPressEyeOld && (
-                <Feather name="eye-off" size={24} color="black" />
-              )}
-            </TouchableOpacity>
-          </View>
-
-          <Text style={styles.textLable}>Nhập mật khẩu mới </Text>
-          <Text
+    <>
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          left: 0,
+          bottom: 0,
+          backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+        }}
+      ></View>
+      <KeyboardAvoidingView
+        enabled
+        behavior={Platform.OS === "ios" ? "padding" : null}
+      >
+        <ScrollView>
+          <Pressable
+            onPress={Keyboard.dismiss}
             style={{
-              fontFamily: baloo2Fonts.medium,
-              marginHorizontal: 10,
-              paddingBottom: 10,
+              flexGrow: 1,
+              backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
             }}
           >
-            Mật khẩu phải bao gồm cả chữ cái (a-z, A-Z) và số (0-9)
-          </Text>
-          <View style={styles.wapperEdit}>
-            <TextInput
-              style={styles.textEdit}
-              placeholder="new password"
-              spellCheck={false}
-              selectionColor={colors.primary}
-              secureTextEntry={isPressEyeNew}
-              onChangeText={(text) => setNewPassword(text)}
-            ></TextInput>
-            <TouchableOpacity
-              onPress={() => setIsPressEyeNew(!isPressEyeNew)}
-              style={styles.eyeIcon}
-              activeOpacity={0.5}
-            >
-              {!isPressEyeNew && (
-                <AntDesign name="eyeo" size={24} color="black" />
-              )}
-              {isPressEyeNew && (
-                <Feather name="eye-off" size={24} color="black" />
-              )}
-            </TouchableOpacity>
-          </View>
+            <LinearBackGround
+              height={120}
+              back={true}
+              avatar={false}
+              onPress={onBack}
+              isDarkMode={isDarkMode}
+            ></LinearBackGround>
 
-          <Text style={styles.textLable}>Xác nhận mật khẩu mới </Text>
-          <View style={styles.wapperEdit}>
-            <TextInput
-              style={styles.textEdit}
-              placeholder="confirm password"
-              spellCheck={false}
-              selectionColor={colors.primary}
-              secureTextEntry={isPressEyeConfirm}
-              onChangeText={(text) => setConfirmPassword(text)}
-            ></TextInput>
-            <TouchableOpacity
-              onPress={() => setIsPressEyeConfirm(!isPressEyeConfirm)}
-              style={styles.eyeIcon}
-              activeOpacity={0.5}
-            >
-              {!isPressEyeConfirm && (
-                <AntDesign name="eyeo" size={24} color="black" />
-              )}
-              {isPressEyeConfirm && (
-                <Feather name="eye-off" size={24} color="black" />
-              )}
-            </TouchableOpacity>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <LinearGradient
-              colors={isDarkMode ? navbarDarkLinearColors : linearColors}
+            <Text
               style={[
-                styles.summitWrapper,
-                { gap: isLoading ? 12 : 0, opacity: isLoading ? 0.6 : 1 },
+                styles.title,
+                { color: isDarkMode ? colors.whiteText : "black" },
               ]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
             >
-              {isLoading && (
-                <ActivityIndicator
-                  size={"large"}
-                  color={colors.whiteText}
-                ></ActivityIndicator>
-              )}
+              Thay đổi mật khẩu{" "}
+            </Text>
+            <Text
+              style={[
+                styles.textLable,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
+            >
+              Nhập mật khẩu cũ{" "}
+            </Text>
+            <View
+              style={[
+                styles.wapperEdit,
+                { backgroundColor: isDarkMode ? colors.darkBg : "#D9D9D9" },
+              ]}
+            >
+              <TextInput
+                style={[
+                  styles.textEdit,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+                placeholderTextColor={
+                  isDarkMode ? colors.placeHolder : undefined
+                }
+                placeholder="old password"
+                spellCheck={false}
+                selectionColor={colors.primary}
+                secureTextEntry={isPressEyeOld}
+                onChangeText={(text) => setOldPassword(text)}
+              ></TextInput>
               <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={onSaveData}
-                disabled={isLoading}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
+                onPress={() => setIsPressEyeOld(!isPressEyeOld)}
+                style={styles.eyeIcon}
+                activeOpacity={0.5}
               >
-                <Text style={styles.summitText}>
-                  {isLoading ? "Đang lưu" : "Lưu thay đổi"}
-                </Text>
+                {!isPressEyeOld && (
+                  <AntDesign
+                    name="eyeo"
+                    size={24}
+                    color={isDarkMode ? colors.whiteText : "black"}
+                  />
+                )}
+                {isPressEyeOld && (
+                  <Feather
+                    name="eye-off"
+                    size={24}
+                    color={isDarkMode ? colors.whiteText : "black"}
+                  />
+                )}
               </TouchableOpacity>
-            </LinearGradient>
-          </View>
-          {isLoading === false && (
-            <ToastNotify
-              isLoading={isLoading}
-              onToggleLoading={onToggleLoading}
-              status={status}
-              text={message}
-            ></ToastNotify>
-          )}
-        </Pressable>
-      </ScrollView>
-    </KeyboardAvoidingView>
+            </View>
+
+            <Text
+              style={[
+                styles.textLable,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
+            >
+              Nhập mật khẩu mới{" "}
+            </Text>
+            <Text
+              style={{
+                fontFamily: baloo2Fonts.medium,
+                marginHorizontal: 10,
+                paddingBottom: 10,
+              }}
+            >
+              Mật khẩu phải bao gồm cả chữ cái (a-z, A-Z) và số (0-9)
+            </Text>
+            <View
+              style={[
+                styles.wapperEdit,
+                { backgroundColor: isDarkMode ? colors.darkBg : "#D9D9D9" },
+              ]}
+            >
+              <TextInput
+                style={[
+                  styles.textEdit,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+                placeholderTextColor={
+                  isDarkMode ? colors.placeHolder : undefined
+                }
+                placeholder="new password"
+                spellCheck={false}
+                selectionColor={colors.primary}
+                secureTextEntry={isPressEyeNew}
+                onChangeText={(text) => setNewPassword(text)}
+              ></TextInput>
+              <TouchableOpacity
+                onPress={() => setIsPressEyeNew(!isPressEyeNew)}
+                style={styles.eyeIcon}
+                activeOpacity={0.5}
+              >
+                {!isPressEyeNew && (
+                  <AntDesign
+                    name="eyeo"
+                    size={24}
+                    color={isDarkMode ? colors.whiteText : "black"}
+                  />
+                )}
+                {isPressEyeNew && (
+                  <Feather
+                    name="eye-off"
+                    size={24}
+                    color={isDarkMode ? colors.whiteText : "black"}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+
+            <Text
+              style={[
+                styles.textLable,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
+            >
+              Xác nhận mật khẩu mới{" "}
+            </Text>
+            <View
+              style={[
+                styles.wapperEdit,
+                { backgroundColor: isDarkMode ? colors.darkBg : "#D9D9D9" },
+              ]}
+            >
+              <TextInput
+                style={[
+                  styles.textEdit,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+                placeholderTextColor={
+                  isDarkMode ? colors.placeHolder : undefined
+                }
+                placeholder="confirm password"
+                spellCheck={false}
+                selectionColor={colors.primary}
+                secureTextEntry={isPressEyeConfirm}
+                onChangeText={(text) => setConfirmPassword(text)}
+              ></TextInput>
+              <TouchableOpacity
+                onPress={() => setIsPressEyeConfirm(!isPressEyeConfirm)}
+                style={styles.eyeIcon}
+                activeOpacity={0.5}
+              >
+                {!isPressEyeConfirm && (
+                  <AntDesign
+                    name="eyeo"
+                    size={24}
+                    color={isDarkMode ? colors.whiteText : "black"}
+                  />
+                )}
+                {isPressEyeConfirm && (
+                  <Feather
+                    name="eye-off"
+                    size={24}
+                    color={isDarkMode ? colors.whiteText : "black"}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <LinearGradient
+                colors={isDarkMode ? navbarDarkLinearColors : linearColors}
+                style={[
+                  styles.summitWrapper,
+                  { gap: isLoading ? 12 : 0, opacity: isLoading ? 0.6 : 1 },
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                {isLoading && (
+                  <ActivityIndicator
+                    size={"large"}
+                    color={colors.whiteText}
+                  ></ActivityIndicator>
+                )}
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={onSaveData}
+                  disabled={isLoading}
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={styles.summitText}>
+                    {isLoading ? "Đang lưu" : "Lưu thay đổi"}
+                  </Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
+            {isLoading === false && (
+              <ToastNotify
+                isLoading={isLoading}
+                onToggleLoading={onToggleLoading}
+                status={status}
+                text={message}
+                isDarkMode={isDarkMode}
+              ></ToastNotify>
+            )}
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 

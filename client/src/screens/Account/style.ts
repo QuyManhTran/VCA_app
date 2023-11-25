@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
 
   header: {
     display: "flex",
+    marginTop: 40,
   },
 
   headerAvatar: {
@@ -77,7 +78,6 @@ const styles = StyleSheet.create({
 
   contentHeading: {
     marginTop: 5,
-    backgroundColor: "#D9D9D9",
     paddingLeft: 20,
     flexDirection: "row",
     alignItems: "center",
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
 
   contentItem: {
-    fontFamily: baloo2Fonts.bold,
+    fontFamily: baloo2Fonts.medium,
     fontSize: 20,
     letterSpacing: 1.5,
   },

@@ -7,6 +7,7 @@ import {
   Alert,
   Pressable,
   useWindowDimensions,
+  ActivityIndicator,
 } from "react-native";
 import { useState, useEffect, useContext, useCallback } from "react";
 import ThemeContext from "../../utilies/theme";
@@ -92,6 +93,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
 
     if (isComfirmed) {
       setDataCoverphoto(null);
+      setIsLoading(true);
       const response = await deletePhotoService.deletePhoto(
         deletePhotoService.deletePhotoPath,
         {
@@ -118,6 +120,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
 
     if (isComfirmed) {
       setDataAvatar(null);
+      setIsLoading(true);
       const response = await deletePhotoService.deletePhoto(
         deletePhotoService.deletePhotoPath,
         {
@@ -219,9 +222,9 @@ const Account = ({ navigation, ...props }: RouterProps) => {
 
   const onNavigateEditInfor = () =>
     navigation.navigate("EditInfor", {
-      username: userInfor?.username || "Andrew",
-      birthday: userInfor?.birthday || "04 tháng 5 năm 2003",
-      phoneNumber: userInfor?.phoneNumber || "0123456789",
+      username: userInfor?.username || "",
+      birthday: userInfor?.birthday || "",
+      phoneNumber: userInfor?.phoneNumber || "",
       isDarkMode: isDarkMode,
       userId: userId,
     });
@@ -246,6 +249,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
 
   useEffect(() => {
     if (dataAvatar) {
+      setIsLoading(true);
       const data = uriBase64 + dataAvatar?.base64;
       const requestAvatar = async () => {
         const response = await changeAvatarService.changeAvatar(
@@ -261,7 +265,8 @@ const Account = ({ navigation, ...props }: RouterProps) => {
           setIsLoading(false);
           setStatus("error");
         } else {
-          onUserInfor({ ...userInfor, avatar: data });
+          console.log(response.data?.avatar);
+          onUserInfor({ ...userInfor, avatar: response.data?.avatar || data });
           setMessage("Đổi avatar thành công");
           setIsLoading(false);
           setStatus("success");
@@ -273,6 +278,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
 
   useEffect(() => {
     if (dataCoverphoto) {
+      setIsLoading(true);
       const data = uriBase64 + dataCoverphoto?.base64;
       const requestAvatar = async () => {
         const response = await changeCoverPhotoService.changeCoverPhoto(
@@ -288,7 +294,8 @@ const Account = ({ navigation, ...props }: RouterProps) => {
           setIsLoading(false);
           setStatus("error");
         } else {
-          onUserInfor({ ...userInfor, cover: data });
+          console.log(response.data?.cover);
+          onUserInfor({ ...userInfor, cover: response.data?.cover || data });
           setMessage("Đổi ảnh bìa thành công");
           setIsLoading(false);
           setStatus("success");
@@ -299,10 +306,14 @@ const Account = ({ navigation, ...props }: RouterProps) => {
   }, [dataCoverphoto]);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: isDarkMode ? colors.darkTheme : "#fff" },
+      ]}
+    >
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ marginTop: 40 }}
         onScroll={(e) => onScroll(e.nativeEvent.contentOffset.y)}
       >
         <View style={styles.header}>
@@ -313,7 +324,12 @@ const Account = ({ navigation, ...props }: RouterProps) => {
               justifyContent: "center",
             }}
           >
-            <Text style={styles.headerTextName}>
+            <Text
+              style={[
+                styles.headerTextName,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
+            >
               {userInfor?.username || "Andrew"}
             </Text>
             <TouchableOpacity
@@ -323,11 +339,15 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                 right: 10,
                 padding: 6,
                 borderWidth: 1,
-                borderColor: colors.black,
+                borderColor: isDarkMode ? colors.whiteText : "black",
                 borderRadius: 15,
               }}
             >
-              <AntDesign name="setting" size={30} color="black" />
+              <AntDesign
+                name="setting"
+                size={30}
+                color={isDarkMode ? colors.whiteText : "black"}
+              />
             </TouchableOpacity>
           </View>
 
@@ -337,8 +357,8 @@ const Account = ({ navigation, ...props }: RouterProps) => {
               style={{
                 width: "100%",
                 position: "relative",
-                borderWidth: 2,
-                borderColor: colors.whiteText,
+                // borderWidth: 2,
+                // borderColor: colors.whiteText,
               }}
               onPress={setActionChooseCoverPhoto}
             >
@@ -384,6 +404,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                     borderRadius: 85,
                     borderWidth: 2,
                     borderColor: colors.whiteText,
+                    opacity: isLoading ? 0.5 : 1,
                   }}
                   source={
                     avatar
@@ -403,9 +424,31 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                     backgroundColor: colors.whiteText,
                   }}
                 >
-                  <MaterialIcons name="photo-camera" size={20}></MaterialIcons>
+                  <MaterialIcons
+                    name="photo-camera"
+                    size={20}
+                    color={"black"}
+                  ></MaterialIcons>
                 </View>
               </TouchableOpacity>
+              {isLoading && (
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <ActivityIndicator
+                    size={"large"}
+                    color={colors.primary}
+                  ></ActivityIndicator>
+                </View>
+              )}
             </View>
           </View>
         </View>
@@ -415,16 +458,32 @@ const Account = ({ navigation, ...props }: RouterProps) => {
             <View
               style={[
                 styles.contentHeading,
-                { paddingLeft: width < 400 ? 8 : 20 },
+                {
+                  paddingLeft: width < 400 ? 8 : 20,
+                  backgroundColor: isDarkMode ? colors.darkBg : "#D9D9D9",
+                },
               ]}
             >
-              <Text style={styles.contentTitle}>Tiểu sử</Text>
+              <Text
+                style={[
+                  [
+                    styles.contentTitle,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ],
+                ]}
+              >
+                Tiểu sử
+              </Text>
               <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={onNavigateEditInfor}
                 style={{ marginRight: 12 }}
               >
-                <AntDesign name="edit" size={24} color="black" />
+                <AntDesign
+                  name="edit"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
               </TouchableOpacity>
             </View>
             <View style={styles.contentContent}>
@@ -434,8 +493,19 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                   { paddingLeft: width < 400 ? 8 : 20 },
                 ]}
               >
-                <FontAwesome name="birthday-cake" size={24} color="black" />
-                <Text style={styles.contentItem}>04/05/2003</Text>
+                <FontAwesome
+                  name="birthday-cake"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
+                <Text
+                  style={[
+                    styles.contentItem,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
+                  {userInfor?.birthday ? userInfor.birthday : "Chưa cập nhật"}
+                </Text>
               </View>
               <View
                 style={[
@@ -443,8 +513,21 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                   { paddingLeft: width < 400 ? 8 : 20 },
                 ]}
               >
-                <Ionicons name="call" size={24} color="black" />
-                <Text style={styles.contentItem}>0123456789</Text>
+                <Ionicons
+                  name="call"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
+                <Text
+                  style={[
+                    styles.contentItem,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
+                  {userInfor?.phoneNumber
+                    ? userInfor.phoneNumber
+                    : "Chưa cập nhật"}
+                </Text>
               </View>
             </View>
           </View>
@@ -452,16 +535,30 @@ const Account = ({ navigation, ...props }: RouterProps) => {
             <View
               style={[
                 styles.contentHeading,
-                { paddingLeft: width < 400 ? 8 : 20 },
+                {
+                  paddingLeft: width < 400 ? 8 : 20,
+                  backgroundColor: isDarkMode ? colors.darkBg : "#D9D9D9",
+                },
               ]}
             >
-              <Text style={styles.contentTitle}>Tài khoản cá nhân</Text>
+              <Text
+                style={[
+                  styles.contentTitle,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Tài khoản cá nhân
+              </Text>
               <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={onNavigatePassword}
                 style={{ marginRight: 12 }}
               >
-                <AntDesign name="edit" size={24} color="black" />
+                <AntDesign
+                  name="edit"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
               </TouchableOpacity>
             </View>
             <View style={styles.contentContent}>
@@ -471,8 +568,17 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                   { paddingLeft: width < 400 ? 8 : 20 },
                 ]}
               >
-                <MaterialIcons name="alternate-email" size={24} color="black" />
-                <Text style={styles.contentItem}>
+                <MaterialIcons
+                  name="alternate-email"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
+                <Text
+                  style={[
+                    styles.contentItem,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
                   {userInfor?.email || "andrew03@gmail.com"}
                 </Text>
               </View>
@@ -482,8 +588,19 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                   { paddingLeft: width < 400 ? 8 : 20 },
                 ]}
               >
-                <FontAwesome5 name="lock" size={24} color="black" />
-                <Text style={styles.contentItem}>***********</Text>
+                <FontAwesome5
+                  name="lock"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
+                <Text
+                  style={[
+                    styles.contentItem,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
+                  ***********
+                </Text>
               </View>
             </View>
           </View>
@@ -491,16 +608,30 @@ const Account = ({ navigation, ...props }: RouterProps) => {
             <View
               style={[
                 styles.contentHeading,
-                { paddingLeft: width < 400 ? 8 : 20 },
+                {
+                  paddingLeft: width < 400 ? 8 : 20,
+                  backgroundColor: isDarkMode ? colors.darkBg : "#D9D9D9",
+                },
               ]}
             >
-              <Text style={styles.contentTitle}>Hoạt động gần đây</Text>
+              <Text
+                style={[
+                  styles.contentTitle,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Hoạt động gần đây
+              </Text>
               <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={() => navigation.navigate("EditInfo")}
                 style={{ marginRight: 12 }}
               >
-                <AntDesign name="right" size={24} color="black" />
+                <AntDesign
+                  name="right"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
               </TouchableOpacity>
             </View>
             <RecommendList
@@ -539,7 +670,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
           {pressAvatar && (
             <View
               style={{
-                backgroundColor: colors.whiteText,
+                backgroundColor: isDarkMode ? colors.darkBg : "#fff",
                 borderTopRightRadius: 24,
                 borderTopLeftRadius: 24,
                 paddingBottom: 82,
@@ -553,16 +684,36 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                   })
                 }
               >
-                <MaterialIcons name="account-circle" size={25} color="black" />
-                <Text style={styles.modalCompoment}>Xem ảnh đại diện</Text>
+                <MaterialIcons
+                  name="account-circle"
+                  size={25}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
+                <Text
+                  style={[
+                    styles.modalCompoment,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
+                  Xem ảnh đại diện
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.modalWapper}
                 onPress={() => handleSetAvatar(true)}
               >
-                <AntDesign name="camera" size={24} color="black" />
-                <Text style={styles.modalCompoment}>
+                <AntDesign
+                  name="camera"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
+                <Text
+                  style={[
+                    styles.modalCompoment,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
                   Chọn ảnh đại diện từ camera{" "}
                 </Text>
               </TouchableOpacity>
@@ -571,8 +722,17 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                 style={styles.modalWapper}
                 onPress={() => handleSetAvatar(false)}
               >
-                <Entypo name="folder-images" size={24} color="black" />
-                <Text style={styles.modalCompoment}>
+                <Entypo
+                  name="folder-images"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
+                <Text
+                  style={[
+                    styles.modalCompoment,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
                   Chọn ảnh đại diện từ thư viện
                 </Text>
               </TouchableOpacity>
@@ -582,8 +742,19 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                   style={styles.modalWapper}
                   onPress={deleteAvatar}
                 >
-                  <AntDesign name="delete" size={24} color="black" />
-                  <Text style={styles.modalCompoment}>Xóa ảnh đại diện </Text>
+                  <AntDesign
+                    name="delete"
+                    size={24}
+                    color={isDarkMode ? colors.whiteText : "black"}
+                  />
+                  <Text
+                    style={[
+                      styles.modalCompoment,
+                      { color: isDarkMode ? colors.whiteText : "black" },
+                    ]}
+                  >
+                    Xóa ảnh đại diện{" "}
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -592,7 +763,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
             <View
               style={{
                 height: 300,
-                backgroundColor: colors.whiteText,
+                backgroundColor: isDarkMode ? colors.darkBg : "#fff",
                 borderRadius: 25,
               }}
             >
@@ -608,16 +779,36 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                   })
                 }
               >
-                <Entypo name="image" size={24} color="black" />
-                <Text style={styles.modalCompoment}>Xem ảnh bìa</Text>
+                <Entypo
+                  name="image"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
+                <Text
+                  style={[
+                    styles.modalCompoment,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
+                  Xem ảnh bìa
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.modalWapper}
                 onPress={() => handleSetCoverPhoto(true)}
               >
-                <AntDesign name="camera" size={24} color="black" />
-                <Text style={styles.modalCompoment}>
+                <AntDesign
+                  name="camera"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
+                <Text
+                  style={[
+                    styles.modalCompoment,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
                   Chọn ảnh bìa từ camera{" "}
                 </Text>
               </TouchableOpacity>
@@ -626,8 +817,17 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                 style={styles.modalWapper}
                 onPress={() => handleSetCoverPhoto(false)}
               >
-                <Entypo name="folder-images" size={24} color="black" />
-                <Text style={styles.modalCompoment}>
+                <Entypo
+                  name="folder-images"
+                  size={24}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                />
+                <Text
+                  style={[
+                    styles.modalCompoment,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
                   Chọn ảnh bìa từ thư viện{" "}
                 </Text>
               </TouchableOpacity>
@@ -637,8 +837,19 @@ const Account = ({ navigation, ...props }: RouterProps) => {
                   style={styles.modalWapper}
                   onPress={deleteCoverPhoto}
                 >
-                  <AntDesign name="delete" size={24} color="black" />
-                  <Text style={styles.modalCompoment}>Xóa ảnh bìa</Text>
+                  <AntDesign
+                    name="delete"
+                    size={24}
+                    color={isDarkMode ? colors.whiteText : "black"}
+                  />
+                  <Text
+                    style={[
+                      styles.modalCompoment,
+                      { color: isDarkMode ? colors.whiteText : "black" },
+                    ]}
+                  >
+                    Xóa ảnh bìa
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
