@@ -72,7 +72,7 @@ const Password = ({ route, navigation }) => {
       } else {
         setIsLoading(false);
         setStatus("success");
-        setMessage("Thay đổi mật khẩu thành công");
+        setMessage("Đổi mật khẩu thành công");
       }
     }
   };

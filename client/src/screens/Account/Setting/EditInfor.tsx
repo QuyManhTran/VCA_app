@@ -9,10 +9,9 @@ import {
   Keyboard,
   Pressable,
   ActivityIndicator,
-  useWindowDimensions,
 } from "react-native";
 import LinearBackGround from "../../../components/LinearBackGround";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useState } from "react";
 import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../../../../constants";

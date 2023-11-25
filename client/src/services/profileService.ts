@@ -30,6 +30,15 @@ interface DeletePhotoProps {
   id_user: string;
   typeImage: ImageType;
 }
+
+interface GetHistoriesProps {
+  id_user: string;
+}
+
+interface PostHistoryProps {
+  id_user: string;
+  id_food: string;
+}
 /**
  * [PATCH] edit user's information
  * @param path
@@ -86,6 +95,32 @@ const deletePhoto = async (path: string, body: DeletePhotoProps) => {
   return response;
 };
 const deletePhotoPath = "account/delete-image";
+/**
+ * [GET] recent activities
+ * @param path
+ * @param params
+ * @returns
+ */
+const getHistories = async (path: string, params: GetHistoriesProps) => {
+  const response = await request.get(path, params);
+  return response;
+};
+const getHistoriesPath = "ulist/get-history";
+/**
+ * [PATCH] update history
+ * @param path
+ * @param body
+ * @returns
+ */
+const postHistory = async (path: string, body: PostHistoryProps) => {
+  const response = await request.patch(path, body);
+  return response;
+};
+const postHistoryPath = "ulist/add-history";
+
+/**
+ * Export profile service
+ */
 export const editInforService = { editInfor, editInforPath };
 export const changePasswordService = { changePassword, changePasswordPath };
 export const changeAvatarService = { changeAvatar, changeAvatarPath };
@@ -94,3 +129,5 @@ export const changeCoverPhotoService = {
   changCoverPhotoPath,
 };
 export const deletePhotoService = { deletePhoto, deletePhotoPath };
+export const getHistoriesService = { getHistories, getHistoriesPath };
+export const postHistoryService = { postHistory, postHistoryPath };

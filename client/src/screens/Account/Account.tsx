@@ -12,12 +12,7 @@ import {
 import { useState, useEffect, useContext, useCallback } from "react";
 import ThemeContext from "../../utilies/theme";
 import * as ImagePicker from "expo-image-picker";
-import {
-  EvilIcons,
-  FontAwesome,
-  FontAwesome5,
-  Ionicons,
-} from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -30,6 +25,7 @@ import {
   changeAvatarService,
   changeCoverPhotoService,
   deletePhotoService,
+  getHistoriesService,
 } from "../../services/profileService";
 import ToastNotify, { Status } from "../../components/ToastNotify/ToastNotify";
 const uriBase64 = "data:image/jpeg;base64,";
@@ -47,6 +43,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
   const [pressAvatar, setPressAvatar] = useState(false);
   const [pressCoverPhoto, setPressCoverPhoto] = useState(false);
   const [prevOffSetY, setPrevOffSetY] = useState(0);
+  const [goBack, setGoBack] = useState<boolean>(false);
 
   const setActionChooseAvatar = () => {
     setPressCoverPhoto(false);
@@ -227,6 +224,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
       phoneNumber: userInfor?.phoneNumber || "",
       isDarkMode: isDarkMode,
       userId: userId,
+      onUserInfor: onUserInfor,
     });
 
   const onNavigatePassword = () => {
@@ -245,6 +243,15 @@ const Account = ({ navigation, ...props }: RouterProps) => {
 
   const onToggleLoading = (result: boolean | null) => {
     setIsLoading(result);
+  };
+
+  const recentActivity = async () => {
+    return getHistoriesService.getHistories(
+      getHistoriesService.getHistoriesPath,
+      {
+        id_user: userId,
+      }
+    );
   };
 
   useEffect(() => {
@@ -635,13 +642,14 @@ const Account = ({ navigation, ...props }: RouterProps) => {
               </TouchableOpacity>
             </View>
             <RecommendList
-              trending="Tết"
+              trending="History"
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Thêm gần đây"
               data={recommendLists}
               onBlog={onBlog}
               isAccount
+              recentActivity={recentActivity}
             ></RecommendList>
           </View>
         </View>

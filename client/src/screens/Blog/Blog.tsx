@@ -27,6 +27,7 @@ import { history } from "./Meaning/Meaning";
 import { ingredients } from "./Recipe/Recipe";
 import FavoriteModal from "./FavoriteModal";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
+import { postHistoryService } from "../../services/profileService";
 
 const upComment = { 0: { top: 1000 }, 1: { top: 0 } };
 const downComment = { 0: { top: 0 }, 1: { top: 1000 } };
@@ -137,6 +138,23 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const closeComment = useCallback(() => {
     setIsComment(false);
   }, []);
+
+  useEffect(() => {
+    const updateActivity = async () => {
+      const response = await postHistoryService.postHistory(
+        postHistoryService.postHistoryPath,
+        {
+          id_food: id,
+          id_user: userId,
+        }
+      );
+      console.log(response.message);
+    };
+    return () => {
+      updateActivity();
+    };
+  }, []);
+
   // Call API
   useEffect(() => {
     const getBlog = async () => {

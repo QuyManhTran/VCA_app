@@ -35,6 +35,12 @@ const UserSchema = new Schema({
       public_id: { type: String },
     },
   },
+  birthday: {
+    type: String,
+  },
+  phoneNumber: {
+    type: String,
+    unique: true,
+  },
 });
-
 module.exports = mongoose.model("account", UserSchema);

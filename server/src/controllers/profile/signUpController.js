@@ -2,6 +2,8 @@ const bcrypt = require("bcryptjs");
 const User = require("../../models/profile/User");
 const ulistModel = require("../../models/ulist/ulist");
 const ulistController = require("../../controllers/ulist/ulist");
+const history = require("../../models/ulist/history");
+
 // const jwt = require('jsonwebtoken');
 
 const signUpController = async (req, res) => {
@@ -10,7 +12,6 @@ const signUpController = async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const newUser = new User({ username, email, password: hashedPassword });
-
   newUser
     .save()
     .then(async (user) => {
@@ -22,6 +23,8 @@ const signUpController = async (req, res) => {
           image: "path",
         });
         await newUList.save();
+        const newHistory = new history({ id_user: user._id });
+        await newHistory.save();
         return res
           .status(200)
           .json({ message: "Đăng kí tài khoản thành công" });

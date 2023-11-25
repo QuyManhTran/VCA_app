@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, useContext } from "react";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
 import { colors } from "../../../constants";
@@ -14,6 +14,8 @@ import { recommendLists } from "../../../assets/img/foods";
 import { Ionicons } from "@expo/vector-icons";
 import { searchTagService } from "../../services/searchService";
 import { mostlySearch } from "../../../constants/fakeData";
+import { getHistoriesService } from "../../services/profileService";
+import ThemeContext from "../../utilies/theme";
 interface RecommendListProps {
   heading: string;
   explore?: boolean;
@@ -23,6 +25,9 @@ interface RecommendListProps {
   onBlog: any;
   trending?: string;
   isAccount?: boolean;
+  recentActivity?: () => Promise<
+    { message: number; data: any } | { message: any; data?: undefined }
+  >;
   data: {
     name: string;
     img: any;
@@ -41,28 +46,42 @@ const RecommendList = ({
   isDarkMode = false,
   isLibrary = false,
   isAccount = false,
+  recentActivity,
   onBlog = () => {},
   data: fallBackData = mostlySearch,
 }: RecommendListProps) => {
+  const { userId } = useContext(ThemeContext);
   const [data, setData] = useState([]);
+  const recommendSearch = async () => {
+    const response = await searchTagService.searchTag(
+      searchTagService.searchTagPath,
+      {
+        tag: trending,
+      }
+    );
+    if (response.message === 200) {
+      setData(response.data);
+    } else {
+      setData(fallBackData);
+    }
+  };
+  const getRecentActivity = async () => {
+    const response = await recentActivity();
+    if (response.message === 200) {
+      setData(response.data?.dataWatchedFoods || fallBackData);
+    } else {
+      setData(fallBackData);
+    }
+  };
   useEffect(() => {
     if (!trending) {
       setData(fallBackData);
     } else {
-      const recommendSearch = async () => {
-        const response = await searchTagService.searchTag(
-          searchTagService.searchTagPath,
-          {
-            tag: trending,
-          }
-        );
-        if (response.message === 200) {
-          setData(response.data);
-        } else {
-          setData(fallBackData);
-        }
-      };
-      recommendSearch();
+      if (isAccount) {
+        getRecentActivity();
+      } else {
+        recommendSearch();
+      }
     }
   }, []);
   const onNavigateBlog = (data: any) => {
