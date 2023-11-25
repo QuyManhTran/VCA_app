@@ -1,4 +1,3 @@
-const cloudinary = require('../../configs/cloundinary.config');
 const Food = require('../../models/food/food');
 const lodash = require('lodash');
 const foodSearchAllCtrl = async (req, res) => {

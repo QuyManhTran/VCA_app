@@ -65,7 +65,7 @@ const FoodSchema = new Schema ({
     },
     rate: {
         type: Number,
-        format: "int32",
+        format: "Double",
         default: 0
     },
     tags: {
@@ -88,6 +88,19 @@ const FoodSchema = new Schema ({
                 content: {
                     type: String
                 }
+            }
+        }
+    },
+    rate_list: {
+        type: Array,
+        items: {
+            type: Object,
+            prototype: {
+                user_id: String,
+                rate: {
+                    type: Number,
+                    format: "int32",
+                },
             }
         }
     },

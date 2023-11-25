@@ -11,7 +11,6 @@ const UserSchema = new Schema ({
     email: {
         type: String,
         required: true,
-        unique: true,
         format: "email"
     },
     otp: {
@@ -23,6 +22,12 @@ const UserSchema = new Schema ({
     },
     avatar: {
         type: String,
+    }, 
+    like_list: {
+        type: Array,
+        items: {
+            type: String
+        }
     }
 })
 
