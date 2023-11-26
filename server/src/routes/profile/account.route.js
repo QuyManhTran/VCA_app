@@ -7,6 +7,7 @@ const {ggLoginController, ggCallbackController, ggInfor} = require('../../contro
 const {deleteAccount} = require('../../controllers/profile/deleteAccount');
 const {confirmOtpController } = require('../../controllers/profile/confirmOtpController');
 const { changePasswordController } = require('../../controllers/profile/changePasswordController');
+const {isLikeCtrl, isRateCtrl} = require('../../controllers/profile/checkController');
 
 accountRouter.get('/login', loginController);
 accountRouter.post('/signup', signUpController);
@@ -15,6 +16,8 @@ accountRouter.post('/confirm', confirmOtpController);
 accountRouter.post('/change-password', changePasswordController);
 accountRouter.put('/delete', deleteAccount);
 
+accountRouter.get('/check/like', isLikeCtrl);
+accountRouter.get('/check/rate', isRateCtrl);
 
 // Đăng nhập bằng tài khoản Google
 accountRouter.get('/auth/google', ggLoginController);

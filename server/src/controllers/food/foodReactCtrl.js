@@ -37,7 +37,6 @@ const likeReact = async (req, res) => {
 			  });
             return res.status(200).json("Unlike thành công");
         }
-        
 	}
     await Food.findOneAndUpdate(
         { _id: food_id },
