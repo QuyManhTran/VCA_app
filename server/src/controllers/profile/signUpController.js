@@ -16,7 +16,7 @@ const signUpController = async (req, res) => {
   .then(async (user) => {
     console.log(user);
     try {
-      const newUList = new ulist({ id_user: user._id, name: "Xem sau", image: "path" });
+      const newUList = new ulistModel({ id_user: user._id, name: "Xem sau", image: "path" });
       await newUList.save();
       return res.status(200).json({ message: 'Đăng kí tài khoản thành công' });
     } catch (error) {
