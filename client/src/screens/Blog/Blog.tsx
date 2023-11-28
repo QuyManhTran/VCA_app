@@ -22,7 +22,13 @@ import ThemeContext from "../../utilies/theme";
 import styles from "./style";
 import { colors } from "../../../constants";
 import { navItems } from "../../../constants/fakeData";
-import { blogService } from "../../services/blogService";
+import {
+  blogService,
+  checkLikeService,
+  checkRateService,
+  likeReactService,
+  rateReactService,
+} from "../../services/blogService";
 import { history } from "./Meaning/Meaning";
 import { ingredients } from "./Recipe/Recipe";
 import FavoriteModal from "./FavoriteModal";
@@ -40,14 +46,8 @@ const saveFavoriteAnimation = {
 
 const Blog = ({ route, navigation }: RouterProps) => {
   const { height, width } = useWindowDimensions();
-  const { id, name, like, image, rate } = route.params;
-  const {
-    isLiked,
-    originRate,
-    isFavorite: isFavoriteOrigin,
-  } = {
-    isLiked: false,
-    originRate: false,
+  const { id, name, image } = route.params;
+  const { isFavorite: isFavoriteOrigin } = {
     isFavorite: false,
   };
   const { isDarkMode, userId, userInfor } = useContext(ThemeContext);
@@ -56,7 +56,10 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const [histories, setHistories] = useState<history[]>([]);
   const [ingredientList, setIngredientList] = useState<ingredients[]>([]);
   const [video, setVideo] = useState<string>("");
-  const [isRate, setIsRate] = useState(originRate);
+  const [like, setLike] = useState(route.params.like);
+  const [rate, setRate] = useState(route.params.rate);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isRated, setIsRated] = useState(false);
   const [isFavorite, setIsFavorite] = useState(isFavoriteOrigin);
   const [activeNav, setActiveNav] = useState(0);
   const [contentY, setContentY] = useState(0);
@@ -121,10 +124,26 @@ const Blog = ({ route, navigation }: RouterProps) => {
     setIsFavoriteModal(false);
   }, []);
 
-  const onRating = useCallback(() => {
-    setIsRate(true);
+  const onRating = useCallback(async (star: number) => {
+    setIsRated(true);
     setIsModal(false);
+    const response = await rateReactService.rateReact(
+      rateReactService.rateReactPath,
+      {
+        food_id: id,
+        user_id: userId,
+        rateUser: star + 1,
+      }
+    );
+    if (response.message === 200) {
+      setRate(response.data?.rate || rate);
+    }
   }, []);
+
+  const onLiking = useCallback(() => {
+    setIsLiked(!isLiked);
+    setLike((prev) => (isLiked ? prev - 1 : prev + 1));
+  }, [isLiked]);
 
   const onFavoriting = useCallback(() => {
     setIsFavorite(true);
@@ -148,7 +167,6 @@ const Blog = ({ route, navigation }: RouterProps) => {
           id_user: userId,
         }
       );
-      console.log(response.message);
     };
     return () => {
       updateActivity();
@@ -167,14 +185,44 @@ const Blog = ({ route, navigation }: RouterProps) => {
           video,
           description: descriptionAPI,
           ingredient_list,
+          like,
+          rate,
         } = response.data;
         setHistories(history);
         setDescription(descriptionAPI);
         setVideo(video);
         setIngredientList(ingredient_list);
+        setLike(like);
+        setRate(rate);
+      }
+    };
+    const getIsLiked = async () => {
+      const response = await checkLikeService.checkLike(
+        checkLikeService.checkLikePath,
+        {
+          food_id: id,
+          user_id: userId,
+        }
+      );
+      if (response.message === 200) {
+        setIsLiked(response.data?.isLiked || isLiked);
+      }
+    };
+    const getIsRated = async () => {
+      const response = await checkRateService.checkRate(
+        checkRateService.checkRatePath,
+        {
+          food_id: id,
+          user_id: userId,
+        }
+      );
+      if (response.message === 200) {
+        setIsRated(response.data?.isRated || isRated);
       }
     };
     getBlog();
+    getIsLiked();
+    getIsRated();
     return () => clearTimeout(timoutRef.current as NodeJS.Timeout);
   }, []);
 
@@ -259,6 +307,9 @@ const Blog = ({ route, navigation }: RouterProps) => {
         }}
       >
         <Header
+          onLiking={onLiking}
+          blogId={id}
+          userId={userId}
           name={name}
           like={like}
           rate={rate}
@@ -266,7 +317,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
           isDarkMode={isDarkMode}
           isLiked={isLiked}
           isFavorite={isFavorite}
-          isRate={isRate}
+          isRated={isRated}
           width={width}
           openModal={openModal}
           openComment={openComment}

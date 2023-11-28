@@ -6,16 +6,18 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { useState, useEffect, memo, useContext } from "react";
+import { useState, useEffect, memo } from "react";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
 import { colors } from "../../../constants";
-import { recommendLists } from "../../../assets/img/foods";
 import { Ionicons } from "@expo/vector-icons";
-import { searchTagService } from "../../services/searchService";
+import {
+  searchTagService,
+  trendingService,
+} from "../../services/searchService";
 import { mostlySearch } from "../../../constants/fakeData";
-import { getHistoriesService } from "../../services/profileService";
-import ThemeContext from "../../utilies/theme";
+import { FoodReviewRawProps } from "../FoodReview/FoodReview";
+
 interface RecommendListProps {
   heading: string;
   explore?: boolean;
@@ -52,13 +54,10 @@ const RecommendList = ({
   onBlog = () => {},
   data: fallBackData = mostlySearch,
 }: RecommendListProps) => {
-  const [data, setData] = useState([]);
-  const recommendSearch = async () => {
-    const response = await searchTagService.searchTag(
-      searchTagService.searchTagPath,
-      {
-        tag: trending,
-      }
+  const [data, setData] = useState<any[]>([]);
+  const getTrendingFood = async () => {
+    const response = await trendingService.getTrendingFood(
+      trendingService.getTrendingFoodPath + trending
     );
     if (response.message === 200) {
       setData(response.data);
@@ -81,7 +80,7 @@ const RecommendList = ({
       if (isAccount) {
         getRecentActivity();
       } else {
-        recommendSearch();
+        getTrendingFood();
       }
     }
   }, [isFocused]);

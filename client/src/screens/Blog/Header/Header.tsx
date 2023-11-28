@@ -6,8 +6,11 @@ import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../../constants";
 import { FbSound } from "../../../../assets/audios";
+import { likeReactService } from "../../../services/blogService";
 
 interface HeaderBlogProps {
+  userId: string;
+  blogId: string;
   name: string;
   like: number;
   rate: number;
@@ -15,11 +18,12 @@ interface HeaderBlogProps {
   isDarkMode: boolean;
   isLiked: boolean;
   isFavorite: boolean;
-  isRate: boolean;
+  isRated: boolean;
   width: number;
   openModal: any;
   openFavoriteModal: any;
   openComment: any;
+  onLiking: any;
 }
 const interactAnimation = {
   0: { scale: 1 },
@@ -28,6 +32,8 @@ const interactAnimation = {
   1: { scale: 1 },
 };
 const Header = ({
+  blogId,
+  userId,
   name,
   like,
   rate,
@@ -38,14 +44,21 @@ const Header = ({
   openModal,
   openFavoriteModal,
   openComment,
-  ...props
+  onLiking,
+  isLiked,
+  isRated,
 }: HeaderBlogProps) => {
   const heartRef = useRef(null);
   const rateRef = useRef(null);
   const favoriteRef = useRef(null);
   const [likeSound, setLikeSound] = useState<Audio.Sound>();
-  const [isLiked, setIsLiked] = useState(props.isLiked);
-  const [isRate, setIsRate] = useState<boolean>(null);
+
+  const likeReact = async () => {
+    await likeReactService.likeReact(likeReactService.likeReactPath, {
+      food_id: blogId,
+      user_id: userId,
+    });
+  };
 
   async function playSound() {
     try {
@@ -74,16 +87,12 @@ const Header = ({
   }, [isLiked]);
 
   useEffect(() => {
-    setIsRate(props.isRate);
-  }, [props.isRate]);
-
-  useEffect(() => {
     if (rateRef.current) {
-      if (isRate) {
+      if (isRated) {
         rateRef.current.animate(interactAnimation);
       }
     }
-  }, [isRate]);
+  }, [isRated]);
 
   useEffect(() => {
     if (favoriteRef.current) {
@@ -101,7 +110,6 @@ const Header = ({
       ]}
     >
       <View style={styles.wrapper}>
-        {/* <Image source={img} style={styles.img}></Image> */}
         <View style={styles.wrapperContent}>
           <Text
             style={[
@@ -131,8 +139,9 @@ const Header = ({
                   }
                   size={36}
                   style={{ paddingRight: 4 }}
-                  onPress={() => {
-                    setIsLiked(!isLiked);
+                  onPress={async () => {
+                    onLiking();
+                    likeReact();
                     if (!isLiked) {
                       playSound();
                     }
@@ -157,9 +166,13 @@ const Header = ({
             >
               <Animatable.View ref={rateRef}>
                 <AntDesign
-                  name={isRate ? "star" : "staro"}
+                  name={isRated ? "star" : "staro"}
                   color={
-                    isRate ? "#face15" : isDarkMode ? colors.whiteText : "black"
+                    isRated
+                      ? "#face15"
+                      : isDarkMode
+                      ? colors.whiteText
+                      : "black"
                   }
                   size={32}
                   style={{ paddingRight: 4 }}

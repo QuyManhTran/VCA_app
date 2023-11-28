@@ -1,6 +1,6 @@
 const User = require('../../models/profile/User');
 
-const comfirnOtpController = async (req, res) => {
+const confirmOtpController = async (req, res) => {
    
     const { email, otp} = req.body;
 
@@ -13,5 +13,5 @@ const comfirnOtpController = async (req, res) => {
 };
 
 module.exports = {
-    comfirnOtpController,
+    confirmOtpController,
 }

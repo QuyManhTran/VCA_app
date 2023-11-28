@@ -31,7 +31,6 @@ import {
 import ToastNotify, { Status } from "../../components/ToastNotify/ToastNotify";
 const uriBase64 = "data:image/jpeg;base64,";
 const Account = ({ navigation, ...props }: RouterProps) => {
-  console.log("hello");
   const isFocused = useIsFocused();
   const { width } = useWindowDimensions();
   const { isDarkMode, userInfor, userId, setHomeNavbar, onUserInfor } =

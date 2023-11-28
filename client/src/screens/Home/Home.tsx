@@ -182,7 +182,7 @@ const Home = ({ route, navigation }: RouterProps) => {
               </ScrollView>
             </View>
             <RecommendList
-              trending="Hà Nội"
+              trending="popular"
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Phổ biến"
@@ -190,7 +190,7 @@ const Home = ({ route, navigation }: RouterProps) => {
               onBlog={onBlog}
             ></RecommendList>
             <RecommendList
-              trending="Bún"
+              trending="love"
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
               heading="Yêu thích"
@@ -198,10 +198,10 @@ const Home = ({ route, navigation }: RouterProps) => {
               onBlog={onBlog}
             ></RecommendList>
             <RecommendList
-              trending="Tết"
+              trending="new"
               isDarkMode={isDarkMode}
               onNavigateSearch={onNavigateSearch}
-              heading="Thêm gần đây"
+              heading="Mới nhất"
               data={recommendLists}
               onBlog={onBlog}
             ></RecommendList>

@@ -144,7 +144,7 @@ const RateModal = ({ isDarkMode, closeModal, onRating }: RateModal) => {
           activeOpacity={0.6}
           style={{ width: "100%", opacity: star !== null ? 1 : 0.6 }}
           disabled={star !== null ? false : true}
-          onPress={onRating}
+          onPress={() => onRating(star)}
         >
           <NavButton
             customeStyle={{ width: "100%" }}

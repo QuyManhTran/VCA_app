@@ -42,5 +42,11 @@ const UserSchema = new Schema({
     type: String,
     unique: true,
   },
+  like_list: {
+    type: Array,
+    items: {
+      type: String,
+    },
+  },
 });
 module.exports = mongoose.model("account", UserSchema);
