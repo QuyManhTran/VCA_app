@@ -1,10 +1,10 @@
 import React, { memo, useContext, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Foundation } from "@expo/vector-icons";
-import LinearBackGround from "../../components/LinearBackGround";
-import { baloo2Fonts } from "../../../constants/fontFamiles";
-import ThemeContext from "../../utilies/theme";
-import { colors } from "../../../constants";
+import LinearBackGround from "../../../components/LinearBackGround";
+import { baloo2Fonts } from "../../../../constants/fontFamiles";
+import ThemeContext from "../../../utilies/theme";
+import { colors } from "../../../../constants";
 
 const Display = ({ navigation, ...props }) => {
   const { isDarkMode, onDarkTheme } = useContext(ThemeContext);
@@ -68,7 +68,7 @@ const Display = ({ navigation, ...props }) => {
               resizeMode: "stretch",
               borderRadius: 25,
             }}
-            source={require("../../../assets/img/accounts/Light2.png")}
+            source={require("../../../../assets/img/accounts/Light2.png")}
           />
           <Text
             style={{
@@ -102,7 +102,7 @@ const Display = ({ navigation, ...props }) => {
               resizeMode: "stretch",
               borderRadius: 25,
             }}
-            source={require("../../../assets/img/accounts/Dark2.png")}
+            source={require("../../../../assets/img/accounts/Dark2.png")}
           />
           <Text
             style={{

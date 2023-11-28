@@ -40,8 +40,8 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
     setUserId(userId);
   };
 
-  const onUserInfor = (userInfor: UserInforProps) => {
-    setUserInfor(userInfor);
+  const onUserInfor = (updatedData: object) => {
+    setUserInfor((prev) => ({ ...prev, ...updatedData }));
   };
 
   const onDarkTheme = (isDarkMode: boolean) => {
@@ -214,9 +214,9 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
     }
   }, [userId]);
 
-  useEffect(() => {
-    console.log(personalLists);
-  }, [personalLists]);
+  // useEffect(() => {
+  //   console.log(userInfor);
+  // }, [userInfor]);
 
   return (
     <ThemeContext.Provider

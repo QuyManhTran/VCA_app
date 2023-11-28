@@ -1,9 +1,9 @@
 import React, { memo, useContext } from "react";
 import { View, Text, ScrollView } from "react-native";
-import LinearBackGround from "../../../components/LinearBackGround";
-import { baloo2Fonts } from "../../../../constants/fontFamiles";
-import ThemeContext from "../../../utilies/theme";
-import { colors } from "../../../../constants";
+import LinearBackGround from "../../../../components/LinearBackGround";
+import { baloo2Fonts } from "../../../../../constants/fontFamiles";
+import ThemeContext from "../../../../utilies/theme";
+import { colors } from "../../../../../constants";
 
 const TermsOfService = ({ navigation, ...props }) => {
   const { isDarkMode } = useContext(ThemeContext);

@@ -1,9 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
 import Home from "../Home";
-import { colors } from "../../../constants";
 import Explore from "../Explore";
 import Account from "../Account";
 import MyTabBar from "./MyNavbar";

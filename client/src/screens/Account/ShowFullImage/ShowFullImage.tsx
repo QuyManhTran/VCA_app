@@ -2,7 +2,7 @@ import React, { memo, useState } from "react";
 import { Dimensions, Modal } from "react-native";
 import ImageViewer from "react-native-image-zoom-viewer";
 
-const showFullImage = ({ navigation, ...props }) => {
+const ShowFullImage = ({ navigation, ...props }) => {
   const onBack = () => {
     navigation.goBack();
   };
@@ -12,7 +12,7 @@ const showFullImage = ({ navigation, ...props }) => {
         {
           url: "",
           props: {
-            source: require("../../../assets/img/accounts/anhDaiDienAccount.png"),
+            source: require("../../../../assets/img/accounts/anhDaiDienAccount.png"),
           },
         },
       ];
@@ -45,4 +45,4 @@ const showFullImage = ({ navigation, ...props }) => {
   );
 };
 
-export default memo(showFullImage);
+export default memo(ShowFullImage);

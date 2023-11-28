@@ -10,24 +10,24 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import LinearBackGround from "../../../components/LinearBackGround";
+import LinearBackGround from "../../../../components/LinearBackGround";
 import { memo, useState } from "react";
-import { baloo2Fonts } from "../../../../constants/fontFamiles";
+import { baloo2Fonts } from "../../../../../constants/fontFamiles";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { colors } from "../../../../constants";
-import { RouterProps } from "../../Splash/Splash";
+import { colors } from "../../../../../constants";
+import { RouterProps } from "../../../Splash/Splash";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   linearColors,
   navbarDarkLinearColors,
-} from "../../../../constants/colors";
+} from "../../../../../constants/colors";
 import ToastNotify, {
   Status,
-} from "../../../components/ToastNotify/ToastNotify";
-import { editInforService } from "../../../services/profileService";
+} from "../../../../components/ToastNotify/ToastNotify";
+import { editInforService } from "../../../../services/profileService";
 
 const EditInfor = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, userId, onUserInfor, userInfor } = route.params;
+  const { isDarkMode, userId, onUserInfor } = route.params;
   const [isLoading, setIsLoading] = useState<boolean | null>(null);
   const [status, setStatus] = useState<Status | null>(null);
   const [fullName, setFullName] = useState(route.params?.username || "");
@@ -81,10 +81,10 @@ const EditInfor = ({ route, navigation }: RouterProps) => {
       setIsLoading(false);
       setStatus("error");
     } else {
+      onUserInfor(data);
       setIsLoading(false);
       setStatus("success");
       setMessage("Thay đổi thành công");
-      onUserInfor({ ...userInfor, ...data });
     }
   };
 

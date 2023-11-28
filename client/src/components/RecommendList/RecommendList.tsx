@@ -25,6 +25,7 @@ interface RecommendListProps {
   onBlog: any;
   trending?: string;
   isAccount?: boolean;
+  isFocused?: boolean;
   recentActivity?: () => Promise<
     { message: number; data: any } | { message: any; data?: undefined }
   >;
@@ -46,11 +47,11 @@ const RecommendList = ({
   isDarkMode = false,
   isLibrary = false,
   isAccount = false,
+  isFocused = false,
   recentActivity,
   onBlog = () => {},
   data: fallBackData = mostlySearch,
 }: RecommendListProps) => {
-  const { userId } = useContext(ThemeContext);
   const [data, setData] = useState([]);
   const recommendSearch = async () => {
     const response = await searchTagService.searchTag(
@@ -83,7 +84,7 @@ const RecommendList = ({
         recommendSearch();
       }
     }
-  }, []);
+  }, [isFocused]);
   const onNavigateBlog = (data: any) => {
     onBlog(data);
   };
@@ -122,53 +123,63 @@ const RecommendList = ({
         </TouchableOpacity>
       )}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {data.map((blog, index) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                if (explore) {
-                  onNavigateSearch({ keyword: blog.name, status: "tag" });
-                } else {
-                  onNavigateBlog({
-                    id: blog.id,
-                    name: blog.name,
-                    image: blog.image,
-                    like: blog.like,
-                    rate: blog.rate,
-                  });
-                }
-              }}
-              activeOpacity={0.6}
-              key={index}
-              style={{
-                paddingLeft: isLibrary ? 0 : index === 0 ? 12 : 24,
-                marginRight: index === data.length - 1 ? 0 : isLibrary ? 24 : 0,
-                paddingRight: index === data.length - 1 ? 24 : 0,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Image
-                source={trending ? { uri: blog.image } : blog.img}
-                resizeMode="cover"
-                style={{ borderRadius: 12, width: 150, height: 90 }}
-              ></Image>
-              <Text
+        {data
+          .filter((blog, index) => index < 5)
+          .map((blog, index) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  if (explore) {
+                    onNavigateSearch({ keyword: blog.name, status: "tag" });
+                  } else {
+                    onNavigateBlog({
+                      id: blog.id,
+                      name: blog.name,
+                      image: blog.image,
+                      like: blog.like,
+                      rate: blog.rate,
+                    });
+                  }
+                }}
+                activeOpacity={0.6}
+                key={index}
                 style={{
-                  fontSize: 20,
-                  fontFamily: isLibrary ? baloo2Fonts.medium : baloo2Fonts.bold,
-                  paddingTop: 4,
-                  color: isDarkMode ? colors.whiteText : "black",
+                  paddingLeft: isLibrary ? 0 : index === 0 ? 12 : 24,
+                  marginRight:
+                    index === data.length - 1 ? 0 : isLibrary ? 24 : 0,
+                  // paddingRight: index === data.length - 1 ? 24 : 0,
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                {blog.name}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+                <Image
+                  source={trending ? { uri: blog.image } : blog.img}
+                  resizeMode="cover"
+                  style={{ borderRadius: 12, width: 150, height: 90 }}
+                ></Image>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: isLibrary
+                      ? baloo2Fonts.medium
+                      : baloo2Fonts.bold,
+                    paddingTop: 4,
+                    color: isDarkMode ? colors.whiteText : "black",
+                  }}
+                >
+                  {blog.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         {!explore && data.length >= 5 && (
           <View
-            style={{ marginTop: 12, alignItems: "center", paddingRight: 12 }}
+            style={{
+              marginTop: 12,
+              alignItems: "center",
+              paddingRight: 12,
+              paddingLeft: 24,
+            }}
           >
             <BackButton
               color={colors.primary}

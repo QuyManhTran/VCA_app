@@ -1,10 +1,10 @@
 import { memo, useContext } from "react";
 import { View, Text, ScrollView } from "react-native";
 
-import LinearBackGround from "../../../components/LinearBackGround";
-import { colors } from "../../../../constants";
-import { baloo2Fonts } from "../../../../constants/fontFamiles";
-import ThemeContext from "../../../utilies/theme";
+import LinearBackGround from "../../../../components/LinearBackGround";
+import { colors } from "../../../../../constants";
+import { baloo2Fonts } from "../../../../../constants/fontFamiles";
+import ThemeContext from "../../../../utilies/theme";
 
 const PrivacyPolicy = ({ navigation, ...props }) => {
   const { isDarkMode } = useContext(ThemeContext);

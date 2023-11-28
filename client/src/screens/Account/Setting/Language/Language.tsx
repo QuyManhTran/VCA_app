@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 import {
   View,
   Text,
@@ -9,10 +9,10 @@ import {
 import { Foundation } from "@expo/vector-icons";
 
 import { useContext } from "react";
-import LinearBackGround from "../../../components/LinearBackGround";
-import { baloo2Fonts } from "../../../../constants/fontFamiles";
-import ThemeContext from "../../../utilies/theme";
-import { colors } from "../../../../constants";
+import LinearBackGround from "../../../../components/LinearBackGround";
+import { baloo2Fonts } from "../../../../../constants/fontFamiles";
+import ThemeContext from "../../../../utilies/theme";
+import { colors } from "../../../../../constants";
 
 const listLanguage = {
   vietnam: "vietname",

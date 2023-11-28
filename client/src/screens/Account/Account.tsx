@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useState, useEffect, useContext, useCallback } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import ThemeContext from "../../utilies/theme";
 import * as ImagePicker from "expo-image-picker";
 import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
@@ -30,6 +31,8 @@ import {
 import ToastNotify, { Status } from "../../components/ToastNotify/ToastNotify";
 const uriBase64 = "data:image/jpeg;base64,";
 const Account = ({ navigation, ...props }: RouterProps) => {
+  console.log("hello");
+  const isFocused = useIsFocused();
   const { width } = useWindowDimensions();
   const { isDarkMode, userInfor, userId, setHomeNavbar, onUserInfor } =
     useContext(ThemeContext);
@@ -43,7 +46,6 @@ const Account = ({ navigation, ...props }: RouterProps) => {
   const [pressAvatar, setPressAvatar] = useState(false);
   const [pressCoverPhoto, setPressCoverPhoto] = useState(false);
   const [prevOffSetY, setPrevOffSetY] = useState(0);
-  const [goBack, setGoBack] = useState<boolean>(false);
 
   const setActionChooseAvatar = () => {
     setPressCoverPhoto(false);
@@ -103,7 +105,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
         setIsLoading(false);
         setStatus("error");
       } else {
-        onUserInfor({ ...userInfor, cover: "" });
+        onUserInfor({ cover: "" });
         setMessage("Xóa ảnh bìa thành công");
         setIsLoading(false);
         setStatus("success");
@@ -130,7 +132,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
         setIsLoading(false);
         setStatus("error");
       } else {
-        onUserInfor({ ...userInfor, avatar: "" });
+        onUserInfor({ avatar: "" });
         setMessage("Xóa avatar thành công");
         setIsLoading(false);
         setStatus("success");
@@ -245,14 +247,14 @@ const Account = ({ navigation, ...props }: RouterProps) => {
     setIsLoading(result);
   };
 
-  const recentActivity = async () => {
+  const recentActivity = useCallback(async () => {
     return getHistoriesService.getHistories(
       getHistoriesService.getHistoriesPath,
       {
         id_user: userId,
       }
     );
-  };
+  }, []);
 
   useEffect(() => {
     if (dataAvatar) {
@@ -273,7 +275,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
           setStatus("error");
         } else {
           console.log(response.data?.avatar);
-          onUserInfor({ ...userInfor, avatar: response.data?.avatar || data });
+          onUserInfor({ avatar: response.data?.avatar || data });
           setMessage("Đổi avatar thành công");
           setIsLoading(false);
           setStatus("success");
@@ -302,7 +304,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
           setStatus("error");
         } else {
           console.log(response.data?.cover);
-          onUserInfor({ ...userInfor, cover: response.data?.cover || data });
+          onUserInfor({ cover: response.data?.cover || data });
           setMessage("Đổi ảnh bìa thành công");
           setIsLoading(false);
           setStatus("success");
@@ -319,64 +321,65 @@ const Account = ({ navigation, ...props }: RouterProps) => {
         { backgroundColor: isDarkMode ? colors.darkTheme : "#fff" },
       ]}
     >
+      <View
+        style={{
+          marginTop: 28,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderBottomWidth: 1,
+          borderBottomColor: isDarkMode ? colors.whiteText : colors.grayBg,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            paddingHorizontal: 10,
+          }}
+        >
+          <Ionicons
+            name="arrow-back"
+            size={32}
+            color={isDarkMode ? colors.whiteText : "black"}
+          ></Ionicons>
+        </TouchableOpacity>
+        <Text
+          style={[
+            styles.headerTextName,
+            { color: isDarkMode ? colors.whiteText : "black" },
+          ]}
+        >
+          {userInfor?.username || "Andrew"}
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Setting")}
+          style={{
+            paddingHorizontal: 10,
+          }}
+        >
+          <AntDesign
+            name="setting"
+            size={30}
+            color={isDarkMode ? colors.whiteText : "black"}
+          />
+        </TouchableOpacity>
+      </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         onScroll={(e) => onScroll(e.nativeEvent.contentOffset.y)}
       >
         <View style={styles.header}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text
-              style={[
-                styles.headerTextName,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              {userInfor?.username || "Andrew"}
-            </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Setting")}
-              style={{
-                position: "absolute",
-                right: 10,
-                padding: 6,
-                borderWidth: 1,
-                borderColor: isDarkMode ? colors.whiteText : "black",
-                borderRadius: 15,
-              }}
-            >
-              <AntDesign
-                name="setting"
-                size={30}
-                color={isDarkMode ? colors.whiteText : "black"}
-              />
-            </TouchableOpacity>
-          </View>
-
           <View style={styles.headerImage}>
             <TouchableOpacity
               activeOpacity={0.6}
               style={{
                 width: "100%",
                 position: "relative",
-                // borderWidth: 2,
-                // borderColor: colors.whiteText,
               }}
               onPress={setActionChooseCoverPhoto}
             >
               <Image
-                style={[
-                  styles.headerImageDetail,
-                  {
-                    borderTopLeftRadius: cover ? 999 : 0,
-                    borderTopRightRadius: cover ? 999 : 0,
-                  },
-                ]}
+                style={styles.headerImageDetail}
                 source={
                   cover
                     ? { uri: cover }
@@ -631,7 +634,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
               </Text>
               <TouchableOpacity
                 activeOpacity={0.6}
-                onPress={() => navigation.navigate("EditInfo")}
+                onPress={() => navigation.navigate("History")}
                 style={{ marginRight: 12 }}
               >
                 <AntDesign
@@ -650,6 +653,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
               onBlog={onBlog}
               isAccount
               recentActivity={recentActivity}
+              isFocused={isFocused}
             ></RecommendList>
           </View>
         </View>

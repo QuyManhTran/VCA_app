@@ -21,13 +21,15 @@ const getSortedWatchedFoods = async (req, res) => {
           like: detailWatchedFood.like,
           rate: detailWatchedFood.rate,
           image: detailWatchedFood.image,
-          watchedAt: watchedFood.watchedAt,
+          tags: detailWatchedFood.tags,
+          watchedAt: watchedFood.watchedAt.toISOString(),
         };
       })
     );
 
-    dataWatchedFoods.sort((a, b) => b.watchedAt - a.watchedAt);
-
+    dataWatchedFoods.sort(
+      (a, b) => Date.parse(b.watchedAt) - Date.parse(a.watchedAt)
+    );
     res.status(200).json({ dataWatchedFoods: dataWatchedFoods });
   } catch (error) {
     return res.status(404).json({ text: "Không tìm thấy tài khoản" });

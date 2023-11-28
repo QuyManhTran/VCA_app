@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
 
   header: {
     display: "flex",
-    marginTop: 40,
   },
 
   headerAvatar: {
@@ -22,10 +21,7 @@ const styles = StyleSheet.create({
   },
 
   headerImage: {
-    marginTop: 10,
-
     flexDirection: "row",
-
     justifyContent: "center",
     alignItems: "center",
   },

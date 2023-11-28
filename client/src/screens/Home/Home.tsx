@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, useWindowDimensions } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { useState, useContext, useRef, useEffect, useCallback } from "react";
 import styles from "./style";
 import ThemeContext from "../../utilies/theme";
@@ -24,18 +24,12 @@ const searchDown = {
   1: { translateY: 0 },
 };
 const Home = ({ route, navigation }: RouterProps) => {
-  const { width, height } = useWindowDimensions();
   const { isDarkMode, setHomeNavbar } = useContext(ThemeContext);
   const [prevOffSetY, setPrevOffSetY] = useState(0);
   const [countVar, setCountVar] = useState(0);
   const [recommendations, setRecommendations] = useState([]);
   const scrollY = useRef(new Animated.Value(0)).current;
-  const diffClampScrollY = Animated.diffClamp(scrollY, 0, 70);
   const searchRef = useRef(null);
-  const headerBottom = diffClampScrollY.interpolate({
-    inputRange: [0, 35],
-    outputRange: [0, -70],
-  });
 
   const onNavigateSearch = useCallback((params: object) => {
     navigation.navigate("Search", params);

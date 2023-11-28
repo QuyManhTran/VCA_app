@@ -15,17 +15,19 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import LinearBackGround from "../../components/LinearBackGround";
-import { colors } from "../../../constants";
-import { baloo2Fonts } from "../../../constants/fontFamiles";
+import LinearBackGround from "../../../components/LinearBackGround";
+import { colors } from "../../../../constants";
+import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   linearColors,
   navbarDarkLinearColors,
-} from "../../../constants/colors";
-import ToastNotify, { Status } from "../../components/ToastNotify/ToastNotify";
+} from "../../../../constants/colors";
+import ToastNotify, {
+  Status,
+} from "../../../components/ToastNotify/ToastNotify";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { changePasswordService } from "../../services/profileService";
+import { changePasswordService } from "../../../services/profileService";
 
 const Password = ({ route, navigation }) => {
   const { isDarkMode, email } = route.params;
