@@ -1,12 +1,28 @@
 const tf = require("@tensorflow/tfjs-node");
 const Jimp = require('jimp');
+const food = require("../../models/food/food");
 
 
 const MODEL_DIR_PATH = `${__dirname}`;
 const IMAGE_FILE_PATH = 'http://localhost:3000/public//images/comtam.jpg';
+const BASE_PROBABILITY = 0.1;
+
+function isImage(path) {
+    const validExtensions = ['.png', '.jpg', '.jpeg'];
+    const fileExtension = path.toLowerCase().substr(path.lastIndexOf('.'));
+    return validExtensions.includes(fileExtension);
+}
 
 const searchByImage = async (req, res) => {
     const { path } = req.file;
+
+    if(!isImage(path)) {
+        return res.status(400).json(
+            {
+                text: "Không đúng định dạng ảnh"
+            }
+        )
+    }
     const newPath = 'http://localhost:3000/' + path.substring(path.indexOf('public'));
 
     const modelUrl = 'http://localhost:3000/public/model_v1/model.json';
@@ -40,20 +56,36 @@ const searchByImage = async (req, res) => {
     img_tensor = img_tensor.expandDims(0);
 
     const predictions = await model.predict(img_tensor).dataSync();
-    let result = []
+    let data = []
 
     for (let i = 0; i < predictions.length; i++) {
         const label = labels[i];
         const probability = predictions[i];
         console.log(`${label}: ${probability}`);
-        result.push({
+        data.push({
             label: label,
             probability: probability
         })
     }
 
-    res.json({
-        result: result
+    const filteredData = data.filter(item => item.probability > BASE_PROBABILITY)
+    const sortedData = filteredData.sort((a, b) => b.probability - a.probability)
+    const results = await Promise.all(filteredData.map(async (item) => {
+        const foodByLabel = await food.findOne(
+            { name: { $regex: new RegExp(item.label, "i") } },
+            { _id: 1, name: 1, image: 1, tags: 1, like: 1, rate: 1 }
+        );
+        if(!foodByLabel) {
+            return null
+        }
+        return {...foodByLabel._doc, label: item.label , probability: item.probability};
+    }));
+
+    const resultsSorted = results.sort((a, b) => b.probability - a.probability);
+
+    return res.status(200).json({
+        machineSearch: sortedData,
+        result: resultsSorted
     })
 }
 
