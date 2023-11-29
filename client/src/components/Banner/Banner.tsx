@@ -15,8 +15,8 @@ interface BannerProps {
   onPress: any;
 }
 const Banner = ({ onPress }: BannerProps) => {
-  const onBanner = (keyword: string) => {
-    onPress(keyword);
+  const onBanner = (keyword: string, image: any) => {
+    onPress(keyword, image);
   };
   return (
     <View style={{ marginBottom: 24 }}>
@@ -38,7 +38,7 @@ const Banner = ({ onPress }: BannerProps) => {
                 }).start();
                 setTimeout(() => {
                   scaleAnimation.resetAnimation();
-                  onBanner(item.keyword);
+                  onBanner(item.keyword, item.img);
                 }, 100);
               }}
               key={index}

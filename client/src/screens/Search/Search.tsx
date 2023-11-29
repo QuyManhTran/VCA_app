@@ -22,8 +22,10 @@ import { colors } from "../../../constants";
 import {
   searchAllService,
   searchTagService,
+  trendingService,
 } from "../../services/searchService";
 import { resultNotFound } from "../../../assets/img/ilustraitions";
+import { Ionicons } from "@expo/vector-icons";
 type SearchStatusType = "tag" | "all";
 const Search = ({ route, navigation }: RouterProps) => {
   const flatRef = useRef<FlatList>(null);
@@ -33,6 +35,7 @@ const Search = ({ route, navigation }: RouterProps) => {
   const [data, setData] = useState([]);
   const debounceKeyword = useDebounce(keyword, 300);
   const [activeTag, setActiveTag] = useState(0);
+  const [isLoading, setIsLoading] = useState<boolean | null>(null);
   const [searchStatus, setSearchStatus] = useState<SearchStatusType>(
     route.params?.status || "all"
   );
@@ -58,9 +61,25 @@ const Search = ({ route, navigation }: RouterProps) => {
     navigation.goBack();
   }, []);
 
-  const searchByTag = async (tag: string) => {
-    // console.log("tag: ", tag);
+  const searchByTrending = async (tag: string) => {
+    setIsLoading(true);
+    const response = await trendingService.getTrendingFood(
+      trendingService.getTrendingFoodPath + tag,
+      {
+        limit: 8,
+      }
+    );
+    if (response.message === 200) {
+      setIsLoading(false);
+      setData(response.data);
+    } else {
+      setIsLoading(false);
+      setData([]);
+    }
+  };
 
+  const searchByTag = async (tag: string) => {
+    setIsLoading(true);
     const foods = await searchTagService.searchTag(
       searchTagService.searchTagPath,
       {
@@ -69,14 +88,16 @@ const Search = ({ route, navigation }: RouterProps) => {
     );
 
     if (foods.message !== 200) {
+      setIsLoading(false);
       setData([]);
     } else {
+      setIsLoading(false);
       setData(foods.data);
     }
   };
 
   const searchByAll = async (keyword: string) => {
-    // console.log("keyword: ", keyword);
+    setIsLoading(true);
     const foods = await searchAllService.searchAll(
       searchAllService.searchAllPath,
       {
@@ -85,9 +106,28 @@ const Search = ({ route, navigation }: RouterProps) => {
     );
 
     if (foods.message !== 200) {
+      setIsLoading(false);
       setData([]);
     } else {
+      setIsLoading(false);
       setData(foods.data);
+    }
+  };
+
+  const blankKeywordHandler = () => {
+    switch (viralSearchs[activeTag]) {
+      case "Phổ biến":
+        searchByTrending("popular");
+        break;
+      case "Mới":
+        searchByTrending("new");
+        break;
+      case "Yêu thích":
+        searchByTrending("love");
+        break;
+      default:
+        searchByTag(viralSearchs[activeTag]);
+        break;
     }
   };
 
@@ -96,28 +136,20 @@ const Search = ({ route, navigation }: RouterProps) => {
   }, [searchStatus]);
 
   useEffect(() => {
-    const viralSearch = async () => {
-      await searchByTag(viralSearchs[activeTag]);
-    };
-    viralSearch();
+    blankKeywordHandler();
   }, [activeTag]);
 
   useEffect(() => {
-    // sent API by debounceKeyword
-    const getFoods = async () => {
-      if (debounceKeyword === "") {
-        console.log(debounceKeyword);
-        setSearchStatus("tag");
-        await searchByTag(viralSearchs[activeTag]);
+    if (debounceKeyword === "") {
+      setSearchStatus("tag");
+      blankKeywordHandler();
+    } else {
+      if (searchStatus === "tag") {
+        searchByTag(debounceKeyword);
       } else {
-        if (searchStatus === "tag") {
-          await searchByTag(debounceKeyword);
-        } else {
-          await searchByAll(debounceKeyword);
-        }
+        searchByAll(debounceKeyword);
       }
-    };
-    getFoods();
+    }
     scrollOpacity.setValue(0);
   }, [debounceKeyword]);
 
@@ -165,8 +197,8 @@ const Search = ({ route, navigation }: RouterProps) => {
           keyword={keyword}
         ></SearchTool>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {(data.length !== 0 || searchStatus === "tag") && (
+      <View style={{ paddingBottom: 16 }}>
+        {debounceKeyword === "" && (
           <FlatList
             ref={flatRef}
             data={viralSearchs}
@@ -194,6 +226,17 @@ const Search = ({ route, navigation }: RouterProps) => {
                     },
                   ]}
                 >
+                  <Ionicons
+                    name="trending-up"
+                    size={24}
+                    color={
+                      isDarkMode
+                        ? colors.whiteText
+                        : index === activeTag
+                        ? colors.primary
+                        : "black"
+                    }
+                  ></Ionicons>
                   <Text
                     style={[
                       styles.chipTagText,
@@ -215,16 +258,20 @@ const Search = ({ route, navigation }: RouterProps) => {
             horizontal
           ></FlatList>
         )}
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
             flex: 1,
+            marginTop: 12,
             paddingHorizontal: 12,
             paddingBottom: 24,
           }}
         >
           {data.length === 0 &&
             searchStatus === "all" &&
-            debounceKeyword !== "" && (
+            debounceKeyword !== "" &&
+            isLoading === false && (
               <View style={{ alignItems: "center" }}>
                 <Animated.Text
                   numberOfLines={2}

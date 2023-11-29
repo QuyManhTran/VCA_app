@@ -82,14 +82,7 @@ export const notifytions = {
   ],
 };
 
-export const viralSearchs = [
-  "Truyền thống",
-  "Phổ biến",
-  "Mới",
-  "Yêu thích",
-  "Bánh",
-  "Cơm",
-];
+export const viralSearchs = ["Phổ biến", "Mới", "Yêu thích", "Bánh", "Cơm"];
 
 export const navItems = [
   {

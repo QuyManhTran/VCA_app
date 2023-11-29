@@ -210,8 +210,8 @@ const Account = ({ navigation, ...props }: RouterProps) => {
     });
   };
 
-  const onNavigateSearch = useCallback((params: object) => {
-    navigation.navigate("Search", params);
+  const onNavigateHistory = useCallback(() => {
+    navigation.navigate("History");
   }, []);
 
   const onBlog = useCallback(({ ...props }) => {
@@ -646,7 +646,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
             <RecommendList
               trending="History"
               isDarkMode={isDarkMode}
-              onNavigateSearch={onNavigateSearch}
+              onNavigateHistory={onNavigateHistory}
               heading="Thêm gần đây"
               data={recommendLists}
               onBlog={onBlog}

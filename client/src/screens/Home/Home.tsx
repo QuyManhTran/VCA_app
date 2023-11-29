@@ -35,12 +35,20 @@ const Home = ({ route, navigation }: RouterProps) => {
     navigation.navigate("Search", params);
   }, []);
 
+  const onNavigateTrending = useCallback((params: object) => {
+    navigation.navigate("Trending", params);
+  }, []);
+
   const onTag = useCallback((keyword: string) => {
     navigation.navigate("Search", { keyword: keyword, status: "tag" });
   }, []);
 
-  const onBanner = useCallback((keyword: string) => {
-    navigation.navigate("Search", { keyword: keyword, status: "tag" });
+  const onBanner = useCallback((keyword: string, image: any) => {
+    navigation.navigate("PlayList", {
+      keyword: keyword,
+      image: image,
+      status: "tag",
+    });
   }, []);
 
   const onChipTab = useCallback((keyword: string) => {
@@ -151,7 +159,7 @@ const Home = ({ route, navigation }: RouterProps) => {
             </View>
             <RecommendList
               isDarkMode={isDarkMode}
-              onNavigateSearch={onNavigateSearch}
+              onNavigateTrending={onNavigateTrending}
               heading="Khám phá"
               explore
               data={exploreData}
@@ -184,7 +192,7 @@ const Home = ({ route, navigation }: RouterProps) => {
             <RecommendList
               trending="popular"
               isDarkMode={isDarkMode}
-              onNavigateSearch={onNavigateSearch}
+              onNavigateTrending={onNavigateTrending}
               heading="Phổ biến"
               data={recommendLists}
               onBlog={onBlog}
@@ -192,7 +200,7 @@ const Home = ({ route, navigation }: RouterProps) => {
             <RecommendList
               trending="love"
               isDarkMode={isDarkMode}
-              onNavigateSearch={onNavigateSearch}
+              onNavigateTrending={onNavigateTrending}
               heading="Yêu thích"
               data={recommendLists}
               onBlog={onBlog}
@@ -200,7 +208,7 @@ const Home = ({ route, navigation }: RouterProps) => {
             <RecommendList
               trending="new"
               isDarkMode={isDarkMode}
-              onNavigateSearch={onNavigateSearch}
+              onNavigateTrending={onNavigateTrending}
               heading="Mới nhất"
               data={recommendLists}
               onBlog={onBlog}

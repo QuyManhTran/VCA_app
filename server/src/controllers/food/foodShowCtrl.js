@@ -1,7 +1,7 @@
 const Food = require("../../models/food/food");
 
 const popularShow = async (req, res) => {
-  const limit = 5;
+  const { limit } = req.query;
   try {
     const foods = await Food.find({ like: { $gt: 0 } })
       .sort({ like: -1 })
@@ -23,7 +23,7 @@ const popularShow = async (req, res) => {
 };
 
 const loveShow = async (req, res) => {
-  const limit = 5;
+  const { limit } = req.query;
   try {
     const foods = await Food.find({ rate: { $gt: 1 } })
       .sort({ rate: -1 })
@@ -45,7 +45,7 @@ const loveShow = async (req, res) => {
 };
 
 const newShow = async (req, res) => {
-  const limit = 5;
+  const { limit } = req.query;
   try {
     const foods = await Food.find().sort({ updatedAt: -1 }).limit(limit);
     const result = foods.map((foodInstance) => {

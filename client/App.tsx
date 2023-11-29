@@ -24,6 +24,8 @@ import TermsOfService from "./src/screens/Account/Setting/TermsOfService";
 import PrivacyPolicy from "./src/screens/Account/Setting/PrivacyPolicy";
 import Language from "./src/screens/Account/Setting/Language";
 import History from "./src/screens/Account/History";
+import TrendingList from "./src/screens/TrendingList";
+import PlayList from "./src/screens/PlayList";
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +64,8 @@ export default function App() {
           <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
           <Stack.Screen name="Language" component={Language} />
           <Stack.Screen name="History" component={History} />
+          <Stack.Screen name="Trending" component={TrendingList} />
+          <Stack.Screen name="PlayList" component={PlayList} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>

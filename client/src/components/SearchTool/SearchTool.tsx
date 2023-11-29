@@ -12,6 +12,7 @@ import { useContext, memo } from "react";
 import { searchDark, searchWhite } from "../../../assets/img/icons";
 import { colors } from "../../../constants";
 import fontFamilies, { baloo2Fonts } from "../../../constants/fontFamiles";
+import { AntDesign } from "@expo/vector-icons";
 
 interface SearchProps {
   isHome: boolean;
@@ -77,39 +78,16 @@ const SearchTool = ({
             </Text>
           )}
         </View>
+        {!isHome && (
+          <TouchableOpacity activeOpacity={0.5}>
+            <AntDesign
+              name="scan1"
+              size={24}
+              color={isDarkMode ? colors.whiteText : "black"}
+            />
+          </TouchableOpacity>
+        )}
       </View>
-      {/* {isFocused && (
-        <View
-          style={{
-            position: "absolute",
-            width: "100%",
-            alignItems: "center",
-            top: "105%",
-          }}
-        >
-          <View style={styles.resultContainer}>
-            {data.map((result, index) => {
-              return (
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  key={index}
-                  style={[
-                    styles.result,
-                    index === data.length - 1 && { paddingBottom: 0 },
-                  ]}
-                >
-                  <Ionicons
-                    name="trending-up"
-                    size={24}
-                    style={{ marginRight: 12 }}
-                  ></Ionicons>
-                  <Text style={styles.text}>{result}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-      )} */}
     </TouchableWithoutFeedback>
   );
 };

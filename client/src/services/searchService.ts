@@ -28,8 +28,8 @@ const searchAllPath = "food/search/all";
  * @param path
  * @returns
  */
-const getTrendingFood = async (path: string) => {
-  const response = await request.get(path);
+const getTrendingFood = async (path: string, params: { limit: number }) => {
+  const response = await request.get(path, params);
   return response;
 };
 const getTrendingFoodPath = "food/show/";

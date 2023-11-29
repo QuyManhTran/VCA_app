@@ -11,23 +11,20 @@ import { baloo2Fonts } from "../../../constants/fontFamiles";
 import BackButton from "../BackButton";
 import { colors } from "../../../constants";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  searchTagService,
-  trendingService,
-} from "../../services/searchService";
+import { trendingService } from "../../services/searchService";
 import { mostlySearch } from "../../../constants/fakeData";
-import { FoodReviewRawProps } from "../FoodReview/FoodReview";
 
 interface RecommendListProps {
   heading: string;
   explore?: boolean;
   isDarkMode: boolean;
   isLibrary?: boolean;
-  onNavigateSearch: any;
+  onNavigateTrending?: any;
   onBlog: any;
   trending?: string;
   isAccount?: boolean;
   isFocused?: boolean;
+  onNavigateHistory?: any;
   recentActivity?: () => Promise<
     { message: number; data: any } | { message: any; data?: undefined }
   >;
@@ -45,19 +42,23 @@ const RecommendList = ({
   trending,
   heading,
   explore = false,
-  onNavigateSearch,
+  onNavigateTrending,
   isDarkMode = false,
   isLibrary = false,
   isAccount = false,
   isFocused = false,
   recentActivity,
+  onNavigateHistory = () => {},
   onBlog = () => {},
   data: fallBackData = mostlySearch,
 }: RecommendListProps) => {
   const [data, setData] = useState<any[]>([]);
   const getTrendingFood = async () => {
     const response = await trendingService.getTrendingFood(
-      trendingService.getTrendingFoodPath + trending
+      trendingService.getTrendingFoodPath + trending,
+      {
+        limit: 5,
+      }
     );
     if (response.message === 200) {
       setData(response.data);
@@ -98,7 +99,12 @@ const RecommendList = ({
             flexDirection: "row",
             alignItems: "center",
           }}
-          onPress={() => onNavigateSearch({ keyword: heading, status: "tag" })}
+          onPress={() =>
+            onNavigateTrending({
+              keyword: trending,
+              title: heading,
+            })
+          }
         >
           <Text
             style={[
@@ -129,7 +135,11 @@ const RecommendList = ({
               <TouchableOpacity
                 onPress={() => {
                   if (explore) {
-                    onNavigateSearch({ keyword: blog.name, status: "tag" });
+                    onNavigateTrending({
+                      keyword: blog.name,
+                      title: blog.name,
+                      status: "tag",
+                    });
                   } else {
                     onNavigateBlog({
                       id: blog.id,
@@ -146,7 +156,8 @@ const RecommendList = ({
                   paddingLeft: isLibrary ? 0 : index === 0 ? 12 : 24,
                   marginRight:
                     index === data.length - 1 ? 0 : isLibrary ? 24 : 0,
-                  // paddingRight: index === data.length - 1 ? 24 : 0,
+                  paddingRight:
+                    index === data.length - 1 && data.length < 5 ? 24 : 0,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -182,9 +193,16 @@ const RecommendList = ({
           >
             <BackButton
               color={colors.primary}
-              onPress={() =>
-                onNavigateSearch({ keyword: heading, status: "tag" })
-              }
+              onPress={() => {
+                if (isAccount) {
+                  onNavigateHistory();
+                } else {
+                  onNavigateTrending({
+                    keyword: trending,
+                    title: heading,
+                  });
+                }
+              }}
               rotate="180deg"
               customeStyle={{
                 borderRadius: 25,
