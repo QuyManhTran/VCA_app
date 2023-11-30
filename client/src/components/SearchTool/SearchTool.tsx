@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { useContext, memo } from "react";
+import { useContext, memo, useRef } from "react";
 import { searchDark, searchWhite } from "../../../assets/img/icons";
 import { colors } from "../../../constants";
 import fontFamilies, { baloo2Fonts } from "../../../constants/fontFamiles";
@@ -21,6 +21,7 @@ interface SearchProps {
   onKeyword?: any;
   keyword?: string;
   isDarkMode: boolean;
+  onPhotoSearch?: any;
 }
 const fakeData = ["truyền thống", "phổ biến ", "yêu thích", "liên quan"];
 const SearchTool = ({
@@ -30,7 +31,15 @@ const SearchTool = ({
   onKeyword,
   keyword,
   isDarkMode = false,
+  onPhotoSearch = () => {},
 }: SearchProps) => {
+  const inputRef = useRef<TextInput>();
+  const photoHandler = () => {
+    if (inputRef.current) {
+      inputRef.current.blur();
+    }
+    onPhotoSearch();
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View
@@ -52,6 +61,7 @@ const SearchTool = ({
         <View style={styles.inputWrapper}>
           {!isHome && (
             <TextInput
+              ref={inputRef}
               value={keyword}
               style={[
                 styles.input,
@@ -79,7 +89,7 @@ const SearchTool = ({
           )}
         </View>
         {!isHome && (
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity activeOpacity={0.5} onPress={photoHandler}>
             <AntDesign
               name="scan1"
               size={24}

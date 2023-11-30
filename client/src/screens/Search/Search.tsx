@@ -6,8 +6,12 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Pressable,
 } from "react-native";
 import { useCallback, useEffect, useState, useRef, useContext } from "react";
+import * as Animatable from "react-native-animatable";
+import * as ImagePicker from "expo-image-picker";
+import { Blob } from "buffer";
 import styles from "./style";
 import LinearBackGround from "../../components/LinearBackGround";
 import SearchTool from "../../components/SearchTool";
@@ -26,19 +30,32 @@ import {
 } from "../../services/searchService";
 import { resultNotFound } from "../../../assets/img/ilustraitions";
 import { Ionicons } from "@expo/vector-icons";
+import request from "../../utilies/request";
 type SearchStatusType = "tag" | "all";
+const photoUp = {
+  0: { translateY: 0 },
+  1: { translateY: -140 },
+};
+const photoDown = {
+  0: { translateY: -140 },
+  1: { translateY: 0 },
+};
 const Search = ({ route, navigation }: RouterProps) => {
-  const flatRef = useRef<FlatList>(null);
-  const scrollOpacity = useRef(new Animated.Value(0)).current;
   const { isDarkMode } = useContext(ThemeContext);
+  const photoRef = useRef(null);
+  const flatRef = useRef<FlatList>(null);
+  const timeoutRef: { current: NodeJS.Timeout } = useRef(null);
+  const scrollOpacity = useRef(new Animated.Value(0)).current;
   const [keyword, setKeyword] = useState(route.params?.keyword || "");
-  const [data, setData] = useState([]);
   const debounceKeyword = useDebounce(keyword, 300);
+  const [data, setData] = useState([]);
   const [activeTag, setActiveTag] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean | null>(null);
+  const [isModal, setIsModal] = useState<boolean | null>(null);
   const [searchStatus, setSearchStatus] = useState<SearchStatusType>(
     route.params?.status || "all"
   );
+  const [photoData, setPhotoData] = useState<any>();
   const onKeyword = useCallback((text: string) => {
     setKeyword(text);
     if (searchStatus !== "all") {
@@ -131,9 +148,55 @@ const Search = ({ route, navigation }: RouterProps) => {
     }
   };
 
+  const closeModalHandler = () => {
+    photoRef.current?.animate(photoDown);
+    timeoutRef.current = setTimeout(() => {
+      setIsModal(false);
+    }, 300);
+  };
+
+  const chosePhotoHandler = async (isCamera = true) => {
+    let result;
+    if (isCamera) {
+      result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+      });
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+      });
+    }
+    if (result) {
+      setPhotoData(result.assets[0]);
+    }
+  };
+
+  const apiPhotoHandler = async () => {
+    const formData = new FormData();
+    formData.append(
+      "imageSearch",
+      JSON.stringify({
+        uri: photoData.uri,
+        name: "image",
+        type: photoData.type,
+      })
+    );
+    const response = await request.post("/food/search-image", {
+      data: FormData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(response.data);
+  };
+
   useEffect(() => {
-    console.log(searchStatus);
-  }, [searchStatus]);
+    return () => clearTimeout(timeoutRef.current as NodeJS.Timeout);
+  }, []);
 
   useEffect(() => {
     blankKeywordHandler();
@@ -170,6 +233,21 @@ const Search = ({ route, navigation }: RouterProps) => {
       });
     }
   }, [activeTag]);
+
+  useEffect(() => {
+    if (isModal !== null) {
+      if (isModal) {
+        photoRef.current?.animate(photoUp);
+      }
+    }
+  }, [isModal]);
+
+  useEffect(() => {
+    if (photoData) {
+      apiPhotoHandler();
+    }
+  }, [photoData]);
+
   return (
     <View
       style={{
@@ -190,6 +268,7 @@ const Search = ({ route, navigation }: RouterProps) => {
       </View>
       <View style={styles.search}>
         <SearchTool
+          onPhotoSearch={() => setIsModal(true)}
           isDarkMode={isDarkMode}
           isHome={false}
           width={300}
@@ -312,6 +391,60 @@ const Search = ({ route, navigation }: RouterProps) => {
           )}
         </View>
       </ScrollView>
+      {isModal && (
+        <Pressable style={styles.modalContainer} onPress={closeModalHandler}>
+          <Animatable.View
+            ref={photoRef}
+            duration={200}
+            easing={"linear"}
+            style={[
+              styles.modalContent,
+              { backgroundColor: isDarkMode ? colors.darkBg : "#fff" },
+            ]}
+          >
+            <Pressable style={styles.contentWrapper}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.itemContent}
+                onPress={() => chosePhotoHandler(true)}
+              >
+                <Ionicons
+                  name={isDarkMode ? "camera" : "camera-outline"}
+                  size={32}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                ></Ionicons>
+                <Text
+                  style={[
+                    styles.itemText,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
+                  Chọn ảnh từ camera
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.itemContent}
+                onPress={() => chosePhotoHandler(false)}
+              >
+                <Ionicons
+                  name={isDarkMode ? "image" : "image-outline"}
+                  size={32}
+                  color={isDarkMode ? colors.whiteText : "black"}
+                ></Ionicons>
+                <Text
+                  style={[
+                    styles.itemText,
+                    { color: isDarkMode ? colors.whiteText : "black" },
+                  ]}
+                >
+                  Chọn ảnh từ thư viện
+                </Text>
+              </TouchableOpacity>
+            </Pressable>
+          </Animatable.View>
+        </Pressable>
+      )}
     </View>
   );
 };
