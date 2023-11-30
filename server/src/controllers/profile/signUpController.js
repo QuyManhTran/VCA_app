@@ -41,7 +41,6 @@ const signUpController = async (req, res) => {
       return res.status(401).json({ message: error });
     });
 };
-
 module.exports = {
   signUpController,
 };

@@ -11,7 +11,6 @@ import {
 import { useCallback, useEffect, useState, useRef, useContext } from "react";
 import * as Animatable from "react-native-animatable";
 import * as ImagePicker from "expo-image-picker";
-import { Blob } from "buffer";
 import styles from "./style";
 import LinearBackGround from "../../components/LinearBackGround";
 import SearchTool from "../../components/SearchTool";
@@ -40,6 +39,7 @@ const photoDown = {
   0: { translateY: -140 },
   1: { translateY: 0 },
 };
+const uriBase64 = "data:image/jpeg;base64,";
 const Search = ({ route, navigation }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
   const photoRef = useRef(null);
@@ -162,12 +162,14 @@ const Search = ({ route, navigation }: RouterProps) => {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         quality: 1,
+        base64: true,
       });
     } else {
       result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         quality: 1,
+        base64: true,
       });
     }
     if (result) {
@@ -176,22 +178,26 @@ const Search = ({ route, navigation }: RouterProps) => {
   };
 
   const apiPhotoHandler = async () => {
-    const formData = new FormData();
-    formData.append(
-      "imageSearch",
-      JSON.stringify({
-        uri: photoData.uri,
-        name: "image",
-        type: photoData.type,
-      })
-    );
-    const response = await request.post("/food/search-image", {
-      data: FormData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    console.log(response.data);
+    // const formData = new FormData();
+    // const data = JSON.stringify({
+    //   uri: photoData.uri,
+    //   name: "image",
+    //   type: photoData.type,
+    // });
+    // const blog = new Blob([data], { type: "application/json" });
+    // formData.append("imageSearch", blog);
+    try {
+      const response = await request.post(
+        "/food/search-image",
+        {
+          base64: photoData?.base64,
+        },
+        { timeout: 5000 }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
