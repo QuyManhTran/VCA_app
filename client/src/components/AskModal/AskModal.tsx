@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     width: 320,
-    minHeight: 200,
     borderRadius: 8,
     backgroundColor: "#fff",
     alignItems: "center",

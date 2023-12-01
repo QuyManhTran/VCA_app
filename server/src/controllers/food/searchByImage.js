@@ -85,19 +85,27 @@ const searchByImage = async (req, res) => {
           { name: { $regex: new RegExp(item.label, "i") } },
           { _id: 1, name: 1, image: 1, tags: 1, like: 1, rate: 1 }
         );
-        if (!foodByLabel) {
-          return;
+        if (foodByLabel !== null) {
+          return {
+            ...foodByLabel._doc,
+            label: item.label,
+            probability: item.probability,
+          };
         }
-        return {
-          ...foodByLabel._doc,
-          label: item.label,
-          probability: item.probability,
-        };
       })
     );
 
-    const resultsSorted = results.sort((a, b) => b.probability - a.probability);
-
+    let resultsSorted = results.sort((a, b) => b.probability - a.probability);
+    if (!resultsSorted.includes(undefined)) {
+      resultsSorted = resultsSorted.map((result) => ({
+        id: result?._id,
+        tags: result?.tags,
+        like: result?.like,
+        rate: result?.rate,
+        image: result?.image,
+        name: result?.name,
+      }));
+    }
     return res.status(200).json({
       machineSearch: sortedData,
       result: resultsSorted,

@@ -1,6 +1,7 @@
-import { LogBox } from "react-native";
 import React, { useState, useEffect } from "react";
 import ThemeContext from "./theme";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LogBox } from "react-native";
 import { list } from "../../assets/img/foods";
 import { mostlySearch, notifytions } from "../../constants/fakeData";
 import {
@@ -13,8 +14,8 @@ import {
 } from "../services/listService";
 interface GlobalContextProps {
   children: React.ReactNode;
+  storageData: string;
 }
-
 export interface UserInforProps {
   username: string;
   avatar: string;
@@ -22,7 +23,8 @@ export interface UserInforProps {
 }
 
 const fakeData = [{ img: list, name: "Xem sau", data: mostlySearch }];
-const GlobalContext = ({ children }: GlobalContextProps) => {
+const GlobalContext = ({ storageData, children }: GlobalContextProps) => {
+  const [isLogged, setIsLogged] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [userInfor, setUserInfor] = useState<UserInforProps>();
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -31,6 +33,41 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
   const [personalLists, setPersonalLists] = useState<any[]>(fakeData);
   const [notifitions, setNotifitions] = useState(notifytions);
   const [isConnectionSocket, setIsConnectionSocket] = useState(false);
+
+  const getIsDarkMode = async () => {
+    const value = await AsyncStorage.getItem(
+      process.env.EXPO_PUBLIC_DARK_MODE_KEY
+    );
+    if (value !== null) {
+      setIsDarkMode(JSON.parse(value)?.isDarkMode || false);
+    }
+  };
+
+  const onSaveDatatoStorage = async (data: string) => {
+    try {
+      const value = await AsyncStorage.getItem(
+        process.env.EXPO_PUBLIC_STORAGE_KEY
+      );
+      const isDarkMode = AsyncStorage.getItem(
+        process.env.EXPO_PUBLIC_DARK_MODE_KEY
+      );
+      if (value === null) {
+        await AsyncStorage.setItem(process.env.EXPO_PUBLIC_STORAGE_KEY, data);
+      }
+      if (isDarkMode === null) {
+        await AsyncStorage.setItem(
+          process.env.EXPO_PUBLIC_DARK_MODE_KEY,
+          JSON.stringify({ isDarkMode: false })
+        );
+      }
+    } catch (error) {
+      console.log("Save error for unknown reasons!");
+    }
+  };
+
+  const onLogin = () => {
+    setIsLogged(true);
+  };
 
   const onConnectSocket = () => {
     setIsConnectionSocket(true);
@@ -192,12 +229,19 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
       });
     }
   };
+
   useEffect(() => {
-    LogBox.ignoreLogs([
-      "new NativeEventEmitter()",
-      "Non-serializable values were found in the navigation state",
-    ]);
+    getIsDarkMode();
   }, []);
+
+  useEffect(() => {
+    if (storageData) {
+      const parseData = JSON.parse(storageData);
+      setUserId(parseData?.userId);
+      setIsLogged(parseData?.isLogged);
+      setUserInfor(parseData?.userInfor);
+    }
+  }, [storageData]);
 
   useEffect(() => {
     if (userId) {
@@ -214,13 +258,30 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
     }
   }, [userId]);
 
-  // useEffect(() => {
-  //   console.log(userInfor);
-  // }, [userInfor]);
+  useEffect(() => {
+    if (isLogged) {
+      const storageData = JSON.stringify({
+        isLogged,
+        userId,
+        userInfor,
+      });
+      onSaveDatatoStorage(storageData);
+    }
+  }, [isLogged]);
+
+  useEffect(() => {
+    (async () => {
+      await AsyncStorage.mergeItem(
+        process.env.EXPO_PUBLIC_DARK_MODE_KEY,
+        JSON.stringify({ isDarkMode: isDarkMode })
+      );
+    })();
+  }, [isDarkMode]);
 
   return (
     <ThemeContext.Provider
       value={{
+        isLogged,
         isDarkMode,
         isHomeScrollDown,
         personalLists,
@@ -229,6 +290,7 @@ const GlobalContext = ({ children }: GlobalContextProps) => {
         userId,
         isConnectionSocket,
         userInfor,
+        onLogin,
         onUserId,
         onUserInfor,
         setHomeNavbar,

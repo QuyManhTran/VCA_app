@@ -38,14 +38,18 @@ const History = ({ navigation, route }: RouterProps) => {
 
   useEffect(() => {
     const recentActivity = async () => {
-      const response = await getHistoriesService.getHistories(
-        getHistoriesService.getHistoriesPath,
-        {
-          id_user: userId,
+      try {
+        const response = await getHistoriesService.getHistories(
+          getHistoriesService.getHistoriesPath,
+          {
+            id_user: userId,
+          }
+        );
+        if (response.message === 200) {
+          setHistories(response.data?.dataWatchedFoods || []);
         }
-      );
-      if (response.message === 200) {
-        setHistories(response.data?.dataWatchedFoods || []);
+      } catch (error) {
+        console.log(error);
       }
     };
     recentActivity();
@@ -63,6 +67,10 @@ const History = ({ navigation, route }: RouterProps) => {
       });
     }
   }, [histories]);
+
+  useEffect(() => {
+    console.log(parcition);
+  }, [parcition]);
   return (
     <View
       style={[
@@ -103,8 +111,8 @@ const History = ({ navigation, route }: RouterProps) => {
         showsVerticalScrollIndicator={false}
         style={{ paddingTop: 12 }}
       >
-        <View style={styles.wrapper}>
-          {parcition > 0 && (
+        {(parcition > 0 || (parcition === null && histories.length > 0)) && (
+          <View style={styles.wrapper}>
             <Text
               style={[
                 styles.title,
@@ -113,10 +121,11 @@ const History = ({ navigation, route }: RouterProps) => {
             >
               Hôm nay
             </Text>
-          )}
-          {parcition > 0 &&
-            histories
-              .filter((food, index) => index < parcition)
+
+            {histories
+              .filter((food, index) =>
+                parcition !== null ? index < parcition : true
+              )
               .map((food, index) => (
                 <FoodReview
                   key={index}
@@ -131,9 +140,10 @@ const History = ({ navigation, route }: RouterProps) => {
                   onTag={onTag}
                 ></FoodReview>
               ))}
-        </View>
-        <View style={[styles.wrapper, { marginBottom: 24 }]}>
-          {parcition !== null && (
+          </View>
+        )}
+        {parcition !== null && (
+          <View style={[styles.wrapper, { marginBottom: 24 }]}>
             <Text
               style={[
                 styles.title,
@@ -142,9 +152,8 @@ const History = ({ navigation, route }: RouterProps) => {
             >
               Trước đó
             </Text>
-          )}
-          {parcition !== null &&
-            histories
+
+            {histories
               .filter((food, index) => index >= parcition)
               .map((food, index) => (
                 <FoodReview
@@ -160,7 +169,8 @@ const History = ({ navigation, route }: RouterProps) => {
                   onTag={onTag}
                 ></FoodReview>
               ))}
-        </View>
+          </View>
+        )}
       </ScrollView>
     </View>
   );

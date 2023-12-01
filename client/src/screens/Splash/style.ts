@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 40,
     borderBottomWidth: 1,
-    borderBottomColor: "black",
     paddingBottom: 4,
     alignSelf: "flex-start",
   },

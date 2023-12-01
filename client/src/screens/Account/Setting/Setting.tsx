@@ -7,16 +7,37 @@ import {
 } from "react-native";
 import LinearBackGround from "../../../components/LinearBackGround";
 import { Ionicons } from "@expo/vector-icons";
-import { memo, useContext } from "react";
+import { memo, useCallback, useContext, useState } from "react";
 import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ThemeContext from "../../../utilies/theme";
 import { colors } from "../../../../constants";
+import AskModal from "../../../components/AskModal";
+import { RouterProps } from "../../Splash/Splash";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Setting = ({ navigation }) => {
+const Setting = ({ navigation, route }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
+  const [isLogout, setIsLogout] = useState<boolean>(false);
+
+  const removeStorageHandler = async () => {
+    try {
+      await AsyncStorage.removeItem(process.env.EXPO_PUBLIC_STORAGE_KEY);
+      navigation.navigate("AskAccount");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onCancelLogout = useCallback(() => {
+    setIsLogout(false);
+  }, []);
+
+  const logoutHandler = useCallback(() => {
+    removeStorageHandler();
+  }, []);
   const onBack = () => {
     navigation.goBack();
   };
@@ -50,7 +71,6 @@ const Setting = ({ navigation }) => {
           Cài đặt
         </Text>
       </View>
-
       <View style={{ backgroundColor: isDarkMode ? colors.darkTheme : "#fff" }}>
         <TouchableOpacity
           activeOpacity={0.6}
@@ -327,6 +347,7 @@ const Setting = ({ navigation }) => {
         <TouchableOpacity
           activeOpacity={0.6}
           style={[styles.options, { borderBottomColor: "transparent" }]}
+          onPress={() => setIsLogout(true)}
         >
           <View style={styles.optionsLeft}>
             <AntDesign
@@ -350,6 +371,15 @@ const Setting = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
+      {isLogout && (
+        <AskModal
+          content="Đăng xuất tài khoản này?"
+          removeContent="Đăng xuất"
+          isDarkMode={isDarkMode}
+          onAccess={logoutHandler}
+          onDiscard={onCancelLogout}
+        ></AskModal>
+      )}
     </ScrollView>
   );
 };

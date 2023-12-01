@@ -50,7 +50,7 @@ const RecommendList = ({
   recentActivity,
   onNavigateHistory = () => {},
   onBlog = () => {},
-  data: fallBackData = mostlySearch,
+  data: fallBackData = [],
 }: RecommendListProps) => {
   const [data, setData] = useState<any[]>([]);
   const getTrendingFood = async () => {
@@ -90,7 +90,7 @@ const RecommendList = ({
   };
   return (
     <View style={styles.container}>
-      {!isAccount && (
+      {(!isAccount || (isLibrary && data.length > 0)) && (
         <TouchableOpacity
           disabled={explore ? true : false}
           activeOpacity={0.6}
@@ -99,12 +99,16 @@ const RecommendList = ({
             flexDirection: "row",
             alignItems: "center",
           }}
-          onPress={() =>
-            onNavigateTrending({
-              keyword: trending,
-              title: heading,
-            })
-          }
+          onPress={() => {
+            if (isLibrary) {
+              onNavigateHistory();
+            } else {
+              onNavigateTrending({
+                keyword: trending,
+                title: heading,
+              });
+            }
+          }}
         >
           <Text
             style={[

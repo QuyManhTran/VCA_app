@@ -4,8 +4,12 @@ import { Svg, Circle, G } from "react-native-svg";
 import { AntDesign } from "@expo/vector-icons";
 import styles from "./style";
 import { colors } from "../../../constants";
-
-const ArrowButton = ({ percentage, onNext }) => {
+interface ArrowButton {
+  percentage: number;
+  onNext: any;
+  isDarkMode: boolean;
+}
+const ArrowButton = ({ percentage, onNext, isDarkMode }: ArrowButton) => {
   const size = 78;
   const strokeWidth = 4;
   const center = size / 2;
@@ -50,7 +54,7 @@ const ArrowButton = ({ percentage, onNext }) => {
             strokeWidth={strokeWidth}
           ></Circle>
           <Circle
-            stroke={"black"}
+            stroke={isDarkMode ? colors.primary : "black"}
             fill={"rgba(0, 0, 0, 0.1)"}
             cx={center}
             cy={center}
@@ -63,11 +67,18 @@ const ArrowButton = ({ percentage, onNext }) => {
       </Svg>
       <TouchableOpacity
         activeOpacity={0.6}
-        style={styles.btn}
+        style={[
+          styles.btn,
+          { backgroundColor: isDarkMode ? colors.darkBg : "#fff" },
+        ]}
         onPress={onNext}
         touchSoundDisabled={true}
       >
-        <AntDesign name="arrowright" size={32} color={"black"}></AntDesign>
+        <AntDesign
+          name="arrowright"
+          size={32}
+          color={isDarkMode ? "#fff" : "black"}
+        ></AntDesign>
       </TouchableOpacity>
     </View>
   );

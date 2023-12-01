@@ -1,27 +1,30 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const History = new Schema({
+const History = new Schema(
+  {
     id_user: {
-        type: String,
-        require: true,
-        ref: 'accounts'
+      type: String,
+      require: true,
+      ref: "accounts",
     },
     watchedFoods: [
-        {
-            food: {
-                id_food: mongoose.Schema.Types.ObjectId,
-                // ref: 'food'
-            },
+      {
+        food: {
+          id_food: String,
+          // ref: 'food'
+        },
 
-            watchedAt: {
-                type: Date,
-                default: Date.now
-            }
-        }
-    ]
-}, {
-    timestamps: true
-})
+        watchedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('history', History)
+module.exports = mongoose.model("history", History);

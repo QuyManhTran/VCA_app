@@ -20,9 +20,11 @@ import ThemeContext from "../../utilies/theme";
 import { useFocusEffect } from "@react-navigation/native";
 import RecommendList from "../../components/RecommendList";
 import { list, recommendLists } from "../../../assets/img/foods";
+import { getHistoriesService } from "../../services/profileService";
 
 const Explore = ({ route, navigation }: RouterProps) => {
   const {
+    isHomeScrollDown,
     isDarkMode,
     setHomeNavbar,
     personalLists,
@@ -53,8 +55,8 @@ const Explore = ({ route, navigation }: RouterProps) => {
     });
   };
 
-  const onNavigateSearch = useCallback((params: object) => {
-    navigation.navigate("Search", params);
+  const onNavigateHistory = useCallback(() => {
+    navigation.navigate("History");
   }, []);
 
   const onBlog = useCallback(({ ...props }) => {
@@ -73,11 +75,21 @@ const Explore = ({ route, navigation }: RouterProps) => {
       setHomeNavbar(false);
     }
   };
+
+  const recentActivity = useCallback(async () => {
+    return getHistoriesService.getHistories(
+      getHistoriesService.getHistoriesPath,
+      {
+        id_user: userId,
+      }
+    );
+  }, []);
   // When navigation goBack and set state
   useFocusEffect(
     useCallback(() => {
+      setHomeNavbar(false);
       setIsGoBack(true);
-    }, [])
+    }, [isHomeScrollDown])
   );
 
   return (
@@ -124,12 +136,15 @@ const Explore = ({ route, navigation }: RouterProps) => {
         <View style={styles.container}>
           <View style={styles.listWrapper}>
             <RecommendList
+              trending="Xem gần đây"
               isLibrary={true}
               isDarkMode={isDarkMode}
-              onNavigateSearch={onNavigateSearch}
+              isAccount
+              onNavigateHistory={onNavigateHistory}
+              recentActivity={recentActivity}
               heading="Xem gần đây"
               onBlog={onBlog}
-              data={recommendLists}
+              data={[]}
             ></RecommendList>
             <View style={styles.header}>
               <Text

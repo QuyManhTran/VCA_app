@@ -648,7 +648,7 @@ const Account = ({ navigation, ...props }: RouterProps) => {
               isDarkMode={isDarkMode}
               onNavigateHistory={onNavigateHistory}
               heading="Thêm gần đây"
-              data={recommendLists}
+              data={[]}
               onBlog={onBlog}
               isAccount
               recentActivity={recentActivity}

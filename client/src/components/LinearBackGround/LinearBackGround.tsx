@@ -71,7 +71,7 @@ const LinearBackGround = ({
       {avatar && (
         <TouchableOpacity activeOpacity={0.8}>
           <Image
-            source={userInfor.avatar ? { uri: userInfor.avatar } : userAvatar}
+            source={userInfor?.avatar ? { uri: userInfor.avatar } : userAvatar}
             style={{
               height: 60,
               width: 60,

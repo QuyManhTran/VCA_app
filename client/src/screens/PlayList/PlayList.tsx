@@ -15,9 +15,7 @@ import FoodReview, {
 import { searchTagService } from "../../services/searchService";
 import ThemeContext from "../../utilies/theme";
 import { baloo2Fonts, montserratFonts } from "../../../constants/fontFamiles";
-import { LinearGradient } from "expo-linear-gradient";
-import colors, { navbarDarkLinearColors } from "../../../constants/colors";
-import BackButton from "../../components/BackButton";
+import colors from "../../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 const headerAppear = {
   0: { scale: 0, opacity: 0 },

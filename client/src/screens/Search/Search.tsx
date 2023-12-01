@@ -39,7 +39,7 @@ const photoDown = {
   0: { translateY: -140 },
   1: { translateY: 0 },
 };
-const uriBase64 = "data:image/jpeg;base64,";
+
 const Search = ({ route, navigation }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
   const photoRef = useRef(null);
@@ -158,34 +158,34 @@ const Search = ({ route, navigation }: RouterProps) => {
   const chosePhotoHandler = async (isCamera = true) => {
     let result;
     if (isCamera) {
-      result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        quality: 1,
-        base64: true,
-      });
+      try {
+        result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          quality: 1,
+          base64: true,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        quality: 1,
-        base64: true,
-      });
+      try {
+        result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          quality: 1,
+          base64: true,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
-    if (result) {
+    if (!result.canceled) {
       setPhotoData(result.assets[0]);
     }
   };
 
   const apiPhotoHandler = async () => {
-    // const formData = new FormData();
-    // const data = JSON.stringify({
-    //   uri: photoData.uri,
-    //   name: "image",
-    //   type: photoData.type,
-    // });
-    // const blog = new Blob([data], { type: "application/json" });
-    // formData.append("imageSearch", blog);
     try {
       const response = await request.post(
         "/food/search-image",
@@ -194,9 +194,17 @@ const Search = ({ route, navigation }: RouterProps) => {
         },
         { timeout: 5000 }
       );
-      console.log(response.data);
+      console.log("SEARCH IMAGE:", response.data?.machineSearch);
+      if (!response.data?.result.includes(null)) {
+        setSearchStatus("all");
+        setData(response.data?.result || []);
+      } else {
+        setSearchStatus("all");
+        setData([]);
+      }
     } catch (error) {
-      console.log(error);
+      setSearchStatus("all");
+      setData([]);
     }
   };
 
@@ -282,8 +290,8 @@ const Search = ({ route, navigation }: RouterProps) => {
           keyword={keyword}
         ></SearchTool>
       </View>
-      <View style={{ paddingBottom: 16 }}>
-        {debounceKeyword === "" && (
+      <View style={{ paddingBottom: data.length > 0 ? 16 : 0 }}>
+        {debounceKeyword === "" && searchStatus === "tag" && (
           <FlatList
             ref={flatRef}
             data={viralSearchs}
@@ -355,7 +363,6 @@ const Search = ({ route, navigation }: RouterProps) => {
         >
           {data.length === 0 &&
             searchStatus === "all" &&
-            debounceKeyword !== "" &&
             isLoading === false && (
               <View style={{ alignItems: "center" }}>
                 <Animated.Text
@@ -412,7 +419,10 @@ const Search = ({ route, navigation }: RouterProps) => {
               <TouchableOpacity
                 activeOpacity={0.5}
                 style={styles.itemContent}
-                onPress={() => chosePhotoHandler(true)}
+                onPress={() => {
+                  chosePhotoHandler(true);
+                  closeModalHandler();
+                }}
               >
                 <Ionicons
                   name={isDarkMode ? "camera" : "camera-outline"}
@@ -431,7 +441,10 @@ const Search = ({ route, navigation }: RouterProps) => {
               <TouchableOpacity
                 activeOpacity={0.5}
                 style={styles.itemContent}
-                onPress={() => chosePhotoHandler(false)}
+                onPress={() => {
+                  chosePhotoHandler(false);
+                  closeModalHandler();
+                }}
               >
                 <Ionicons
                   name={isDarkMode ? "image" : "image-outline"}

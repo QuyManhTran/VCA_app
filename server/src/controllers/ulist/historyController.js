@@ -3,13 +3,11 @@ const history = require("../../models/ulist/history");
 
 const getSortedWatchedFoods = async (req, res) => {
   const { id_user } = req.query;
-
   try {
     const userHistory = await history.findOne(
       { id_user: id_user },
       { watchedFoods: 1 }
     );
-
     const dataWatchedFoods = await Promise.all(
       userHistory.watchedFoods.map(async (watchedFood) => {
         const detailWatchedFood = await food.findOne({
@@ -32,6 +30,7 @@ const getSortedWatchedFoods = async (req, res) => {
     );
     res.status(200).json({ dataWatchedFoods: dataWatchedFoods });
   } catch (error) {
+    console.log(error);
     return res.status(404).json({ text: "Không tìm thấy tài khoản" });
   }
 };

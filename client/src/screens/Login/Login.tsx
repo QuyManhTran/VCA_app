@@ -23,9 +23,13 @@ import { montserratFonts } from "../../../constants/fontFamiles";
 import screenWidth from "../../../constants/screenWidth";
 import ThemeContext from "../../utilies/theme";
 import * as loginService from "../../services/loginService";
-import { defaultAvatar, defaultCover } from "../../../constants/image";
 const Login = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, onUserId, onUserInfor } = useContext(ThemeContext);
+  const {
+    isDarkMode,
+    onUserId,
+    onUserInfor,
+    onLogin: onStoreStatus,
+  } = useContext(ThemeContext);
   const width = screenWidth();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -58,10 +62,10 @@ const Login = ({ route, navigation }: RouterProps) => {
           birthday: birthday || "",
           phoneNumber: phoneNumber || "",
         });
+        onStoreStatus();
       }
       navigation.navigate("Navbar");
     }
-    // navigation.navigate("Navbar");
   };
 
   const onForgotPassword = () => {

@@ -6,14 +6,17 @@ import {
   Animated,
 } from "react-native";
 import React from "react";
-import splashes from "../../../assets/img/splash";
+import { splashesLight } from "../../../assets/img/splash";
 import { colors } from "../../../constants";
-
-const Paginator = ({ scrollX }) => {
+interface PaginatorProps {
+  scrollX: any;
+  isDarkMode: boolean;
+}
+const Paginator = ({ scrollX, isDarkMode }: PaginatorProps) => {
   const { width } = useWindowDimensions();
   return (
     <View style={{ flexDirection: "row", height: 64 }}>
-      {splashes.map((splash, index) => {
+      {splashesLight.map((splash, index) => {
         const inputRange = [
           (index - 1) * width,
           index * width,
@@ -33,7 +36,14 @@ const Paginator = ({ scrollX }) => {
         });
         return (
           <Animated.View
-            style={[styles.dot, { width: dotWitdth, opacity }]}
+            style={[
+              styles.dot,
+              {
+                backgroundColor: isDarkMode ? colors.whiteText : "black",
+                width: dotWitdth,
+                opacity,
+              },
+            ]}
             key={index}
           ></Animated.View>
         );
