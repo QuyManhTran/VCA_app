@@ -17,6 +17,9 @@ import { colors } from "../../../../constants";
 import AskModal from "../../../components/AskModal";
 import { RouterProps } from "../../Splash/Splash";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import BackButton from "../../../components/BackButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { navbarDarkLinearColors } from "../../../../constants/colors";
 
 const Setting = ({ navigation, route }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
@@ -38,338 +41,378 @@ const Setting = ({ navigation, route }: RouterProps) => {
   const logoutHandler = useCallback(() => {
     removeStorageHandler();
   }, []);
+
   const onBack = () => {
     navigation.goBack();
   };
 
   return (
-    <ScrollView
+    <View
       style={{
         flex: 1,
         backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
       }}
     >
-      <LinearBackGround
-        height={100}
-        back={true}
-        avatar={false}
-        onPress={onBack}
-        isDarkMode={isDarkMode}
-      ></LinearBackGround>
-      <View
-        style={[
-          styles.header,
-          { borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9" },
-        ]}
+      <LinearGradient
+        colors={isDarkMode ? navbarDarkLinearColors : ["#FF0701", "#FFD28D"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={{
+          flexDirection: "row",
+          height: 120,
+          alignItems: "center",
+          gap: 24,
+        }}
       >
+        <BackButton
+          onPress={onBack}
+          size={28}
+          color={isDarkMode ? "#fff" : "black"}
+          customeStyle={{
+            backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+            marginLeft: 10,
+          }}
+        ></BackButton>
         <Text
           style={[
-            styles.headerText,
-            { color: isDarkMode ? colors.whiteText : "black" },
+            styles.heading,
+            { color: isDarkMode ? "black" : colors.whiteText },
           ]}
         >
           Cài đặt
         </Text>
-      </View>
-      <View style={{ backgroundColor: isDarkMode ? colors.darkTheme : "#fff" }}>
-        <TouchableOpacity
-          activeOpacity={0.6}
+      </LinearGradient>
+      <View
+        style={{
+          paddingTop: 12,
+          paddingHorizontal: 14,
+          backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+          gap: 14,
+        }}
+      >
+        <View
           style={[
-            styles.options,
+            styles.featureWrapper,
             {
-              borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
+              borderBottomColor: isDarkMode
+                ? colors.darkBg
+                : colors.placeHolder,
             },
           ]}
         >
-          <View style={styles.optionsLeft}>
-            <Ionicons
-              name="information-circle-outline"
-              size={28}
-              color={isDarkMode ? colors.whiteText : "black"}
-            />
-            <Text
-              style={[
-                styles.optionsText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Phiên bản
-            </Text>
-          </View>
-          <Text style={{ color: isDarkMode ? colors.whiteText : "black" }}>
-            1.0.1
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={[
-            styles.options,
-            {
-              borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
-            },
-          ]}
-          onPress={() => navigation.navigate("Language")}
-        >
-          <View style={styles.optionsLeft}>
-            <Ionicons
-              name="language"
-              size={24}
-              color={isDarkMode ? colors.whiteText : "black"}
-            />
-            <Text
-              style={[
-                styles.optionsText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Ngôn ngữ
-            </Text>
-          </View>
-          <AntDesign
-            name="right"
-            size={20}
-            color={isDarkMode ? colors.whiteText : "black"}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={[
-            styles.options,
-            {
-              borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
-            },
-          ]}
-          onPress={() => navigation.navigate("Display")}
-        >
-          <View style={styles.optionsLeft}>
-            <Ionicons
-              name="moon-outline"
-              size={24}
-              color={isDarkMode ? colors.whiteText : "black"}
-            />
-            <Text
-              style={[
-                styles.optionsText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Giao diện
-            </Text>
-          </View>
-          <AntDesign
-            name="right"
-            size={20}
-            color={isDarkMode ? colors.whiteText : "black"}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={[
-            styles.options,
-            {
-              borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
-            },
-          ]}
-        >
-          <View style={styles.optionsLeft}>
-            <Ionicons
-              name="help-circle-outline"
-              size={30}
-              color={isDarkMode ? colors.whiteText : "black"}
-            />
-            <Text
-              style={[
-                styles.optionsText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Trợ giúp
-            </Text>
-          </View>
-          <AntDesign
-            name="right"
-            size={20}
-            color={isDarkMode ? colors.whiteText : "black"}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={[
-            styles.options,
-            {
-              borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
-            },
-          ]}
-        >
-          <View style={styles.optionsLeft}>
-            <FontAwesome
-              name="flag-o"
-              size={24}
-              color={isDarkMode ? colors.whiteText : "black"}
-            />
-            <Text
-              style={[
-                styles.optionsText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Góp ý, báo lỗi
-            </Text>
-          </View>
-          <AntDesign
-            name="right"
-            size={20}
-            color={isDarkMode ? colors.whiteText : "black"}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={[
-            styles.options,
-            {
-              borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
-            },
-          ]}
-        >
-          <View style={styles.optionsLeft}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[
+              styles.options,
+              {
+                borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
+              },
+            ]}
+            onPress={() => navigation.navigate("Display")}
+          >
+            <View style={styles.optionsLeft}>
+              <Ionicons
+                name="moon-outline"
+                size={24}
+                color={isDarkMode ? colors.whiteText : "black"}
+              />
+              <Text
+                style={[
+                  styles.optionsText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Giao diện
+              </Text>
+            </View>
             <AntDesign
-              name="staro"
-              size={24}
+              name="right"
+              size={20}
               color={isDarkMode ? colors.whiteText : "black"}
             />
-            <Text
-              style={[
-                styles.optionsText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Bình chọn cho VGA
-            </Text>
-          </View>
-          <AntDesign
-            name="right"
-            size={20}
-            color={isDarkMode ? colors.whiteText : "black"}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={[
-            styles.options,
-            {
-              borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
-            },
-          ]}
-          onPress={() => navigation.navigate("TermsOfService")}
-        >
-          <View style={styles.optionsLeft}>
-            <FontAwesome
-              name="list-alt"
-              size={24}
-              color={isDarkMode ? colors.whiteText : "black"}
-            />
-            <Text
-              style={[
-                styles.optionsText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Điều khoản, dịch vụ
-            </Text>
-          </View>
-          <AntDesign
-            name="right"
-            size={20}
-            color={isDarkMode ? colors.whiteText : "black"}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={[
-            styles.options,
-            {
-              borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
-            },
-          ]}
-          onPress={() => navigation.navigate("PrivacyPolicy")}
-        >
-          <View style={styles.optionsLeft}>
-            <Ionicons
-              name="shield-checkmark-outline"
-              size={28}
-              color={isDarkMode ? colors.whiteText : "black"}
-            ></Ionicons>
-            <Text
-              style={[
-                styles.optionsText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Chính sách, bảo mật
-            </Text>
-          </View>
-          <AntDesign
-            name="right"
-            size={20}
-            color={isDarkMode ? colors.whiteText : "black"}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={[
-            styles.options,
-            {
-              borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
-            },
-          ]}
-        >
-          <View style={styles.optionsLeft}>
-            <MaterialCommunityIcons
-              name="dots-horizontal-circle-outline"
-              size={28}
-              color={isDarkMode ? colors.whiteText : "black"}
-            />
-            <Text
-              style={[
-                styles.optionsText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Khác
-            </Text>
-          </View>
-          <AntDesign
-            name="right"
-            size={20}
-            color={isDarkMode ? colors.whiteText : "black"}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={[styles.options, { borderBottomColor: "transparent" }]}
-          onPress={() => setIsLogout(true)}
-        >
-          <View style={styles.optionsLeft}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[
+              styles.options,
+              {
+                borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
+              },
+            ]}
+            onPress={() => navigation.navigate("Language")}
+          >
+            <View style={styles.optionsLeft}>
+              <Ionicons
+                name="language"
+                size={24}
+                color={isDarkMode ? colors.whiteText : "black"}
+              />
+              <Text
+                style={[
+                  styles.optionsText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Ngôn ngữ
+              </Text>
+            </View>
             <AntDesign
-              name="logout"
-              size={24}
+              name="right"
+              size={20}
               color={isDarkMode ? colors.whiteText : "black"}
             />
-            <Text
-              style={[
-                styles.optionsText,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Đăng xuất
+          </TouchableOpacity>
+        </View>
+
+        <View
+          style={[
+            styles.featureWrapper,
+            {
+              borderBottomColor: isDarkMode
+                ? colors.darkBg
+                : colors.placeHolder,
+            },
+          ]}
+        >
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[
+              styles.options,
+              {
+                borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
+              },
+            ]}
+          >
+            <View style={styles.optionsLeft}>
+              <Ionicons
+                name="information-circle-outline"
+                size={28}
+                color={isDarkMode ? colors.whiteText : "black"}
+              />
+              <Text
+                style={[
+                  styles.optionsText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Phiên bản
+              </Text>
+            </View>
+            <Text style={{ color: isDarkMode ? colors.whiteText : "black" }}>
+              1.0.1
             </Text>
-          </View>
-          <AntDesign
-            name="right"
-            size={20}
-            color={isDarkMode ? colors.whiteText : "black"}
-          />
-        </TouchableOpacity>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[
+              styles.options,
+              {
+                borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
+              },
+            ]}
+          >
+            <View style={styles.optionsLeft}>
+              <Ionicons
+                name="help-circle-outline"
+                size={30}
+                color={isDarkMode ? colors.whiteText : "black"}
+              />
+              <Text
+                style={[
+                  styles.optionsText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Trợ giúp
+              </Text>
+            </View>
+            <AntDesign
+              name="right"
+              size={20}
+              color={isDarkMode ? colors.whiteText : "black"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[
+              styles.options,
+              {
+                borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
+              },
+            ]}
+          >
+            <View style={styles.optionsLeft}>
+              <FontAwesome
+                name="flag-o"
+                size={24}
+                color={isDarkMode ? colors.whiteText : "black"}
+              />
+              <Text
+                style={[
+                  styles.optionsText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Góp ý, báo lỗi
+              </Text>
+            </View>
+            <AntDesign
+              name="right"
+              size={20}
+              color={isDarkMode ? colors.whiteText : "black"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[
+              styles.options,
+              {
+                borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
+              },
+            ]}
+          >
+            <View style={styles.optionsLeft}>
+              <AntDesign
+                name="staro"
+                size={24}
+                color={isDarkMode ? colors.whiteText : "black"}
+              />
+              <Text
+                style={[
+                  styles.optionsText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Bình chọn cho VGA
+              </Text>
+            </View>
+            <AntDesign
+              name="right"
+              size={20}
+              color={isDarkMode ? colors.whiteText : "black"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[
+              styles.options,
+              {
+                borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
+              },
+            ]}
+            onPress={() => navigation.navigate("TermsOfService")}
+          >
+            <View style={styles.optionsLeft}>
+              <FontAwesome
+                name="list-alt"
+                size={24}
+                color={isDarkMode ? colors.whiteText : "black"}
+              />
+              <Text
+                style={[
+                  styles.optionsText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Điều khoản, dịch vụ
+              </Text>
+            </View>
+            <AntDesign
+              name="right"
+              size={20}
+              color={isDarkMode ? colors.whiteText : "black"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[
+              styles.options,
+              {
+                borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
+              },
+            ]}
+            onPress={() => navigation.navigate("PrivacyPolicy")}
+          >
+            <View style={styles.optionsLeft}>
+              <Ionicons
+                name="shield-checkmark-outline"
+                size={28}
+                color={isDarkMode ? colors.whiteText : "black"}
+              ></Ionicons>
+              <Text
+                style={[
+                  styles.optionsText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Chính sách, bảo mật
+              </Text>
+            </View>
+            <AntDesign
+              name="right"
+              size={20}
+              color={isDarkMode ? colors.whiteText : "black"}
+            />
+          </TouchableOpacity>
+        </View>
+        <View>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[
+              styles.options,
+              {
+                borderBottomColor: isDarkMode ? colors.placeHolder : "#D9D9D9",
+              },
+            ]}
+          >
+            <View style={styles.optionsLeft}>
+              <MaterialCommunityIcons
+                name="dots-horizontal-circle-outline"
+                size={28}
+                color={isDarkMode ? colors.whiteText : "black"}
+              />
+              <Text
+                style={[
+                  styles.optionsText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Khác
+              </Text>
+            </View>
+            <AntDesign
+              name="right"
+              size={20}
+              color={isDarkMode ? colors.whiteText : "black"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[styles.options, { borderBottomColor: "transparent" }]}
+            onPress={() => setIsLogout(true)}
+          >
+            <View style={styles.optionsLeft}>
+              <AntDesign
+                name="logout"
+                size={24}
+                color={isDarkMode ? colors.whiteText : "black"}
+              />
+              <Text
+                style={[
+                  styles.optionsText,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Đăng xuất
+              </Text>
+            </View>
+            <AntDesign
+              name="right"
+              size={20}
+              color={isDarkMode ? colors.whiteText : "black"}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       {isLogout && (
         <AskModal
@@ -380,15 +423,20 @@ const Setting = ({ navigation, route }: RouterProps) => {
           onDiscard={onCancelLogout}
         ></AskModal>
       )}
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    borderBottomColor: "#D9D9D9",
-    borderBottomWidth: 2,
-    paddingBottom: 12,
+  heading: {
+    fontSize: 30,
+    fontFamily: baloo2Fonts.extra,
+    color: "#fff",
+  },
+
+  featureWrapper: {
+    borderBottomWidth: 1,
+    paddingBottom: 16,
   },
 
   headerText: {
@@ -397,13 +445,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   options: {
-    paddingHorizontal: 15,
-    paddingVertical: 12,
+    paddingVertical: 8,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 2,
-    borderBottomColor: "#D9D9D9",
   },
 
   optionsLeft: {

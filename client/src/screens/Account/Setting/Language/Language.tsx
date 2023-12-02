@@ -13,15 +13,15 @@ import LinearBackGround from "../../../../components/LinearBackGround";
 import { baloo2Fonts } from "../../../../../constants/fontFamiles";
 import ThemeContext from "../../../../utilies/theme";
 import { colors } from "../../../../../constants";
+import BackButton from "../../../../components/BackButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { navbarDarkLinearColors } from "../../../../../constants/colors";
 
-const listLanguage = {
-  vietnam: "vietname",
-  english: "english",
-};
+type listLanguage = "VietNamese" | "English";
 
 const Language = ({ navigation, ...props }) => {
   const { isDarkMode } = useContext(ThemeContext);
-  const [language, Setlanguage] = useState(listLanguage.vietnam);
+  const [language, Setlanguage] = useState<listLanguage>("VietNamese");
 
   const onBack = () => {
     navigation.goBack();
@@ -34,33 +34,47 @@ const Language = ({ navigation, ...props }) => {
         backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
       }}
     >
-      <ScrollView>
-        <LinearBackGround
-          height={100}
-          back={true}
-          avatar={false}
+      <LinearGradient
+        colors={isDarkMode ? navbarDarkLinearColors : ["#FF0701", "#FFD28D"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={{
+          flexDirection: "row",
+          height: 120,
+          alignItems: "center",
+          gap: 16,
+        }}
+      >
+        <BackButton
           onPress={onBack}
-          isDarkMode={isDarkMode}
-        ></LinearBackGround>
+          size={28}
+          color={isDarkMode ? "#fff" : "black"}
+          customeStyle={{
+            backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+            marginLeft: 10,
+          }}
+        ></BackButton>
         <Text
           style={{
-            marginTop: 4,
-            fontFamily: baloo2Fonts.bold,
-            fontSize: 28,
-            paddingLeft: 20,
-            paddingBottom: 12,
-            color: isDarkMode ? colors.whiteText : "black",
+            fontSize: 30,
+            fontFamily: baloo2Fonts.extra,
+            color: isDarkMode ? "black" : colors.whiteText,
           }}
         >
-          Ngôn ngữ
+          {language === "VietNamese" ? "Ngôn ngữ" : "Languages"}
         </Text>
+      </LinearGradient>
 
+      <View style={styles.wrapper}>
         <TouchableOpacity
           style={[
             styles.wapperOption,
-            { borderTopColor: "#D9D9D9", borderTopWidth: 2 },
+            language === "VietNamese" && {
+              borderWidth: 1,
+              borderColor: colors.primary,
+            },
           ]}
-          onPress={() => Setlanguage(listLanguage.vietnam)}
+          onPress={() => Setlanguage("VietNamese")}
         >
           <Text
             style={[
@@ -70,7 +84,7 @@ const Language = ({ navigation, ...props }) => {
           >
             Tiếng việt
           </Text>
-          {language === listLanguage.vietnam && (
+          {language === "VietNamese" && (
             <Foundation
               name="checkbox"
               size={24}
@@ -80,8 +94,14 @@ const Language = ({ navigation, ...props }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.wapperOption}
-          onPress={() => Setlanguage(listLanguage.english)}
+          style={[
+            styles.wapperOption,
+            language === "English" && {
+              borderWidth: 1,
+              borderColor: colors.primary,
+            },
+          ]}
+          onPress={() => Setlanguage("English")}
         >
           <Text
             style={[
@@ -89,9 +109,9 @@ const Language = ({ navigation, ...props }) => {
               { color: isDarkMode ? colors.whiteText : "black" },
             ]}
           >
-            Tiếng Anh
+            English
           </Text>
-          {language === listLanguage.english && (
+          {language === "English" && (
             <Foundation
               name="checkbox"
               size={24}
@@ -99,25 +119,26 @@ const Language = ({ navigation, ...props }) => {
             />
           )}
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    marginTop: 20,
+  },
   optionText: {
     fontFamily: baloo2Fonts.medium,
     fontSize: 17,
   },
 
   wapperOption: {
-    marginHorizontal: 20,
     flexDirection: "row",
-    paddingVertical: 15,
-
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    marginHorizontal: 8,
     justifyContent: "space-between",
-    borderBottomColor: "#D9D9D9",
-    borderBottomWidth: 2,
   },
 });
 

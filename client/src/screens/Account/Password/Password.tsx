@@ -28,6 +28,7 @@ import ToastNotify, {
 } from "../../../components/ToastNotify/ToastNotify";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { changePasswordService } from "../../../services/profileService";
+import BackButton from "../../../components/BackButton";
 
 const Password = ({ route, navigation }) => {
   const { isDarkMode, email } = route.params;
@@ -128,22 +129,39 @@ const Password = ({ route, navigation }) => {
               backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
             }}
           >
-            <LinearBackGround
-              height={120}
-              back={true}
-              avatar={false}
-              onPress={onBack}
-              isDarkMode={isDarkMode}
-            ></LinearBackGround>
-
-            <Text
-              style={[
-                styles.title,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
+            <LinearGradient
+              colors={
+                isDarkMode ? navbarDarkLinearColors : ["#FF0701", "#FFD28D"]
+              }
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{
+                flexDirection: "row",
+                height: 120,
+                alignItems: "center",
+                gap: 16,
+              }}
             >
-              Thay đổi mật khẩu{" "}
-            </Text>
+              <BackButton
+                onPress={onBack}
+                size={28}
+                color={isDarkMode ? "#fff" : "black"}
+                customeStyle={{
+                  backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+                  marginLeft: 10,
+                }}
+              ></BackButton>
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontFamily: baloo2Fonts.extra,
+                  color: isDarkMode ? "black" : colors.whiteText,
+                }}
+              >
+                Thay đổi mật khẩu
+              </Text>
+            </LinearGradient>
+
             <Text
               style={[
                 styles.textLable,
@@ -203,11 +221,15 @@ const Password = ({ route, navigation }) => {
               Nhập mật khẩu mới{" "}
             </Text>
             <Text
-              style={{
-                fontFamily: baloo2Fonts.medium,
-                marginHorizontal: 10,
-                paddingBottom: 10,
-              }}
+              style={[
+                {
+                  fontSize: 12,
+                  fontFamily: baloo2Fonts.medium,
+                  marginHorizontal: 10,
+                  paddingBottom: 10,
+                },
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
             >
               Mật khẩu phải bao gồm cả chữ cái (a-z, A-Z) và số (0-9)
             </Text>

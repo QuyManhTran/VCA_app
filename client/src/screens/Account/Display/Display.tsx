@@ -5,6 +5,9 @@ import LinearBackGround from "../../../components/LinearBackGround";
 import { baloo2Fonts } from "../../../../constants/fontFamiles";
 import ThemeContext from "../../../utilies/theme";
 import { colors } from "../../../../constants";
+import BackButton from "../../../components/BackButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { navbarDarkLinearColors } from "../../../../constants/colors";
 
 const Display = ({ navigation, ...props }) => {
   const { isDarkMode, onDarkTheme } = useContext(ThemeContext);
@@ -20,25 +23,36 @@ const Display = ({ navigation, ...props }) => {
         backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
       }}
     >
-      <LinearBackGround
-        height={100}
-        back={true}
-        avatar={false}
-        onPress={onBack}
-        isDarkMode={isDarkMode}
-      ></LinearBackGround>
-
-      <Text
+      <LinearGradient
+        colors={isDarkMode ? navbarDarkLinearColors : ["#FF0701", "#FFD28D"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
         style={{
-          marginTop: 5,
-          fontFamily: baloo2Fonts.bold,
-          fontSize: 25,
-          paddingLeft: 20,
-          color: isDarkMode ? colors.whiteText : "black",
+          flexDirection: "row",
+          height: 120,
+          alignItems: "center",
+          gap: 16,
         }}
       >
-        Giao diện
-      </Text>
+        <BackButton
+          onPress={onBack}
+          size={28}
+          color={isDarkMode ? "#fff" : "black"}
+          customeStyle={{
+            backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+            marginLeft: 10,
+          }}
+        ></BackButton>
+        <Text
+          style={{
+            fontSize: 30,
+            fontFamily: baloo2Fonts.extra,
+            color: isDarkMode ? "black" : colors.whiteText,
+          }}
+        >
+          Giao diện
+        </Text>
+      </LinearGradient>
 
       <View
         style={{

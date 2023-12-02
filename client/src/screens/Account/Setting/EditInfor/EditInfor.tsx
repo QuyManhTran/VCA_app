@@ -10,7 +10,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import LinearBackGround from "../../../../components/LinearBackGround";
+
 import { memo, useState } from "react";
 import { baloo2Fonts } from "../../../../../constants/fontFamiles";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -25,6 +25,7 @@ import ToastNotify, {
   Status,
 } from "../../../../components/ToastNotify/ToastNotify";
 import { editInforService } from "../../../../services/profileService";
+import BackButton from "../../../../components/BackButton";
 
 const EditInfor = ({ route, navigation }: RouterProps) => {
   const { isDarkMode, userId, onUserInfor } = route.params;
@@ -105,22 +106,37 @@ const EditInfor = ({ route, navigation }: RouterProps) => {
           backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
         }}
       >
-        <LinearBackGround
-          height={120}
-          back={true}
-          avatar={false}
-          onPress={onBack}
-          isDarkMode={isDarkMode}
-        ></LinearBackGround>
-
-        <Text
-          style={[
-            styles.title,
-            { color: isDarkMode ? colors.whiteText : "black" },
-          ]}
+        <LinearGradient
+          colors={isDarkMode ? navbarDarkLinearColors : ["#FF0701", "#FFD28D"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{
+            flexDirection: "row",
+            height: 120,
+            alignItems: "center",
+            gap: 16,
+          }}
         >
-          Thông tin cá nhân{" "}
-        </Text>
+          <BackButton
+            onPress={onBack}
+            size={28}
+            color={isDarkMode ? "#fff" : "black"}
+            customeStyle={{
+              backgroundColor: isDarkMode ? colors.darkBg : "#fff",
+              marginLeft: 10,
+            }}
+          ></BackButton>
+          <Text
+            style={{
+              fontSize: 30,
+              fontFamily: baloo2Fonts.extra,
+              color: isDarkMode ? "black" : colors.whiteText,
+            }}
+          >
+            Thông tin cá nhân
+          </Text>
+        </LinearGradient>
+
         <Text
           style={[
             styles.textLable,

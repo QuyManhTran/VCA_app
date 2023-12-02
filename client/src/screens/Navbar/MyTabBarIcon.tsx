@@ -114,7 +114,11 @@ const MyTabBarIcon = ({ focused, route }) => {
           color: isDarkMode ? "#fff" : "black",
         }}
       >
-        {route.name}
+        {route.name === "Library"
+          ? "Thư viện"
+          : route.name === "Account"
+          ? "Cá nhân"
+          : "Khám phá"}
       </Animatable.Text>
     </View>
   );

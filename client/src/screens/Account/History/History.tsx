@@ -20,6 +20,7 @@ const History = ({ navigation, route }: RouterProps) => {
   const { isDarkMode, userId } = useContext(ThemeContext);
   const [histories, setHistories] = useState<HistoryFood[]>([]);
   const [parcition, setParcition] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentDate, setCurrentDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
@@ -65,6 +66,7 @@ const History = ({ navigation, route }: RouterProps) => {
         }
         return dateData < currentTime;
       });
+      setIsLoading(false);
     }
   }, [histories]);
 
@@ -107,71 +109,85 @@ const History = ({ navigation, route }: RouterProps) => {
           Hoạt động gần đây
         </Text>
       </LinearGradient>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ paddingTop: 12 }}
-      >
-        {(parcition > 0 || (parcition === null && histories.length > 0)) && (
-          <View style={styles.wrapper}>
-            <Text
-              style={[
-                styles.title,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Hôm nay
-            </Text>
+      {!isLoading && (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ paddingTop: 12 }}
+        >
+          {(parcition > 0 || (parcition === null && histories.length > 0)) && (
+            <View style={styles.wrapper}>
+              <Text
+                style={[
+                  styles.title,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Hôm nay
+              </Text>
 
-            {histories
-              .filter((food, index) =>
-                parcition !== null ? index < parcition : true
-              )
-              .map((food, index) => (
-                <FoodReview
-                  key={index}
-                  id={food.id}
-                  image={food.image}
-                  isDarkMode={isDarkMode}
-                  like={food.like}
-                  name={food.name}
-                  rate={food.rate}
-                  tags={food.tags}
-                  onBlog={onBlog}
-                  onTag={onTag}
-                ></FoodReview>
-              ))}
-          </View>
-        )}
-        {parcition !== null && (
-          <View style={[styles.wrapper, { marginBottom: 24 }]}>
-            <Text
-              style={[
-                styles.title,
-                { color: isDarkMode ? colors.whiteText : "black" },
-              ]}
-            >
-              Trước đó
-            </Text>
+              {histories
+                .filter((food, index) =>
+                  parcition !== null ? index < parcition : true
+                )
+                .map((food, index) => (
+                  <FoodReview
+                    key={index}
+                    id={food.id}
+                    image={food.image}
+                    isDarkMode={isDarkMode}
+                    like={food.like}
+                    name={food.name}
+                    rate={food.rate}
+                    tags={food.tags}
+                    onBlog={onBlog}
+                    onTag={onTag}
+                  ></FoodReview>
+                ))}
+            </View>
+          )}
+          {parcition !== null && (
+            <View style={[styles.wrapper, { marginBottom: 24 }]}>
+              <Text
+                style={[
+                  styles.title,
+                  { color: isDarkMode ? colors.whiteText : "black" },
+                ]}
+              >
+                Trước đó
+              </Text>
 
-            {histories
-              .filter((food, index) => index >= parcition)
-              .map((food, index) => (
-                <FoodReview
-                  key={index}
-                  id={food.id}
-                  image={food.image}
-                  isDarkMode={isDarkMode}
-                  like={food.like}
-                  name={food.name}
-                  rate={food.rate}
-                  tags={food.tags}
-                  onBlog={onBlog}
-                  onTag={onTag}
-                ></FoodReview>
-              ))}
-          </View>
-        )}
-      </ScrollView>
+              {histories
+                .filter((food, index) => index >= parcition)
+                .map((food, index) => (
+                  <FoodReview
+                    key={index}
+                    id={food.id}
+                    image={food.image}
+                    isDarkMode={isDarkMode}
+                    like={food.like}
+                    name={food.name}
+                    rate={food.rate}
+                    tags={food.tags}
+                    onBlog={onBlog}
+                    onTag={onTag}
+                  ></FoodReview>
+                ))}
+            </View>
+          )}
+        </ScrollView>
+      )}
+      {!isLoading && histories.length === 0 && (
+        <View>
+          <Text
+            style={[
+              styles.heading,
+              { color: isDarkMode ? "black" : colors.whiteText },
+            ]}
+          >
+            Chưa có bài viết nào
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -185,7 +201,6 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 30,
     fontFamily: baloo2Fonts.extra,
-    color: "#fff",
   },
   wrapper: {
     paddingLeft: 12,

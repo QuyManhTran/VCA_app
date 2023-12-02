@@ -50,7 +50,7 @@ const Banner = ({ onPress }: BannerProps) => {
               <Animated.View style={{ transform: [{ scale: scaleRef }] }}>
                 <Image
                   source={item.img}
-                  style={{ width: 220, height: 280, borderRadius: 6 }}
+                  style={{ width: 220, height: 280, borderRadius: 8 }}
                   resizeMode="cover"
                 ></Image>
                 <View style={{ position: "absolute", top: 20, left: 20 }}>
