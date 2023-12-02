@@ -127,6 +127,7 @@ const Language = ({ navigation, ...props }) => {
 const styles = StyleSheet.create({
   wrapper: {
     marginTop: 20,
+    gap: 8,
   },
   optionText: {
     fontFamily: baloo2Fonts.medium,
