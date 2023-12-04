@@ -105,6 +105,9 @@ const FoodSchema = new Schema(
         },
       },
     },
+    model_3d: {
+      type: String,
+    },
   },
   {
     timestamps: true,

@@ -9,7 +9,7 @@ import {
 import { useCallback, useState, useContext, useRef, useEffect } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import * as Animatable from "react-native-animatable";
-import { Ionicons } from "@expo/vector-icons";
+import { EvilIcons, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RouterProps } from "../Splash/Splash";
 import Header from "./Header";
 import Description from "./Description";
@@ -51,6 +51,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
     isFavorite: false,
   };
   const { isDarkMode, userId, userInfor } = useContext(ThemeContext);
+  const [model3d, setModel3d] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [description, setDescription] = useState("");
   const [histories, setHistories] = useState<history[]>([]);
@@ -140,6 +141,13 @@ const Blog = ({ route, navigation }: RouterProps) => {
     }
   }, []);
 
+  const onNavigateModel3d = () => {
+    navigation.navigate("Model3d", {
+      isDarkMode: isDarkMode,
+      model3d: model3d,
+    });
+  }
+
   const onLiking = useCallback(() => {
     setIsLiked(!isLiked);
     setLike((prev) => (isLiked ? prev - 1 : prev + 1));
@@ -187,6 +195,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
           ingredient_list,
           like,
           rate,
+          model_3d
         } = response.data;
         setHistories(history);
         setDescription(descriptionAPI);
@@ -194,6 +203,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
         setIngredientList(ingredient_list);
         setLike(like);
         setRate(rate);
+        setModel3d(model_3d);
       }
     };
     const getIsLiked = async () => {
@@ -323,6 +333,12 @@ const Blog = ({ route, navigation }: RouterProps) => {
           openComment={openComment}
           openFavoriteModal={openFavoriteModal}
         ></Header>
+        <TouchableOpacity>
+          <MaterialCommunityIcons name="rotate-3d" size={24} color="black" onPress={onNavigateModel3d} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <EvilIcons name="image" size={24} color="black" />
+        </TouchableOpacity>
         <View
           style={[
             styles.wrapperNav,
@@ -358,8 +374,8 @@ const Blog = ({ route, navigation }: RouterProps) => {
                           activeNav === index
                             ? "white"
                             : isDarkMode
-                            ? colors.whiteText
-                            : "black",
+                              ? colors.whiteText
+                              : "black",
                       },
                     ]}
                   >

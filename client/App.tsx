@@ -31,6 +31,7 @@ import TrendingList from "./src/screens/TrendingList";
 import PlayList from "./src/screens/PlayList";
 import customeFont from "./constants/customeFont";
 import Waiting from "./src/screens/Waiting";
+import Model3d from "./src/screens/Blog/CustomerExperience/Model3d";
 
 const Stack = createNativeStackNavigator();
 
@@ -118,6 +119,7 @@ export default function App() {
               <Stack.Screen name="History" component={History} />
               <Stack.Screen name="Trending" component={TrendingList} />
               <Stack.Screen name="PlayList" component={PlayList} />
+              <Stack.Screen name="Model3d" component={Model3d} />
             </Stack.Navigator>
           </NavigationContainer>
         </GlobalContext>
