@@ -73,7 +73,7 @@ const Login = ({ route, navigation }: RouterProps) => {
   };
 
   const onMoveRegister = () => {
-    navigation.navigate("Register");
+    navigation.navigate("AskRegister");
   };
 
   const handleUserName = (text: string) => {

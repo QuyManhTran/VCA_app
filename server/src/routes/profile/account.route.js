@@ -2,6 +2,7 @@ const express = require("express");
 const accountRouter = express.Router();
 const {
   signUpController,
+  singupGoogleController,
 } = require("../../controllers/profile/signUpController");
 const {
   loginController,
@@ -53,5 +54,7 @@ accountRouter.get("/auth/google/callback", ggCallbackController);
 
 // Trang hiển thị thông tin người dùng sau khi đăng nhập
 accountRouter.get("/profile", ggInfor);
+
+accountRouter.post("/google-signup", singupGoogleController);
 
 module.exports = accountRouter;

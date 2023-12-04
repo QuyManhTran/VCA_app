@@ -131,7 +131,7 @@ const Register = ({ route, navigation }: RouterProps) => {
   };
 
   const onLogin = () => {
-    navigation.navigate("Login");
+    navigation.navigate("AskLogin");
   };
   useEffect(() => {
     Animated.timing(opacity, {
@@ -191,7 +191,7 @@ const Register = ({ route, navigation }: RouterProps) => {
     if (isValidated !== isRealValidate) {
       setIsValidated(isRealValidate);
     }
-  }, [userName, emailDebounce, debounce]);
+  }, [emailDebounce, debounce]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -271,7 +271,7 @@ const Register = ({ route, navigation }: RouterProps) => {
               style={[
                 styles.input,
                 {
-                  color: !isEmail ? "red" : isDarkMode ? "#fff" : "black",
+                  color: !isPassword ? "red" : isDarkMode ? "#fff" : "black",
                 },
               ]}
               placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}

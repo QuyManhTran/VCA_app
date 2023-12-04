@@ -15,10 +15,13 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/splash/splash0.png",
         "backgroundColor": "#fff"
-      }
+      },
+      "permissions": ["android.permission.RECORD_AUDIO"],
+      "package": "com.quymanh.vca"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -30,7 +33,14 @@
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photo",
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
         }
-      ]
-    ]
+      ],
+      "@react-native-google-signin/google-signin",
+      "@react-native-firebase/app"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ed1bd740-8b53-4450-83b6-2cc9bfaf3353"
+      }
+    }
   }
 }

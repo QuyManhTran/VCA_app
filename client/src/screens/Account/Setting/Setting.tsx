@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackButton from "../../../components/BackButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { navbarDarkLinearColors } from "../../../../constants/colors";
+import { signOutFireBase } from "../../../utilies/firebaseConfig";
 
 const Setting = ({ navigation, route }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
@@ -28,6 +29,7 @@ const Setting = ({ navigation, route }: RouterProps) => {
   const removeStorageHandler = async () => {
     try {
       await AsyncStorage.removeItem(process.env.EXPO_PUBLIC_STORAGE_KEY);
+      signOutFireBase();
       navigation.navigate("AskAccount");
     } catch (error) {
       console.log(error);

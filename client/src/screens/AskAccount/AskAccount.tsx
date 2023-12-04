@@ -11,10 +11,10 @@ import ThemeContext from "../../utilies/theme";
 const AskAccount = ({ route, navigation }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
   const onMoveLogin = () => {
-    navigation.navigate("Login");
+    navigation.navigate("AskLogin");
   };
   const onMoveRegister = () => {
-    navigation.navigate("Register");
+    navigation.navigate("AskRegister");
   };
   return (
     <View style={{ flex: 1, backgroundColor: isDarkMode ? "black" : "#fff" }}>

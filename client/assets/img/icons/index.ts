@@ -19,3 +19,4 @@ export const darkComment = require("./dark-comment.png");
 export const whiteComment = require("./white-comment.png");
 export const darkReaction = require("./dark-reaction.png");
 export const whiteReaction = require("./white-reaction.png");
+export const authEmail = require("./auth-email.png");

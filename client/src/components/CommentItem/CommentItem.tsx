@@ -24,6 +24,7 @@ interface CommentItemProps {
 }
 const CommentItem = ({ ...props }: CommentItemProps) => {
   const [likeSound, setLikeSound] = useState<Audio.Sound>();
+  const [validImage, setValidImage] = useState<boolean>(true);
   // sound new comment
   async function playSound() {
     try {
@@ -85,9 +86,10 @@ const CommentItem = ({ ...props }: CommentItemProps) => {
   return (
     <View style={styles.container}>
       <Image
-        source={props.avatar ? { uri: props.avatar } : avatar}
+        source={validImage ? { uri: props?.avatar } : avatar}
         resizeMode="cover"
         style={styles.img}
+        onError={() => setValidImage(false)}
       ></Image>
       <View
         style={[

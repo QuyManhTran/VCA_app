@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { RouterProps } from "../Splash/Splash";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -26,6 +27,7 @@ const listDown = {
   1: { translateY: 0 },
 };
 const PlayList = ({ navigation, route }: RouterProps) => {
+  const { width } = useWindowDimensions();
   const { isDarkMode, userInfor } = useContext(ThemeContext);
   const [data, setData] = useState<FoodReviewRawProps[] | null>(null);
   const headerAnimation = useRef(null);
@@ -107,7 +109,7 @@ const PlayList = ({ navigation, route }: RouterProps) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {data !== null && (
           <Animatable.View
-            duration={1000}
+            duration={1500}
             style={styles.header}
             ref={headerAnimation}
           >
@@ -156,9 +158,16 @@ const PlayList = ({ navigation, route }: RouterProps) => {
         )}
         {data !== null && (
           <Animatable.View
-            style={[styles.wrapper, { marginTop: 12, marginBottom: 24 }]}
+            style={[
+              styles.wrapper,
+              {
+                paddingLeft: width < 400 ? 12 : 24,
+                marginTop: 12,
+                marginBottom: 24,
+              },
+            ]}
             ref={listAnimation}
-            duration={1000}
+            duration={1500}
           >
             {data.map((food, index) => (
               <FoodReview

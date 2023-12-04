@@ -31,7 +31,10 @@ import TrendingList from "./src/screens/TrendingList";
 import PlayList from "./src/screens/PlayList";
 import customeFont from "./constants/customeFont";
 import Waiting from "./src/screens/Waiting";
-
+import "expo-dev-client";
+import ExpoGoogle from "./src/screens/ExpoGoogle";
+import AskLogin from "./src/screens/AskAccount/AskLogin";
+import AskRegister from "./src/screens/AskAccount/AskRegister";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -86,10 +89,13 @@ export default function App() {
               screenOptions={{ headerShown: false }}
               initialRouteName={storageData === null ? "Splash" : "Navbar"}
             >
+              <Stack.Screen name="ExpoGoogle" component={ExpoGoogle} />
               <Stack.Screen name="Splash" component={Splash} />
               <Stack.Screen name="Navbar" component={Navbar} />
               <Stack.Screen name="AskAccount" component={AskAccount} />
               <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="AskLogin" component={AskLogin} />
+              <Stack.Screen name="AskRegister" component={AskRegister} />
               <Stack.Screen
                 name="EmailRequirement"
                 component={EmailRequirement}
