@@ -4,6 +4,7 @@ const multer = require("multer");
 const ulist = require("../../controllers/ulist/ulist");
 const ulistRouter = express.Router();
 const history = require("../../controllers/ulist/historyController");
+const recommend = require("../../controllers/ulist/recommendController");
 
 const storage = multer.diskStorage({
   destination: "./src/public/images",
@@ -25,8 +26,11 @@ ulistRouter.patch("/add-item-list", ulist.addItemOfList);
 ulistRouter.delete("/delete-item-list", ulist.deleteItemOfList);
 ulistRouter.patch("/add-item-multi-list", ulist.addItemToMutilList);
 ulistRouter.delete("/delete-item-multi-list", ulist.deleteMultiItemList);
+ulistRouter.patch("/add-item-list-fix", ulist.addItemToMutilListFix);
 
 ulistRouter.patch("/add-history", history.addWatchedFoodToHistory);
 ulistRouter.get("/get-history", history.getSortedWatchedFoods);
+
+ulistRouter.get("/recommend", recommend.getRecommend);
 
 module.exports = ulistRouter;

@@ -309,6 +309,32 @@ const deleteMultiItemList = async (req, res, next) => {
   }
 };
 
+const addItemToMutilListFix = async (req, res, next) => {
+  const { id_food, id_user, list_id_ulist } = req.body;
+  try {
+    const nModified = await ulist.updateMany(
+      { id_user: id_user },
+      { $pull: { listFood: id_food} }
+    );
+
+    const result = await ulist.updateMany(
+      {
+        id_user: id_user,
+        _id: {$in:list_id_ulist}
+      },
+      {$push: {listFood: id_food}}
+    )
+
+    res.status(200).json({
+      text: "chỉnh sửa thành công"
+    })
+  } catch (error) {
+    res.status(400).json({
+      text: "không tìm được tài khoản"
+    })
+  }
+}
+
 module.exports = {
   createNewList,
   editNameList,
@@ -319,4 +345,5 @@ module.exports = {
   deleteList,
   addItemToMutilList,
   deleteMultiItemList,
+  addItemToMutilListFix
 };
