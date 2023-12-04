@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { memo, useState } from "react";
+import { memo, useState, useCallback } from "react";
 import { baloo2Fonts } from "../../../../../constants/fontFamiles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../../../../../constants";
@@ -63,6 +63,10 @@ const EditInfor = ({ route, navigation }: RouterProps) => {
     } else {
       toggleDatapicker();
     }
+  };
+
+  const onRedirectAccount = () => {
+    navigation.goBack();
   };
 
   // Post all data to api
@@ -271,6 +275,7 @@ const EditInfor = ({ route, navigation }: RouterProps) => {
             status={status}
             text={message}
             isDarkMode={isDarkMode}
+            onRedirect={onRedirectAccount}
           ></ToastNotify>
         )}
       </View>

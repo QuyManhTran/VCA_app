@@ -29,7 +29,6 @@ const AskLogin = ({ navigation, route }: RouterProps) => {
   const { isDarkMode, onUserId, onUserInfor, onLogin } =
     useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const googleServiceHandler = async () => {
     const googleService = await onGoogleButtonPress();
     if (googleService.message === 200) {
@@ -92,7 +91,15 @@ const AskLogin = ({ navigation, route }: RouterProps) => {
         isBack
       ></AuthenBackGround>
       <View style={{ position: "absolute", top: 140, left: 38 }}>
-        <Text style={[styles.heading, isDarkMode && { color: "#fff" }]}>
+        <Text
+          style={[
+            styles.heading,
+            {
+              fontSize: width < 400 ? 40 : 46,
+              color: isDarkMode ? colors.whiteText : "black",
+            },
+          ]}
+        >
           Đăng nhập
         </Text>
       </View>
@@ -105,13 +112,13 @@ const AskLogin = ({ navigation, route }: RouterProps) => {
             isDarkMode={isDarkMode}
             width={width}
           ></AuthButton>
-          <AuthButton
+          {/* <AuthButton
             content="Đăng xuất Google"
             icon="google"
             onAccess={signOutFireBase}
             isDarkMode={isDarkMode}
             width={width}
-          ></AuthButton>
+          ></AuthButton> */}
         </View>
         <View
           style={{
@@ -185,7 +192,6 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontFamily: montserratFonts.extra,
-    fontSize: 46,
     lineHeight: 78,
   },
   buttonWrapper: {

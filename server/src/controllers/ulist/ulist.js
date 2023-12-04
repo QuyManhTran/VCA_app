@@ -4,10 +4,6 @@ const food = require("../../models/food/food");
 
 const createNewList = async (req, res, next) => {
   const { name, id_user } = req.body;
-  // originalString = req.file.path;
-  // const startIndex = originalString.indexOf("public");
-  // const image = originalString.substring(startIndex);
-  // console.log(image);
   const allListOfUser = await ulist.find({ id_user: id_user });
   const nameListOfUser = allListOfUser.map((list, index) => {
     return list.name;
@@ -314,26 +310,26 @@ const addItemToMutilListFix = async (req, res, next) => {
   try {
     const nModified = await ulist.updateMany(
       { id_user: id_user },
-      { $pull: { listFood: id_food} }
+      { $pull: { listFood: id_food } }
     );
 
     const result = await ulist.updateMany(
       {
         id_user: id_user,
-        _id: {$in:list_id_ulist}
+        _id: { $in: list_id_ulist },
       },
-      {$push: {listFood: id_food}}
-    )
+      { $push: { listFood: id_food } }
+    );
 
     res.status(200).json({
-      text: "chỉnh sửa thành công"
-    })
+      text: "chỉnh sửa thành công",
+    });
   } catch (error) {
     res.status(400).json({
-      text: "không tìm được tài khoản"
-    })
+      text: "không tìm được tài khoản",
+    });
   }
-}
+};
 
 module.exports = {
   createNewList,
@@ -345,5 +341,5 @@ module.exports = {
   deleteList,
   addItemToMutilList,
   deleteMultiItemList,
-  addItemToMutilListFix
+  addItemToMutilListFix,
 };

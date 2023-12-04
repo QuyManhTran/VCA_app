@@ -11,12 +11,13 @@ import * as Animatable from "react-native-animatable";
 import { baloo2Fonts } from "../../../constants/fontFamiles";
 import { colors } from "../../../constants";
 import { Ionicons } from "@expo/vector-icons";
-import { isLoading } from "expo-font";
+
 export type Status = "success" | "error";
 interface ToastProps {
   status: Status;
   isLoading: boolean | null;
   onToggleLoading: any;
+  onRedirect?: any;
   text?: string;
   isDarkMode?: boolean;
 }
@@ -33,8 +34,9 @@ const ToastNotify = ({
   status = "error",
   isDarkMode = false,
   isLoading,
-  onToggleLoading,
   text,
+  onToggleLoading,
+  onRedirect = () => {},
 }: ToastProps) => {
   const { width } = useWindowDimensions();
   const animatableRef = useRef(null);
@@ -52,12 +54,16 @@ const ToastNotify = ({
         useNativeDriver: false,
       }).start();
       timeoutRef.current = setTimeout(() => {
-        onToggleLoading(null);
-        progressRef.setValue(100);
+        if (status === "success") {
+          onRedirect();
+        }
+        // onToggleLoading(null);
+        // progressRef.setValue(100);
       }, 3500);
     }
     return () => clearTimeout(timeoutRef.current as NodeJS.Timeout);
   }, [isLoading]);
+
   return (
     <Animatable.View
       animation={"bounceInDown"}

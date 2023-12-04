@@ -65,6 +65,19 @@ const GlobalContext = ({ storageData, children }: GlobalContextProps) => {
     }
   };
 
+  const onSaveUserInforStorage = async (data: string) => {
+    const value = await AsyncStorage.getItem(
+      process.env.EXPO_PUBLIC_STORAGE_KEY
+    );
+    if (value !== null) {
+      try {
+        await AsyncStorage.mergeItem(process.env.EXPO_PUBLIC_STORAGE_KEY, data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const onLogin = () => {
     setIsLogged(true);
   };
@@ -99,7 +112,7 @@ const GlobalContext = ({ storageData, children }: GlobalContextProps) => {
       console.log(response.data);
       setPersonalLists((prev) => [
         ...prev,
-        { id: response.data?.id, name: response.data?.name },
+        { id: response.data?.id, name: response.data?.name, listFood: [] },
       ]);
     }
   };
@@ -161,8 +174,17 @@ const GlobalContext = ({ storageData, children }: GlobalContextProps) => {
         id_user: userId,
       }
     );
-    if (response) {
-      return response;
+    if (response.message === 200) {
+      const response = await allListService.getAllList(
+        allListService.allListPath,
+        { id_user: userId }
+      );
+      if (response.message === 200) {
+        setPersonalLists(response.data || personalLists);
+        return { message: 200 };
+      }
+    } else {
+      return { message: 200 };
     }
   };
   const onAddItemList = async (foodId: string, listsId: string[]) => {
@@ -180,7 +202,7 @@ const GlobalContext = ({ storageData, children }: GlobalContextProps) => {
         { id_user: userId }
       );
       if (response.message === 200) {
-        setPersonalLists(response.data || []);
+        setPersonalLists(response.data || personalLists);
       }
     }
   };
@@ -277,6 +299,10 @@ const GlobalContext = ({ storageData, children }: GlobalContextProps) => {
       );
     })();
   }, [isDarkMode]);
+
+  useEffect(() => {
+    onSaveUserInforStorage(JSON.stringify({ userInfor }));
+  }, [userInfor]);
 
   return (
     <ThemeContext.Provider

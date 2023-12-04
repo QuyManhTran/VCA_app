@@ -21,7 +21,6 @@ import {
 } from "react";
 import * as Animatable from "react-native-animatable";
 import { RouterProps } from "../../Splash/Splash";
-import LinearBackGround from "../../../components/LinearBackGround";
 import fontFamilies, {
   baloo2Fonts,
   montserratFonts,
@@ -136,16 +135,20 @@ const SingleList = ({ route, navigation }: RouterProps) => {
     navigation.navigate("Blog", { ...props });
   }, []);
 
-  const updateList = async (
-    response: Promise<{ message: number; data?: any }>
-  ) => {
+  const updateList = async (response: Promise<{ message: number }>) => {
     const message = await response;
     if (message.message === 200) {
       setFoodList((prev) =>
         prev.filter((food, index) => !removeList.includes(food.id))
       );
+      setisRemoveFoodBlog(false);
+      setRemoveList([]);
+      setIsRemoveMode(false);
     } else {
       alert("update fail for some reasons!");
+      setisRemoveFoodBlog(false);
+      setRemoveList([]);
+      setIsRemoveMode(false);
     }
   };
 
@@ -186,6 +189,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
     };
     getSingleList();
   }, []);
+
   useEffect(() => {
     if (foodList.length !== allRemoveList.length) {
       setAllRemoveList(foodList.map((food, index) => food.id));
@@ -199,70 +203,81 @@ const SingleList = ({ route, navigation }: RouterProps) => {
         backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
       }}
     >
-      <LinearBackGround
-        height={width < 400 ? 100 : 120}
-        back={true}
-        avatar={false}
-        onPress={onBack}
-        isDarkMode={isDarkMode}
-      ></LinearBackGround>
-      {isRemoveMode && (
-        <TouchableOpacity
+      <View style={styles.backgroundImageWrapper}>
+        <Image
+          source={img}
           style={{
-            position: "absolute",
-            top: width < 400 ? 34 : 48,
-            right: 120,
+            width: "100%",
+            height: "100%",
+            opacity: isDarkMode ? 0.3 : 0.2,
           }}
-          onPress={handleSelectRemove}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: baloo2Fonts.bold,
-              color: isDarkMode ? colors.whiteText : "black",
-            }}
-          >
-            {removeList.length === foodList.length ? "Bỏ chọn" : "Chọn tất cả"}
-          </Text>
-        </TouchableOpacity>
-      )}
-      {isRemoveMode && (
+          resizeMode="cover"
+          blurRadius={2}
+        ></Image>
+      </View>
+      <View style={styles.header}>
         <TouchableOpacity
+          onPress={onBack}
+          activeOpacity={0.6}
           style={{
-            position: "absolute",
-            top: width < 400 ? 34 : 48,
-            right: 60,
+            paddingHorizontal: 14,
+            paddingVertical: 4,
           }}
-          onPress={() => setIsRemoveMode(false)}
         >
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: baloo2Fonts.bold,
-              color: isDarkMode ? colors.whiteText : "black",
-            }}
-          >
-            Hủy
-          </Text>
+          <Ionicons
+            name="arrow-back"
+            color={isDarkMode ? colors.whiteText : "black"}
+            size={32}
+          ></Ionicons>
         </TouchableOpacity>
-      )}
-      {!isRemoveMode && (
-        <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: width < 400 ? 40 : 52,
-            right: 20,
-          }}
-          onPress={onModal}
-        >
-          <Ionicons name="ellipsis-vertical" size={24}></Ionicons>
-        </TouchableOpacity>
-      )}
+        <View style={{ flexDirection: "row", gap: 24, paddingRight: 14 }}>
+          {isRemoveMode && (
+            <TouchableOpacity onPress={handleSelectRemove}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontFamily: baloo2Fonts.bold,
+                  color: isDarkMode ? colors.whiteText : "black",
+                }}
+              >
+                {removeList.length === foodList.length
+                  ? "Bỏ chọn"
+                  : "Chọn tất cả"}
+              </Text>
+            </TouchableOpacity>
+          )}
+          {isRemoveMode && (
+            <TouchableOpacity onPress={() => setIsRemoveMode(false)}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontFamily: baloo2Fonts.bold,
+                  color: isDarkMode ? colors.whiteText : "black",
+                }}
+              >
+                Hủy
+              </Text>
+            </TouchableOpacity>
+          )}
+          {!isRemoveMode && (
+            <TouchableOpacity
+              onPress={onModal}
+              style={{ paddingHorizontal: 4 }}
+            >
+              <Ionicons
+                name="ellipsis-vertical"
+                size={24}
+                color={isDarkMode ? colors.whiteText : "black"}
+              ></Ionicons>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, marginTop: 90 }}>
           <Animatable.View
             duration={1000}
-            style={styles.header}
+            style={styles.headerContent}
             ref={headerAnimation}
           >
             <View style={styles.imageWrapper}>
@@ -560,11 +575,8 @@ const SingleList = ({ route, navigation }: RouterProps) => {
           isDarkMode={isDarkMode}
           content="Bạn chắc chắn muốn xóa các bài viết này?"
           removeContent="Xóa"
-          onAccess={async () => {
+          onAccess={() => {
             updateList(onRemoveBlogList(position, listId, removeList));
-            setisRemoveFoodBlog(false);
-            setRemoveList([]);
-            setIsRemoveMode(false);
           }}
           onDiscard={() => setisRemoveFoodBlog(false)}
         ></AskModal>
@@ -576,7 +588,7 @@ const SingleList = ({ route, navigation }: RouterProps) => {
 export default memo(SingleList);
 
 const styles = StyleSheet.create({
-  header: {
+  headerContent: {
     marginTop: 24,
     marginBottom: 36,
     alignItems: "center",
@@ -615,5 +627,23 @@ const styles = StyleSheet.create({
   },
   newListWrapper: {
     alignItems: "center",
+  },
+  backgroundImageWrapper: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+  },
+  header: {
+    position: "absolute",
+    top: 20,
+    left: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 20,
+    zIndex: 1,
   },
 });

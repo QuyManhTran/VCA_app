@@ -38,6 +38,7 @@ const AuthButton = ({
               ? colors.darkBg
               : "#fff",
           width: width < 400 ? 320 : 340,
+          height: width < 400 ? 68 : 72,
         },
       ]}
     >
@@ -52,7 +53,10 @@ const AuthButton = ({
       <Text
         style={[
           styles.authText,
-          { color: isDarkMode ? colors.whiteText : "black" },
+          {
+            fontSize: width < 400 ? 20 : 24,
+            color: isDarkMode ? colors.whiteText : "black",
+          },
         ]}
       >
         {content}
@@ -76,7 +80,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   authText: {
-    fontSize: 24,
     fontFamily: baloo2Fonts.semi,
   },
 });

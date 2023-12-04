@@ -76,7 +76,7 @@ const addItemList = async (path: string, body: AddItemListProps) => {
   const response = await request.patch(path, body);
   return response;
 };
-const addItemListPath = "/ulist/add-item-multi-list";
+const addItemListPath = "/ulist/add-item-list-fix";
 
 // [DELETE] add item list
 const deleteItemList = async (path: string, body: DeleteItemListProps) => {

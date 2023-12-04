@@ -15,6 +15,8 @@ import FoodReview from "../../components/FoodReview";
 import Banner from "../../components/Banner";
 import exploreData, { recommendLists } from "../../../assets/img/foods";
 import { searchTagService } from "../../services/searchService";
+import { recommendService } from "../../services/blogService";
+import { useFocusEffect } from "@react-navigation/native";
 const searchUp = {
   0: { translateY: 0 },
   1: { translateY: -60 },
@@ -28,6 +30,7 @@ const Home = ({ route, navigation }: RouterProps) => {
   const [prevOffSetY, setPrevOffSetY] = useState(0);
   const [countVar, setCountVar] = useState(0);
   const [recommendations, setRecommendations] = useState([]);
+  const [isGoBack, setIsGoBack] = useState<boolean | null>(null);
   const scrollY = useRef(new Animated.Value(0)).current;
   const searchRef = useRef(null);
 
@@ -56,21 +59,23 @@ const Home = ({ route, navigation }: RouterProps) => {
   }, []);
 
   const onBlog = useCallback(({ ...props }) => {
+    setIsGoBack(false);
     navigation.navigate("Blog", { ...props });
   }, []);
 
-  useEffect(() => {
-    const recommendSearch = async () => {
-      const response = await searchTagService.searchTag(
-        searchTagService.searchTagPath,
-        {
-          tag: "Hà Nội",
-        }
-      );
-      if (response.message === 200) {
-        setRecommendations(response.data);
+  const recommendSearch = async () => {
+    const response = await recommendService.getRecommend(
+      recommendService.getReccomendPath,
+      {
+        limit: 3,
       }
-    };
+    );
+    if (response.message === 200) {
+      setRecommendations(response.data);
+    }
+  };
+
+  useEffect(() => {
     recommendSearch();
   }, []);
 
@@ -91,6 +96,18 @@ const Home = ({ route, navigation }: RouterProps) => {
     });
     return () => scrollY.removeAllListeners();
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsGoBack(true);
+    }, [isGoBack])
+  );
+
+  useEffect(() => {
+    if (isGoBack) {
+      recommendSearch();
+    }
+  }, [isGoBack]);
 
   return (
     <View

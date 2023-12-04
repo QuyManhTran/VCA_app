@@ -82,7 +82,15 @@ const AskRegister = ({ navigation, route }: RouterProps) => {
         isBack
       ></AuthenBackGround>
       <View style={{ position: "absolute", top: 140, left: 38 }}>
-        <Text style={[styles.heading, isDarkMode && { color: "#fff" }]}>
+        <Text
+          style={[
+            styles.heading,
+            {
+              fontSize: width < 400 ? 42 : 46,
+              color: isDarkMode ? colors.whiteText : "black",
+            },
+          ]}
+        >
           Đăng ký
         </Text>
       </View>

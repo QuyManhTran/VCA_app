@@ -12,6 +12,11 @@ interface ReactCheckingProps {
   food_id: string;
   user_id: string;
 }
+
+interface RecommendProps {
+  limit?: number;
+  page?: number;
+}
 import * as request from "../utilies/request";
 /**
  * [GET] get blog
@@ -68,9 +73,23 @@ const checkRate = async (path: string, params: ReactCheckingProps) => {
   return response;
 };
 const checkRatePath = "/account/check/rate";
-
+/**
+ * [GET] get reccomned for user
+ * @param path
+ * @param params
+ * @returns
+ */
+const getRecommend = async (path, params: RecommendProps) => {
+  const response = await request.get(path, params);
+  return response;
+};
+const getReccomendPath = "/ulist/recommend";
+/**
+ * [EXPORT]
+ */
 export const blogService = { getBlog, blogPath };
 export const likeReactService = { likeReact, likeReactPath };
 export const rateReactService = { rateReact, rateReactPath };
 export const checkLikeService = { checkLike, checkLikePath };
 export const checkRateService = { checkRate, checkRatePath };
+export const recommendService = { getRecommend, getReccomendPath };
