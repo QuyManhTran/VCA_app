@@ -62,8 +62,8 @@ const newShow = async (req, res) => {
 
     for (const food of foodArray) {
         const now = new Date();
-        const daysPassed = (now - food.createdAt) / (1000 * 60 * 60 * 24);
-        console.log(food.createdAt);
+        const daysPassed = (now - food.updatedAt) / (1000 * 60 * 60 * 24);
+        console.log(food.updatedAt);
         if (daysPassed < 2)  resultAr.push(food)
     }
 
