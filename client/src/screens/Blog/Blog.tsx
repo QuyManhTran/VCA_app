@@ -145,6 +145,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
     navigation.navigate("Model3d", {
       isDarkMode: isDarkMode,
       model3d: model3d,
+      name: name,
     });
   }
 

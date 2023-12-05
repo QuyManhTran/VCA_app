@@ -57,6 +57,7 @@ export default function App() {
   };
   useEffect(() => {
     LogBox.ignoreLogs([
+      'Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation',
       "new NativeEventEmitter()",
       "Non-serializable values were found in the navigation state",
     ]);
