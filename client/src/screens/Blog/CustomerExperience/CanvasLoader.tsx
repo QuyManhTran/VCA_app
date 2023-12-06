@@ -1,18 +1,18 @@
-import { useProgress } from "@react-three/drei/native"
-import { Canvas } from "@react-three/fiber/native";
+import { useProgress, Text, } from "@react-three/drei/native"
 import React from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View,  } from 'react-native';
+import colors from "../../../../constants/colors";
 
-const CanvasLoader = () => {
+const CanvasLoader = (props) => {
+    const {isDarkMode} = props;
+    
     const { progress } = useProgress();
     return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
-
-            <ActivityIndicator size="large" />
-            {progress.toFixed(2)}
-
-        </View>
-    );
+        <mesh>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshBasicMaterial color="orange" />
+        </mesh>
+      );
 };
 
 export default CanvasLoader;
