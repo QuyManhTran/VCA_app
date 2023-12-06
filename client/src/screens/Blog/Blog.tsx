@@ -26,7 +26,6 @@ import {
   blogService,
   checkLikeService,
   checkRateService,
-  likeReactService,
   rateReactService,
 } from "../../services/blogService";
 import { history } from "./Meaning/Meaning";
@@ -62,7 +61,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const [isRated, setIsRated] = useState(false);
   const [isFavorite, setIsFavorite] = useState(isFavoriteOrigin);
   const [activeNav, setActiveNav] = useState(0);
-  const [contentY, setContentY] = useState(0);
+  const [contentY, setContentY] = useState<number | null>(null);
   const [isModal, setIsModal] = useState(false);
   const [isFavoriteModal, setIsFavoriteModal] = useState(false);
   const [isComment, setIsComment] = useState(false);
@@ -73,6 +72,19 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const navRef = useRef<FlatList>(null);
   const pageRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
+  const descriptionScrollY = useRef(new Animated.Value(0)).current;
+  const meaningScrollY = useRef(new Animated.Value(0)).current;
+  const recipeScrollY = useRef(new Animated.Value(0)).current;
+  const diffClampDescriptionScrollY = Animated.diffClamp(
+    descriptionScrollY,
+    0,
+    800
+  );
+  const diffClampScrollY = Animated.diffClamp(meaningScrollY, 0, 800);
+  const diffClampRecipeScrollY = Animated.diffClamp(recipeScrollY, 0, 800);
+  const headerBottomRef: {
+    current: Animated.AnimatedInterpolation<string | number>;
+  } = useRef(new Animated.Value(0));
   const commentRef = useRef(null);
   const contentRef = useRef<View>(null);
 
@@ -277,11 +289,74 @@ const Blog = ({ route, navigation }: RouterProps) => {
     }
   }, [isSavedFavorite]);
 
+  useEffect(() => {
+    if (activeNav === 0) {
+      descriptionScrollY.addListener(({ value }) => {
+        if (contentY !== 0) {
+          setContentY(0);
+        }
+        const headerBottomValue =
+          2 * Math.abs(Number(JSON.stringify(headerBottomRef.current)));
+        if (
+          (value <= 288 && value >= headerBottomValue) ||
+          (value >= 0 && value <= headerBottomValue)
+        ) {
+          headerBottomRef.current = diffClampDescriptionScrollY.interpolate({
+            inputRange: [0, 288, 800],
+            outputRange: [0, -150, -150],
+          });
+        }
+      });
+    }
+    if (activeNav === 1) {
+      meaningScrollY.addListener(({ value }) => {
+        if (contentY !== 1) {
+          setContentY(1);
+        }
+        const headerBottomValue =
+          2 * Math.abs(Number(JSON.stringify(headerBottomRef.current)));
+        if (
+          (value <= 288 && value >= headerBottomValue) ||
+          (value >= 0 && value <= headerBottomValue)
+        ) {
+          headerBottomRef.current = diffClampScrollY.interpolate({
+            inputRange: [0, 288, 800],
+            outputRange: [0, -150, -150],
+          });
+        }
+      });
+    }
+    if (activeNav === 2) {
+      recipeScrollY.addListener(({ value }) => {
+        if (contentY !== 2) {
+          setContentY(2);
+        }
+        const headerBottomValue =
+          2 * Math.abs(Number(JSON.stringify(headerBottomRef.current)));
+        if (
+          (value <= 288 && value >= headerBottomValue) ||
+          (value >= 0 && value <= headerBottomValue)
+        ) {
+          headerBottomRef.current = diffClampRecipeScrollY.interpolate({
+            inputRange: [0, 288, 800],
+            outputRange: [0, -150, -150],
+          });
+        }
+      });
+    }
+    return () => {
+      meaningScrollY.removeAllListeners();
+      recipeScrollY.removeAllListeners();
+    };
+  }, [activeNav]);
+
   return (
     <View
       style={[
         styles.container,
-        { backgroundColor: isDarkMode ? colors.darkTheme : "#fff" },
+        {
+          backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+        },
       ]}
     >
       <TouchableOpacity
@@ -304,9 +379,11 @@ const Blog = ({ route, navigation }: RouterProps) => {
       <View
         style={{
           display: isFullscreen ? "none" : "flex",
+          flex: isFullscreen ? 0 : 1,
         }}
       >
         <Header
+          headerBottom={headerBottomRef.current}
           onLiking={onLiking}
           blogId={id}
           userId={userId}
@@ -323,12 +400,13 @@ const Blog = ({ route, navigation }: RouterProps) => {
           openComment={openComment}
           openFavoriteModal={openFavoriteModal}
         ></Header>
-        <View
+        <Animated.View
           style={[
             styles.wrapperNav,
             {
               backgroundColor: isDarkMode ? "transparent" : "#ff5c001a",
               borderColor: isDarkMode ? colors.whiteText : "transparent",
+              transform: [{ translateY: headerBottomRef.current }],
             },
           ]}
         >
@@ -371,107 +449,159 @@ const Blog = ({ route, navigation }: RouterProps) => {
             horizontal
             showsHorizontalScrollIndicator={false}
           ></FlatList>
-        </View>
-        <View
+        </Animated.View>
+        <Animated.View
           style={{
-            paddingTop: 12,
-            marginHorizontal: 12,
-            height:
-              width > 400 ? height - contentY + 38 : height - contentY + 30,
-          }}
-          ref={contentRef}
-          onLayout={(e) => {
-            if (contentRef.current) {
-              contentRef.current.measure(
-                (x, y, width, height, pageX, pageY) => {
-                  setContentY(Math.round(pageY));
-                }
-              );
-            }
+            height: "120%",
+            marginTop: headerBottomRef.current.interpolate({
+              inputRange: [-150, 0],
+              outputRange: [50, 194],
+            }),
+            paddingBottom: 114,
           }}
         >
-          <FlatList
-            ref={pageRef}
-            data={navItems}
-            renderItem={({ item, index }) => {
-              const inputRange = [
-                (index - 1) * (width - 24),
-                index * (width - 24),
-                (index + 1) * (width - 24),
-              ];
-              const opacity = scrollX.interpolate({
-                inputRange,
-                outputRange: [0, 1, 0],
-                extrapolate: "clamp",
-              });
-              if (index === 0) {
-                return (
-                  <Animated.ScrollView
-                    showsVerticalScrollIndicator={false}
-                    key={index}
-                    style={{
-                      width: width - 24,
-                      opacity: opacity,
-                    }}
-                  >
-                    <Description
-                      content={description}
-                      isDarkMode={isDarkMode}
-                    ></Description>
-                  </Animated.ScrollView>
-                );
-              } else if (index === 1) {
-                return (
-                  <Animated.ScrollView
-                    showsVerticalScrollIndicator={false}
-                    key={index}
-                    style={{
-                      width: width - 24,
-                      opacity: opacity,
-                    }}
-                  >
-                    <Meaning
-                      histories={histories}
-                      isDarkMode={isDarkMode}
-                      width={width}
-                    ></Meaning>
-                  </Animated.ScrollView>
-                );
-              } else {
-                return (
-                  <Animated.ScrollView
-                    showsVerticalScrollIndicator={false}
-                    key={index}
-                    style={{
-                      width: width - 24,
-                      opacity: opacity,
-                    }}
-                  >
-                    <Recipe
-                      isDarkMode={isDarkMode}
-                      ingredientList={ingredientList}
-                    ></Recipe>
-                  </Animated.ScrollView>
+          <View
+            style={{
+              paddingTop: 12,
+              marginHorizontal: 12,
+              height: "92%",
+            }}
+            ref={contentRef}
+            onLayout={(e) => {
+              if (contentRef.current) {
+                contentRef.current.measure(
+                  (x, y, width, height, pageX, pageY) => {
+                    setContentY(Math.round(pageY));
+                  }
                 );
               }
             }}
-            horizontal
-            pagingEnabled={true}
-            showsHorizontalScrollIndicator={false}
-            onScroll={Animated.event(
-              [
-                {
-                  nativeEvent: {
-                    contentOffset: { x: scrollX },
+          >
+            <FlatList
+              ref={pageRef}
+              data={navItems}
+              renderItem={({ item, index }) => {
+                const inputRange = [
+                  (index - 1) * (width - 24),
+                  index * (width - 24),
+                  (index + 1) * (width - 24),
+                ];
+                const opacity = scrollX.interpolate({
+                  inputRange,
+                  outputRange: [0, 1, 0],
+                  extrapolate: "clamp",
+                });
+                if (index === 0) {
+                  return (
+                    <Animated.ScrollView
+                      onScroll={Animated.event(
+                        [
+                          {
+                            nativeEvent: {
+                              contentOffset: {
+                                y: descriptionScrollY,
+                              },
+                            },
+                          },
+                        ],
+                        {
+                          useNativeDriver: false,
+                        }
+                      )}
+                      showsVerticalScrollIndicator={false}
+                      key={index}
+                      style={{
+                        width: width - 24,
+                        opacity: opacity,
+                      }}
+                    >
+                      <Description
+                        content={description}
+                        isDarkMode={isDarkMode}
+                      ></Description>
+                    </Animated.ScrollView>
+                  );
+                } else if (index === 1) {
+                  return (
+                    <Animated.ScrollView
+                      onScroll={Animated.event(
+                        [
+                          {
+                            nativeEvent: {
+                              contentOffset: {
+                                y: meaningScrollY,
+                              },
+                            },
+                          },
+                        ],
+                        {
+                          useNativeDriver: false,
+                        }
+                      )}
+                      showsVerticalScrollIndicator={false}
+                      key={index}
+                      style={{
+                        width: width - 24,
+                        opacity: opacity,
+                        height: "100%",
+                      }}
+                    >
+                      <Meaning
+                        histories={histories}
+                        isDarkMode={isDarkMode}
+                      ></Meaning>
+                    </Animated.ScrollView>
+                  );
+                } else {
+                  return (
+                    <Animated.ScrollView
+                      onScroll={Animated.event(
+                        [
+                          {
+                            nativeEvent: {
+                              contentOffset: {
+                                y: recipeScrollY,
+                              },
+                            },
+                          },
+                        ],
+                        {
+                          useNativeDriver: false,
+                        }
+                      )}
+                      showsVerticalScrollIndicator={false}
+                      key={index}
+                      style={{
+                        width: width - 24,
+                        opacity: opacity,
+                      }}
+                    >
+                      <Recipe
+                        isDarkMode={isDarkMode}
+                        ingredientList={ingredientList}
+                      ></Recipe>
+                    </Animated.ScrollView>
+                  );
+                }
+              }}
+              horizontal
+              pagingEnabled={true}
+              showsHorizontalScrollIndicator={false}
+              onScroll={Animated.event(
+                [
+                  {
+                    nativeEvent: {
+                      contentOffset: { x: scrollX },
+                    },
                   },
-                },
-              ],
-              {
-                useNativeDriver: false,
-              }
-            )}
-          ></FlatList>
-        </View>
+                ],
+                {
+                  useNativeDriver: false,
+                }
+              )}
+            ></FlatList>
+          </View>
+        </Animated.View>
         <Animatable.View
           style={[
             styles.cmtWrapper,

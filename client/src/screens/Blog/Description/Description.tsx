@@ -18,19 +18,19 @@ const Description = ({ content, isDarkMode }: DescriptionProps) => {
   const [isSeeMore, setIsSeeMore] = useState<boolean | null>(null);
   const onTextLayout = (e: NativeSyntheticEvent<TextLayoutEventData>) => {
     const numOfLines = e.nativeEvent.lines.length;
-    if (numOfLines > 8 && isSeeMore === null) {
+    if (numOfLines > 4 && isSeeMore === null) {
       setIsSeeMore(false);
     }
   };
   return (
-    <View style={{ marginBottom: 12 }}>
+    <View style={{ marginBottom: 86, marginTop: 12 }}>
       <Text
         onTextLayout={onTextLayout}
         style={[
           styles.text,
           { color: isDarkMode ? colors.whiteText : "black" },
         ]}
-        numberOfLines={isSeeMore ? undefined : 8}
+        numberOfLines={isSeeMore ? undefined : 4}
         ellipsizeMode="tail"
       >
         {content}

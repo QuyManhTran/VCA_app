@@ -11,16 +11,16 @@ export interface history {
 interface MeaningProps {
   histories: history[];
   isDarkMode: boolean;
-  width: number;
 }
-const Meaning = ({ histories, isDarkMode, width }: MeaningProps) => {
+const Meaning = ({ histories, isDarkMode }: MeaningProps) => {
   return (
     <View
       style={{
         backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
         flexDirection: "column",
         gap: 12,
-        marginBottom: 12,
+        marginBottom: 86,
+        marginTop: 12,
       }}
     >
       <Text

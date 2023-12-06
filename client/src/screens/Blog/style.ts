@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
     left: 12,
   },
   wrapperNav: {
+    position: "absolute",
+    top: 148,
+    left: 0,
     marginTop: 12,
     marginHorizontal: 12,
     padding: 4,
@@ -19,7 +22,7 @@ const styles = StyleSheet.create({
   },
   navItem: {
     borderRadius: 12,
-    height: 60,
+    height: 36,
     justifyContent: "center",
     alignItems: "center",
   },

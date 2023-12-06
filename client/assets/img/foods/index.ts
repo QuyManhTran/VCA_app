@@ -45,7 +45,7 @@ export const banners = [
   },
   {
     img: TayNamBo,
-    keyword: "Tây Nam Bộ",
+    keyword: "Nam",
     content: [
       { content: "Đậm Đà", color: "#fff" },
       { content: "Miền Tây", color: "#88ec90" },

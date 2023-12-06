@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Animated,
+  Image,
+} from "react-native";
 import { useEffect, useRef, useState, memo } from "react";
 import { Audio } from "expo-av";
 import * as Animatable from "react-native-animatable";
@@ -24,6 +31,7 @@ interface HeaderBlogProps {
   openFavoriteModal: any;
   openComment: any;
   onLiking: any;
+  headerBottom: Animated.AnimatedInterpolation<string | number>;
 }
 const interactAnimation = {
   0: { scale: 1 },
@@ -47,6 +55,7 @@ const Header = ({
   onLiking,
   isLiked,
   isRated,
+  headerBottom,
 }: HeaderBlogProps) => {
   const heartRef = useRef(null);
   const rateRef = useRef(null);
@@ -103,18 +112,32 @@ const Header = ({
   }, [isFavorite]);
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.container,
-        { backgroundColor: isDarkMode ? colors.darkTheme : "#fff" },
+        {
+          backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+          transform: [{ translateY: headerBottom }],
+        },
       ]}
     >
       <View style={styles.wrapper}>
+        <Image
+          source={{ uri: image }}
+          style={[
+            styles.img,
+            { width: width < 400 ? 110 : 120, height: width < 400 ? 110 : 120 },
+          ]}
+          resizeMode="cover"
+        ></Image>
         <View style={styles.wrapperContent}>
           <Text
             style={[
               styles.heading,
-              { color: isDarkMode ? colors.whiteText : "black" },
+              {
+                fontSize: width < 400 ? 28 : 32,
+                color: isDarkMode ? colors.whiteText : "black",
+              },
             ]}
           >
             {name}
@@ -188,30 +211,6 @@ const Header = ({
                 {rate}
               </Text>
             </View>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              onPress={openComment}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginRight: width < 400 ? 24 : 32,
-              }}
-            >
-              <Ionicons
-                name="chatbubble-ellipses-outline"
-                color={isDarkMode ? colors.whiteText : "black"}
-                size={32}
-                style={{ paddingRight: 4 }}
-              ></Ionicons>
-              <Text
-                style={[
-                  styles.amount,
-                  { color: isDarkMode ? colors.whiteText : "black" },
-                ]}
-              >
-                {rate}k
-              </Text>
-            </TouchableOpacity>
             <View
               style={{
                 flexDirection: "row",
@@ -245,9 +244,45 @@ const Header = ({
               </Text>
             </View>
           </View>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={openComment}
+            style={[
+              styles.commentWrapper,
+              {
+                marginRight: width < 400 ? 24 : 32,
+                backgroundColor: isDarkMode
+                  ? colors.darkBg
+                  : colors.lightPrimary,
+              },
+            ]}
+          >
+            <Ionicons
+              name="chatbubble-ellipses-outline"
+              color={isDarkMode ? colors.whiteText : "black"}
+              size={32}
+              style={{ paddingRight: 4 }}
+            ></Ionicons>
+            <Text
+              style={[
+                styles.amount,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
+            >
+              Bình luận
+            </Text>
+            {/* <Text
+              style={[
+                styles.amount,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
+            >
+              {rate}k
+            </Text> */}
+          </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -255,19 +290,25 @@ export default memo(Header);
 
 const styles = StyleSheet.create({
   container: {
-    // marginTop: ,
-    marginHorizontal: 12,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    paddingHorizontal: 12,
+    elevation: 2,
   },
   wrapper: {
     flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    gap: 24,
   },
   img: {
-    width: 150,
-    height: 100,
     borderRadius: 12,
   },
+
   wrapperContent: {
-    // marginLeft: 16,
+    flex: 1,
   },
   heading: {
     fontSize: 32,
@@ -281,5 +322,15 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: 20,
     fontFamily: baloo2Fonts.semi,
+  },
+  commentWrapper: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 8,
+    paddingVertical: 4,
+    marginTop: 4,
+    justifyContent: "center",
+    gap: 4,
   },
 });

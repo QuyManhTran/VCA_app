@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     marginBottom: 36,
   },
   listWrapper: {
-    paddingTop: 24,
+    paddingTop: 12,
   },
   header: {
     flexDirection: "row",

@@ -40,7 +40,6 @@ const UserSchema = new Schema({
   },
   phoneNumber: {
     type: String,
-    unique: true,
   },
   like_list: {
     type: Array,

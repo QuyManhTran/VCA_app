@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   commentArea: {
     position: "absolute",
     left: 0,
+    bottom: 0,
     width: "100%",
     paddingHorizontal: 8,
     paddingTop: 12,

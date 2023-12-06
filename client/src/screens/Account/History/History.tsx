@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { useState, useCallback, useContext, useEffect } from "react";
 import { RouterProps } from "../../Splash/Splash";
 import ThemeContext from "../../../utilies/theme";
@@ -17,6 +17,7 @@ interface HistoryFood extends FoodReviewRawProps {
   watchedAt: string;
 }
 const History = ({ navigation, route }: RouterProps) => {
+  const { width } = useWindowDimensions();
   const { isDarkMode, userId } = useContext(ThemeContext);
   const [histories, setHistories] = useState<HistoryFood[]>([]);
   const [parcition, setParcition] = useState<number | null>(null);
@@ -115,7 +116,9 @@ const History = ({ navigation, route }: RouterProps) => {
           style={{ paddingTop: 12 }}
         >
           {(parcition > 0 || (parcition === null && histories.length > 0)) && (
-            <View style={styles.wrapper}>
+            <View
+              style={[styles.wrapper, { paddingLeft: width < 400 ? 12 : 16 }]}
+            >
               <Text
                 style={[
                   styles.title,
@@ -146,7 +149,12 @@ const History = ({ navigation, route }: RouterProps) => {
             </View>
           )}
           {parcition !== null && (
-            <View style={[styles.wrapper, { marginBottom: 24 }]}>
+            <View
+              style={[
+                [styles.wrapper, { paddingLeft: width < 400 ? 12 : 24 }],
+                { marginBottom: 24 },
+              ]}
+            >
               <Text
                 style={[
                   styles.title,

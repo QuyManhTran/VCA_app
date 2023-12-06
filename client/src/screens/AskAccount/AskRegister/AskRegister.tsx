@@ -15,16 +15,18 @@ import {
   googleRegisterPath,
 } from "../../../services/signupService";
 import * as loginService from "../../../services/loginService";
+import { ActivityIndicator } from "react-native";
 const AskRegister = ({ navigation, route }: RouterProps) => {
   const { width } = useWindowDimensions();
   const { isDarkMode, onUserId, onUserInfor, onLogin } =
     useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const onLoading = () => {
+    setIsLoading(true);
+  };
   const googleServiceHandler = async () => {
-    const googleService = await onGoogleButtonPress();
+    const googleService = await onGoogleButtonPress(onLoading);
     if (googleService.message === 200) {
-      setIsLoading(true);
       if (googleService.isNewUser) {
         const response = await googleRegister(googleRegisterPath, {
           ...googleService.data,
@@ -69,6 +71,8 @@ const AskRegister = ({ navigation, route }: RouterProps) => {
           setIsLoading(false);
         }
       }
+    } else {
+      setIsLoading(false);
     }
   };
 
@@ -133,6 +137,34 @@ const AskRegister = ({ navigation, route }: RouterProps) => {
           width={width}
         ></AuthButton>
       </View>
+      {isLoading && (
+        <View
+          style={[
+            styles.modal,
+            { backgroundColor: isDarkMode ? colors.darkTheme : "#f1f3f4" },
+          ]}
+        >
+          <View
+            style={[
+              styles.loadingWrapper,
+              { backgroundColor: isDarkMode ? colors.darkBg : "#fff" },
+            ]}
+          >
+            <ActivityIndicator
+              size={"large"}
+              color={colors.primary}
+            ></ActivityIndicator>
+            <Text
+              style={[
+                styles.loadingText,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
+            >
+              Hệ thống đang xử lý!
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -159,5 +191,27 @@ const styles = StyleSheet.create({
     borderWidth: 0.25,
     borderColor: colors.placeHolder,
     marginTop: 6,
+  },
+  modal: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingWrapper: {
+    width: 320,
+    height: 80,
+    borderRadius: 12,
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 24,
+    paddingHorizontal: 12,
+  },
+  loadingText: {
+    fontSize: 24,
+    fontFamily: baloo2Fonts.medium,
   },
 });

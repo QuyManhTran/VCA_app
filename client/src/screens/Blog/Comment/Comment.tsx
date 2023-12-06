@@ -7,8 +7,6 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  Animated,
-  Easing,
 } from "react-native";
 import { memo, useEffect, useRef, useState, useCallback } from "react";
 import { Audio } from "expo-av";
@@ -66,7 +64,6 @@ const Comment = ({
   const [someone, setSomeOne] = useState<boolean | null>(null);
   const [likeSound, setLikeSound] = useState<Audio.Sound>();
   const [isLikeds, setIsLikeds] = useState<LikeProps[]>([]);
-  const bottomValue = useRef(new Animated.Value(-1)).current;
   const timeoutRef: { current: NodeJS.Timeout | null } = useRef(null);
 
   // sound new comment
@@ -134,24 +131,6 @@ const Comment = ({
     }
     return () => clearTimeout(timeoutRef.current as NodeJS.Timeout);
   }, [active]);
-
-  useEffect(() => {
-    if (isComment) {
-      Animated.timing(bottomValue, {
-        toValue: keyboardHeight - 1,
-        duration: 100,
-        useNativeDriver: false,
-        easing: Easing.linear,
-      }).start();
-    } else {
-      Animated.timing(bottomValue, {
-        toValue: -1,
-        duration: 100,
-        useNativeDriver: false,
-        easing: Easing.linear,
-      }).start();
-    }
-  }, [isComment]);
 
   useEffect(() => {
     if (textInput.trim()) {
@@ -289,14 +268,13 @@ const Comment = ({
         </ScrollView>
       </View>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <Animated.View
+        <View
           style={[
             styles.commentArea,
             {
               backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
               paddingTop: someone ? 0 : 12,
               borderTopColor: isDarkMode ? colors.placeHolder : colors.gray,
-              bottom: bottomValue,
             },
           ]}
         >
@@ -347,7 +325,7 @@ const Comment = ({
               ></Ionicons>
             </TouchableOpacity>
           </View>
-        </Animated.View>
+        </View>
       </TouchableWithoutFeedback>
     </>
   );

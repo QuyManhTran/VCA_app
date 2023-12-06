@@ -4,7 +4,7 @@ GoogleSignin.configure({
   webClientId: process.env.EXPO_PUBLIC_CLIENT_GOOGLE_SERVICE,
 });
 
-export const onGoogleButtonPress = async () => {
+export const onGoogleButtonPress = async (onLoading?: any) => {
   // Check if your device supports Google Play
   try {
     await GoogleSignin.hasPlayServices({
@@ -15,7 +15,7 @@ export const onGoogleButtonPress = async () => {
 
     // Create a Google credential with the token
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
+    onLoading();
     // Sign-in the user with the credential
     const userSignin = await auth().signInWithCredential(googleCredential);
     return {

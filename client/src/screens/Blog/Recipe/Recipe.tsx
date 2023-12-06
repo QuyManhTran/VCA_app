@@ -15,7 +15,13 @@ interface RecipeProps {
 }
 const Recipe = ({ isDarkMode, ingredientList }: RecipeProps) => {
   return (
-    <View style={{ backgroundColor: isDarkMode ? colors.darkTheme : "#fff" }}>
+    <View
+      style={{
+        backgroundColor: isDarkMode ? colors.darkTheme : "#fff",
+        marginBottom: 40,
+        marginTop: 12,
+      }}
+    >
       <Text
         style={[
           styles.heading,

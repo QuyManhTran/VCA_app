@@ -73,11 +73,11 @@ const LinearBackGround = ({
           <Image
             source={userInfor?.avatar ? { uri: userInfor.avatar } : userAvatar}
             style={{
-              height: 60,
-              width: 60,
+              height: 40,
+              width: 40,
               marginLeft: 12,
-              marginRight: 4,
-              borderRadius: 30,
+              marginRight: 8,
+              borderRadius: 20,
             }}
           ></Image>
         </TouchableOpacity>

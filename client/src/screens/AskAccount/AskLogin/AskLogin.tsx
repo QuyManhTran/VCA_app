@@ -29,10 +29,12 @@ const AskLogin = ({ navigation, route }: RouterProps) => {
   const { isDarkMode, onUserId, onUserInfor, onLogin } =
     useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const onLoading = () => {
+    setIsLoading(true);
+  };
   const googleServiceHandler = async () => {
-    const googleService = await onGoogleButtonPress();
+    const googleService = await onGoogleButtonPress(onLoading);
     if (googleService.message === 200) {
-      setIsLoading(true);
       if (googleService.isNewUser) {
         const response = await googleRegister(googleRegisterPath, {
           ...googleService.data,
@@ -77,6 +79,8 @@ const AskLogin = ({ navigation, route }: RouterProps) => {
           setIsLoading(false);
         }
       }
+    } else {
+      setIsLoading(false);
     }
   };
 
@@ -95,7 +99,7 @@ const AskLogin = ({ navigation, route }: RouterProps) => {
           style={[
             styles.heading,
             {
-              fontSize: width < 400 ? 40 : 46,
+              fontSize: width < 400 ? 46 : 50,
               color: isDarkMode ? colors.whiteText : "black",
             },
           ]}
@@ -191,7 +195,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   heading: {
-    fontFamily: montserratFonts.extra,
+    fontFamily: baloo2Fonts.extra,
     lineHeight: 78,
   },
   buttonWrapper: {
@@ -213,7 +217,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loadingWrapper: {
-    width: 300,
+    width: 320,
     height: 80,
     borderRadius: 12,
     alignItems: "center",
