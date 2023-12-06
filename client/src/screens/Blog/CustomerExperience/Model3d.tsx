@@ -3,7 +3,7 @@ import { ActivityIndicator, SafeAreaView, StyleSheet, View, Text, Animated, Imag
 import React, { Suspense, useState, useEffect, useTransition, Children } from 'react';
 import { Canvas } from '@react-three/fiber/native';
 import useControls from 'r3f-native-orbitcontrols';
-import { useGLTF, AccumulativeShadows, RandomizedLight, Center, Environment, OrbitControls, Preload, useProgress, Html } from "@react-three/drei/native";
+import { useGLTF, AccumulativeShadows, RandomizedLight, Center, Environment, OrbitControls, Preload, useProgress, Text3D } from "@react-three/drei/native";
 import { EvilIcons, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LogBox } from 'react-native';
 import { useLoader } from '@react-three/fiber'
@@ -85,6 +85,7 @@ const Model3d = ({ navigation, ...props }) => {
                     <Suspense fallback={<CanvasLoader isDarkMode={isDarkMode} />}>
                         <Model url={process.env.EXPO_PUBLIC_API_URL + model3d}></Model>
                     </Suspense>
+                
                 </Canvas>
 
 
