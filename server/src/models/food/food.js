@@ -5,6 +5,7 @@ const FoodSchema = new Schema(
   {
     name: {
       type: String,
+      index: true,
     },
     description: {
       type: String,

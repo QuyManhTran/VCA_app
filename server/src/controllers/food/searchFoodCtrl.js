@@ -7,9 +7,8 @@ const foodSearchAllCtrl = async (req, res) => {
     const foodByTag = await Food.find({
         tags: { $regex: new RegExp(keyword, "i")}
     });
-    const foodByName = await Food.find({
-        name: { $regex: new RegExp(keyword, "i")}
-    });
+    const foodByName = await Food.find({ $text: { $search: keyword } },);
+    console.log(foodByName);
     const food = lodash.merge(foodByTag, foodByName);
       
     const result = food.map(foodInstance => {

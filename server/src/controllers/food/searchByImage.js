@@ -4,7 +4,7 @@ const food = require("../../models/food/food");
 
 const MODEL_DIR_PATH = `${__dirname}`;
 const IMAGE_FILE_PATH = "http://localhost:3000/public//images/comtam.jpg";
-const BASE_PROBABILITY = 0.1;
+const BASE_PROBABILITY = 0.01;
 
 function isImage(path) {
   const validExtensions = [".png", ".jpg", ".jpeg"];
@@ -72,7 +72,7 @@ const searchByImage = async (req, res) => {
         probability: probability,
       });
     }
-
+    console.log("-------------------");
     const filteredData = data.filter(
       (item) => item.probability > BASE_PROBABILITY
     );
@@ -82,7 +82,7 @@ const searchByImage = async (req, res) => {
     const results = await Promise.all(
       filteredData.map(async (item) => {
         const foodByLabel = await food.findOne(
-          { name: { $regex: new RegExp(item.label, "i") } },
+          { $text: { $search: item.label } },
           { _id: 1, name: 1, image: 1, tags: 1, like: 1, rate: 1 }
         );
         if (foodByLabel !== null) {
@@ -94,10 +94,12 @@ const searchByImage = async (req, res) => {
         }
       })
     );
+    console.log(results);
 
     let resultsSorted = results.sort((a, b) => b.probability - a.probability);
-    if (!resultsSorted.includes(undefined)) {
-      resultsSorted = resultsSorted.map((result) => ({
+    resultsSorted = resultsSorted
+      .filter((result) => result !== undefined)
+      .map((result) => ({
         id: result?._id,
         tags: result?.tags,
         like: result?.like,
@@ -105,7 +107,6 @@ const searchByImage = async (req, res) => {
         image: result?.image,
         name: result?.name,
       }));
-    }
     return res.status(200).json({
       machineSearch: sortedData,
       result: resultsSorted,
