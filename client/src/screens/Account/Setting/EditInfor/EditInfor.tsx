@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { memo, useState, useCallback } from "react";
+import { memo, useState, useContext } from "react";
 import { baloo2Fonts } from "../../../../../constants/fontFamiles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../../../../../constants";
@@ -26,9 +26,11 @@ import ToastNotify, {
 } from "../../../../components/ToastNotify/ToastNotify";
 import { editInforService } from "../../../../services/profileService";
 import BackButton from "../../../../components/BackButton";
+import ThemeContext from "../../../../utilies/theme";
 
 const EditInfor = ({ route, navigation }: RouterProps) => {
-  const { isDarkMode, userId, onUserInfor } = route.params;
+  const { onUserInfor } = useContext(ThemeContext);
+  const { isDarkMode, userId } = route.params;
   const [isLoading, setIsLoading] = useState<boolean | null>(null);
   const [status, setStatus] = useState<Status | null>(null);
   const [fullName, setFullName] = useState(route.params?.username || "");
@@ -49,16 +51,15 @@ const EditInfor = ({ route, navigation }: RouterProps) => {
   const onChange = ({ type }, selectedDate) => {
     if (type === "set") {
       const currentDate = selectedDate;
-      setDate(currentDate);
       if (Platform.OS === "android") {
         const vietnameseDate = new Intl.DateTimeFormat("vi-VN", {
           year: "numeric",
           month: "2-digit",
           day: "2-digit",
         }).format(currentDate);
-
-        setSelectedStartDate(vietnameseDate);
         toggleDatapicker();
+        setSelectedStartDate(vietnameseDate);
+        setDate(currentDate);
       }
     } else {
       toggleDatapicker();

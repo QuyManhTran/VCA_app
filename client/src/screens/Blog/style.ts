@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingRight: 14,
   },
   wrapperNav: {
     position: "absolute",

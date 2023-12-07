@@ -23,7 +23,10 @@ import {
 } from "../../utilies/validation";
 import useDebounce from "../../../hooks/useDebounce";
 import EmailIcon from "../../../assets/icons/EmailIcon";
-import fontFamilies, { montserratFonts } from "../../../constants/fontFamiles";
+import fontFamilies, {
+  baloo2Fonts,
+  montserratFonts,
+} from "../../../constants/fontFamiles";
 import AuthenBackGround from "../../components/AuthenBackGround";
 import NavButton from "../../components/NavButton";
 import screenWidth from "../../../constants/screenWidth";
@@ -209,14 +212,14 @@ const Register = ({ route, navigation }: RouterProps) => {
           <Text
             style={[styles.heading, { color: isDarkMode ? "#fff" : "black" }]}
           >
-            Sign up
+            Đăng ký
           </Text>
           <Button loginStyle={true}>
             <View style={styles.icon}>
               <UserIcon color={isDarkMode ? "#fff" : "black"}></UserIcon>
             </View>
             <TextInput
-              placeholder="User Name"
+              placeholder="Tên đăng nhập"
               style={[styles.input, { color: isDarkMode ? "#fff" : "black" }]}
               placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
               value={userName}
@@ -267,7 +270,7 @@ const Register = ({ route, navigation }: RouterProps) => {
             </TouchableOpacity>
             <TextInput
               secureTextEntry={isHidePassword}
-              placeholder="Password"
+              placeholder="Mật khẩu"
               style={[
                 styles.input,
                 {
@@ -308,7 +311,7 @@ const Register = ({ route, navigation }: RouterProps) => {
                   style={{ marginRight: 24 }}
                 ></ActivityIndicator>
               )}
-              {isPending ? "Sending" : "Create"}
+              {isPending ? "Đang tạo" : "Tạo mới"}
             </NavButton>
           </TouchableOpacity>
         </Animated.View>
@@ -324,22 +327,22 @@ const Register = ({ route, navigation }: RouterProps) => {
         >
           <Text
             style={{
-              fontSize: width < 400 ? 16 : 18,
-              fontFamily: montserratFonts.semi,
+              fontSize: width < 400 ? 20 : 22,
+              fontFamily: baloo2Fonts.semi,
               color: isDarkMode ? "#fff" : "black",
             }}
           >
-            Already have an account?{" "}
+            Có sẵn tài khoản?{" "}
           </Text>
           <TouchableOpacity activeOpacity={0.7} onPress={onLogin}>
             <Text
               style={{
                 color: colors.primary,
-                fontSize: 18,
-                fontFamily: montserratFonts.semi,
+                fontSize: width < 400 ? 20 : 22,
+                fontFamily: baloo2Fonts.semi,
               }}
             >
-              Login
+              Đăng nhập
             </Text>
           </TouchableOpacity>
         </View>

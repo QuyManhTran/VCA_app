@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import { colors } from "../../../../constants";
 import fontFamilies, {
+  baloo2Fonts,
   montserratFonts,
 } from "../../../../constants/fontFamiles";
 const styles = StyleSheet.create({
@@ -14,9 +15,8 @@ const styles = StyleSheet.create({
   },
 
   heading: {
-    fontFamily: montserratFonts.extra,
+    fontFamily: baloo2Fonts.extra,
     fontSize: 50,
-    lineHeight: 60,
   },
   remind: {
     fontSize: 18,

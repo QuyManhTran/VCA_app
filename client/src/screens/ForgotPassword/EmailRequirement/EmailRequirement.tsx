@@ -11,7 +11,9 @@ import React, { useContext } from "react";
 import styles from "./style";
 import { colors } from "../../../../constants";
 import Button from "../../../components/Button";
-import { montserratFonts } from "../../../../constants/fontFamiles";
+import fontFamilies, {
+  montserratFonts,
+} from "../../../../constants/fontFamiles";
 import { RouterProps } from "../../Splash/Splash";
 import EmailIcon from "../../../../assets/icons/EmailIcon";
 import { isSpace } from "../../../utilies/validation";
@@ -80,29 +82,41 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
             style={[
               styles.heading,
               {
-                fontSize: width < 400 ? 48 : 50,
+                fontSize: width < 400 ? 52 : 52,
                 color: isDarkMode ? "#fff" : "black",
               },
             ]}
           >
-            Forgot Password
+            Quên
+          </Text>
+          <Text
+            style={[
+              styles.heading,
+              {
+                marginTop: -28,
+                fontSize: width < 400 ? 52 : 52,
+                color: isDarkMode ? "#fff" : "black",
+              },
+            ]}
+          >
+            mật khẩu
           </Text>
           <View style={{ marginTop: 16, marginBottom: 32 }}>
             <Text
               style={{
                 fontSize: width < 400 ? 18 : 20,
                 color: isDarkMode ? "#fff" : "black",
-                fontFamily: montserratFonts.semi,
+                fontFamily: fontFamilies.semi,
               }}
             >
-              Enter your email and we'll send you a{" "}
+              Nhập email của bạn, chúng tôi sẽ gửi cho bạn{" "}
               <Text
                 style={{
                   color: colors.primary,
                   fontFamily: montserratFonts.semi,
                 }}
               >
-                Verification Code{" "}
+                mã xác thực{" "}
               </Text>
             </Text>
           </View>
@@ -133,7 +147,7 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
               marginTop: 34,
             }}
           >
-            <NavButton>Continue</NavButton>
+            <NavButton>Tiếp tục</NavButton>
           </TouchableOpacity>
         </View>
         {isModal && (

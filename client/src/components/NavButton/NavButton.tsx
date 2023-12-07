@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearColors } from "../../../constants/colors";
-import { montserratFonts } from "../../../constants/fontFamiles";
+import { baloo2Fonts, montserratFonts } from "../../../constants/fontFamiles";
 import RightArrow from "../../../assets/icons/RightArrow";
 interface NavBtnProps {
   children: React.ReactNode;
@@ -25,7 +25,10 @@ const NavButton = ({
       colors={linearColors}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
-      style={[{ width: width, height: height, borderRadius: 20 }, customeStyle]}
+      style={[
+        { minWidth: width, height: height, borderRadius: 20 },
+        customeStyle,
+      ]}
     >
       <View style={styles.container}>
         <Text style={[styles.text, customeText]}>{children}</Text>
@@ -43,11 +46,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 12,
   },
   text: {
     fontSize: 22,
-    fontFamily: montserratFonts.extra,
+    fontFamily: baloo2Fonts.extra,
     color: "#fff",
-    lineHeight: 24,
   },
 });

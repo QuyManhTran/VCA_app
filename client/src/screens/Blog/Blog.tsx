@@ -182,13 +182,17 @@ const Blog = ({ route, navigation }: RouterProps) => {
 
   useEffect(() => {
     const updateActivity = async () => {
-      const response = await postHistoryService.postHistory(
-        postHistoryService.postHistoryPath,
-        {
-          id_food: id,
-          id_user: userId,
-        }
-      );
+      try {
+        const response = await postHistoryService.postHistory(
+          postHistoryService.postHistoryPath,
+          {
+            id_food: id,
+            id_user: userId,
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
     };
     return () => {
       updateActivity();
@@ -379,14 +383,17 @@ const Blog = ({ route, navigation }: RouterProps) => {
             color={isDarkMode ? colors.primary : "black"}
           ></Ionicons>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.6} onPress={onNavigate3D}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={onNavigate3D}
+          style={{ paddingHorizontal: 12, justifyContent: "center" }}
+        >
           <MaterialIcons
             name="3d-rotation"
-            size={30}
+            size={28}
             color={isDarkMode ? colors.primary : "black"}
           />
         </TouchableOpacity>
-        <View></View>
       </View>
       <Video
         isFullscreen={isFullscreen}

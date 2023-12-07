@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { useCallback, useEffect, useState, useRef, useContext } from "react";
 import * as Animatable from "react-native-animatable";
@@ -202,9 +203,11 @@ const Search = ({ route, navigation }: RouterProps) => {
         setSearchStatus("all");
         setData([]);
       }
+      setIsLoading(false);
     } catch (error) {
       setSearchStatus("all");
       setData([]);
+      setIsLoading(false);
     }
   };
 
@@ -258,6 +261,7 @@ const Search = ({ route, navigation }: RouterProps) => {
 
   useEffect(() => {
     if (photoData) {
+      setIsLoading(true);
       apiPhotoHandler();
     }
   }, [photoData]);
@@ -353,56 +357,74 @@ const Search = ({ route, navigation }: RouterProps) => {
         )}
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            flex: 1,
-            marginTop: 12,
-            paddingHorizontal: 12,
-            paddingBottom: 24,
-          }}
-        >
-          {data.length === 0 &&
-            searchStatus === "all" &&
-            isLoading === false && (
-              <View style={{ alignItems: "center" }}>
-                <Animated.Text
-                  numberOfLines={2}
-                  ellipsizeMode={"tail"}
-                  style={{
-                    fontSize: 20,
-                    fontFamily: baloo2Fonts.extra,
-                    paddingVertical: 12,
-                    textAlign: "center",
-                    opacity: scrollOpacity,
-                    color: isDarkMode ? colors.whiteText : "black",
-                  }}
-                >
-                  {data.length === 0
-                    ? `Không có kết quả phù hợp '${debounceKeyword}'`
-                    : undefined}
-                </Animated.Text>
-                <Image
-                  source={resultNotFound}
-                  resizeMode="cover"
-                  style={{ flex: 1, width: 300, height: 300 }}
-                ></Image>
+        {isLoading && (
+          <View style={{ alignItems: "center", gap: 8 }}>
+            <ActivityIndicator
+              size={"large"}
+              color={colors.primary}
+            ></ActivityIndicator>
+            <Text
+              style={[
+                styles.itemText,
+                { color: isDarkMode ? colors.whiteText : "black" },
+              ]}
+            >
+              Đang tìm kiếm
+            </Text>
+          </View>
+        )}
+        {isLoading === false && (
+          <View
+            style={{
+              flex: 1,
+              marginTop: 12,
+              paddingHorizontal: 12,
+              paddingBottom: 24,
+            }}
+          >
+            {data.length === 0 &&
+              searchStatus === "all" &&
+              isLoading === false && (
+                <View style={{ alignItems: "center" }}>
+                  <Animated.Text
+                    numberOfLines={2}
+                    ellipsizeMode={"tail"}
+                    style={{
+                      fontSize: 20,
+                      fontFamily: baloo2Fonts.extra,
+                      paddingVertical: 12,
+                      textAlign: "center",
+                      opacity: scrollOpacity,
+                      color: isDarkMode ? colors.whiteText : "black",
+                    }}
+                  >
+                    {data.length === 0
+                      ? `Không có kết quả phù hợp '${debounceKeyword}'`
+                      : undefined}
+                  </Animated.Text>
+                  <Image
+                    source={resultNotFound}
+                    resizeMode="cover"
+                    style={{ flex: 1, width: 300, height: 300 }}
+                  ></Image>
+                </View>
+              )}
+
+            {data.length > 0 && (
+              <View style={{ flex: 1 }}>
+                {data.map((food, index) => (
+                  <FoodReview
+                    {...food}
+                    key={index}
+                    onTag={onTag}
+                    isDarkMode={isDarkMode}
+                    onBlog={onBlog}
+                  ></FoodReview>
+                ))}
               </View>
             )}
-
-          {data.length > 0 && (
-            <View style={{ flex: 1 }}>
-              {data.map((food, index) => (
-                <FoodReview
-                  {...food}
-                  key={index}
-                  onTag={onTag}
-                  isDarkMode={isDarkMode}
-                  onBlog={onBlog}
-                ></FoodReview>
-              ))}
-            </View>
-          )}
-        </View>
+          </View>
+        )}
       </ScrollView>
       {isModal && (
         <Pressable style={styles.modalContainer} onPress={closeModalHandler}>

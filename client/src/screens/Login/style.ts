@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { colors, fontFamilies } from "../../../constants";
-import { montserratFonts } from "../../../constants/fontFamiles";
+import { baloo2Fonts, montserratFonts } from "../../../constants/fontFamiles";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -13,14 +13,14 @@ const styles = StyleSheet.create({
   },
 
   heading: {
-    fontFamily: montserratFonts.extra,
-    fontSize: 50,
+    fontFamily: baloo2Fonts.extra,
+    fontSize: 46,
     lineHeight: 78,
   },
 
   requirement: {
     fontFamily: fontFamilies.medium,
-    fontSize: 18,
+    fontSize: 15,
     marginBottom: 44,
   },
 
@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
     fontFamily: montserratFonts.bold,
   },
   forgotPassword: {
-    fontSize: 20,
-    fontFamily: montserratFonts.extra,
+    fontSize: 24,
+    fontFamily: baloo2Fonts.extra,
     color: colors.primary,
   },
   icon: {

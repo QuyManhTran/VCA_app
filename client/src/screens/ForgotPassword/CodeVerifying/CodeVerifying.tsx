@@ -11,6 +11,7 @@ import React, { useState, useContext } from "react";
 import styles from "./style";
 import { colors } from "../../../../constants";
 import fontFamilies, {
+  baloo2Fonts,
   montserratFonts,
 } from "../../../../constants/fontFamiles";
 import Button from "../../../components/Button";
@@ -73,12 +74,12 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
             style={[
               styles.heading,
               {
-                fontSize: width < 400 ? 40 : 46,
+                fontSize: width < 400 ? 48 : 52,
                 color: isDarkMode ? "#fff" : "black",
               },
             ]}
           >
-            Enter code
+            Nhập mã
           </Text>
           <View style={{ marginTop: 14, width: 260, marginBottom: 24 }}>
             <Text
@@ -88,16 +89,17 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
                 color: isDarkMode ? "#fff" : "black",
               }}
             >
-              Enter{" "}
+              Vui lòng nhập{" "}
               <Text
                 style={{
                   color: colors.primary,
                   fontFamily: fontFamilies.bold,
+                  lineHeight: 24,
                 }}
               >
-                Verification Code
+                mã xác thực
               </Text>{" "}
-              we've sent you
+              Chúng tôi vừa gửi bạn
             </Text>
           </View>
           <Button loginStyle>
@@ -110,7 +112,7 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
             </View>
             <TextInput
               value={otp}
-              placeholder="Enter here"
+              placeholder="Mã xác thực"
               style={[styles.input, { color: isDarkMode ? "#fff" : "black" }]}
               spellCheck={false}
               underlineColorAndroid={"transparent"}
@@ -129,7 +131,7 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
               marginTop: 20,
             }}
           >
-            <NavButton>Confirm</NavButton>
+            <NavButton>Xác nhận</NavButton>
           </TouchableOpacity>
         </View>
         <View
@@ -144,22 +146,22 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
         >
           <Text
             style={{
-              fontSize: 18,
-              fontFamily: montserratFonts.semi,
+              fontSize: width < 400 ? 20 : 22,
+              fontFamily: baloo2Fonts.semi,
               color: isDarkMode ? "#fff" : "black",
             }}
           >
-            Don't receive code?{" "}
+            Bạn chưa nhận được?{" "}
           </Text>
           <TouchableOpacity activeOpacity={0.7} onPress={reSend}>
             <Text
               style={{
+                fontSize: width < 400 ? 20 : 22,
                 color: colors.primary,
-                fontSize: 18,
-                fontFamily: fontFamilies.semi,
+                fontFamily: baloo2Fonts.semi,
               }}
             >
-              Resend
+              Gửi lại
             </Text>
           </TouchableOpacity>
         </View>

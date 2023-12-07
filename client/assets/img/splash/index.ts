@@ -7,35 +7,35 @@ const splash4Dark = require("./splash4-dark.jpg");
 export const splashesLight = [
   {
     splash: splash2Light,
-    heading: "Food",
-    description: "Find out any Vietnamese dishes that you like",
+    heading: "Ẩm thực",
+    description: "Khám phá những món ăn yêu thích",
   },
   {
     splash: splash3Light,
-    heading: "Culture",
-    description: "Learn about Vietnamese culture through unique dishes",
+    heading: "Văn hóa",
+    description: "Học hỏi các nét văn hóa đặc sắc qua từng món ăn",
   },
   {
     splash: splash4Light,
-    heading: "Story",
-    description: "Many meaningful stories behind these dishes",
+    heading: "Lịch sử",
+    description: "Những câu chuyện ý nghĩa sau mỗi món ăn",
   },
 ];
 export const splashesDark = [
   {
     splash: splash2Dark,
-    heading: "Food",
-    description: "Find out any Vietnamese dishes that you like",
+    heading: "Ẩm thực",
+    description: "Tìm kiếm những món ăn bạn thích",
   },
   {
     splash: splash3Dark,
-    heading: "Culture",
-    description: "Learn about Vietnamese culture through unique dishes",
+    heading: "Văn hóa",
+    description: "Học hỏi nét văn hóa đặc sắc qua mỗi món ăn",
   },
   {
     splash: splash4Dark,
-    heading: "Story",
-    description: "Many meaningful stories behind these dishes",
+    heading: "Lịch sử",
+    description: "Những câu chuyện ý nghĩa sau mỗi món ăn",
   },
 ];
 export const singleLego = require("./singleLogo.jpg");

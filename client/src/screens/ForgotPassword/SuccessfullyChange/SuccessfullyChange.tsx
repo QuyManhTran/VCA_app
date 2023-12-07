@@ -35,22 +35,25 @@ const SuccessfullyChange = ({ route, navigation }: RouterProps) => {
             style={[
               styles.heading,
               {
-                fontSize: width < 400 ? 44 : 50,
-                lineHeight: width < 400 ? 50 : 60,
+                fontSize: width < 400 ? 32 : 36,
+                lineHeight: width < 400 ? 60 : 60,
                 color: isDarkMode ? "#Fff" : "black",
               },
             ]}
           >
-            {route.params ? `Sign up successfully!` : `Change successfully!`}
+            {route.params ? `Đăng ký thành công!` : `Cập nhật thành công!`}
           </Text>
         </View>
         <View style={{ marginTop: 20 }}>
           <Text
-            style={[styles.remind, { color: isDarkMode ? "#Fff" : "black" }]}
+            style={[
+              styles.remind,
+              { lineHeight: 28, color: isDarkMode ? "#Fff" : "black" },
+            ]}
           >
             {route.params
-              ? `Now, You can use this account to login`
-              : `Now, You can use your new password to login`}
+              ? `Bây giờ, bạn có thể sử dụng tài khoản để đăng nhập`
+              : `Bây giờ, bạn có thể đăng nhập bằng mật khẩu mới này`}
           </Text>
         </View>
         <TouchableOpacity
@@ -62,7 +65,7 @@ const SuccessfullyChange = ({ route, navigation }: RouterProps) => {
             marginTop: 20,
           }}
         >
-          <NavButton>Login</NavButton>
+          <NavButton>Đăng nhập</NavButton>
         </TouchableOpacity>
       </View>
     </View>

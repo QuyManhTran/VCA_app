@@ -24,7 +24,7 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
       ></AuthenBackGround>
       <View style={styles.container}>
         <Text style={[styles.heading, isDarkMode && { color: "#fff" }]}>
-          You have an account
+          Bạn đã có tài khoản
         </Text>
         <TouchableOpacity onPress={onMoveLogin} activeOpacity={0.7}>
           <NavButton
@@ -36,7 +36,7 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
               fontFamily: baloo2Fonts.extra,
             }}
           >
-            Login
+            Đăng nhập
           </NavButton>
         </TouchableOpacity>
         <View
@@ -49,14 +49,19 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
         >
           <View style={styles.whiteLine}></View>
           <Text
-            style={{ fontSize: 28, color: colors.primary, marginHorizontal: 8 }}
+            style={{
+              fontFamily: baloo2Fonts.medium,
+              fontSize: 24,
+              color: colors.primary,
+              marginHorizontal: 8,
+            }}
           >
-            or
+            hoặc
           </Text>
           <View style={styles.whiteLine}></View>
         </View>
         <Text style={[styles.heading, isDarkMode && { color: "#fff" }]}>
-          You don't have{" "}
+          Bạn chưa có{" "}
         </Text>
         <TouchableOpacity onPress={onMoveRegister} activeOpacity={0.7}>
           <NavButton
@@ -68,7 +73,7 @@ const AskAccount = ({ route, navigation }: RouterProps) => {
               fontFamily: baloo2Fonts.extra,
             }}
           >
-            Sign up
+            Đăng ký
           </NavButton>
         </TouchableOpacity>
       </View>

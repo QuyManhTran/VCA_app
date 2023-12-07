@@ -19,7 +19,7 @@ import { isEmail, isLoginPassword, isSpace } from "../../utilies/validation";
 import useDebounce from "../../../hooks/useDebounce";
 import AuthenBackGround from "../../components/AuthenBackGround";
 import NavButton from "../../components/NavButton";
-import { montserratFonts } from "../../../constants/fontFamiles";
+import { baloo2Fonts, montserratFonts } from "../../../constants/fontFamiles";
 import screenWidth from "../../../constants/screenWidth";
 import ThemeContext from "../../utilies/theme";
 import * as loginService from "../../services/loginService";
@@ -105,28 +105,50 @@ const Login = ({ route, navigation }: RouterProps) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View
-        style={[styles.container, isDarkMode && { backgroundColor: "black" }]}
+        style={[
+          styles.container,
+          { backgroundColor: isDarkMode ? colors.darkTheme : "#fff" },
+        ]}
       >
         <AuthenBackGround
           onPress={() => navigation.goBack()}
         ></AuthenBackGround>
         <View style={styles.wrapper}>
-          <Text style={[styles.heading, isDarkMode && { color: "#fff" }]}>
-            Login
+          <Text
+            style={[
+              styles.heading,
+              { color: isDarkMode ? colors.whiteText : "black" },
+            ]}
+          >
+            Đăng nhập
           </Text>
-          <Text style={[styles.requirement, isDarkMode && { color: "#fff" }]}>
-            Please sign in to continue
+          <Text
+            style={[
+              styles.requirement,
+              {
+                fontSize: width < 400 ? 15 : 16,
+                color: isDarkMode ? colors.whiteText : "black",
+              },
+            ]}
+          >
+            Vui lòng đăng nhập để tiếp tục
           </Text>
           <Button loginStyle={true}>
             <View style={styles.icon}>
-              <UserIcon color={isDarkMode ? "#fff" : "black"}></UserIcon>
+              <UserIcon
+                color={isDarkMode ? colors.whiteText : "black"}
+              ></UserIcon>
             </View>
             <TextInput
               placeholder="Email"
               style={[
                 styles.input,
                 {
-                  color: !isUserName ? "red" : isDarkMode ? "#fff" : "black",
+                  color: !isUserName
+                    ? "red"
+                    : isDarkMode
+                    ? colors.whiteText
+                    : "black",
                 },
               ]}
               placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
@@ -144,22 +166,28 @@ const Login = ({ route, navigation }: RouterProps) => {
             >
               <View style={styles.icon}>
                 {!isHidePassword && (
-                  <EyeIcon color={isDarkMode ? "#fff" : "black"}></EyeIcon>
+                  <EyeIcon
+                    color={isDarkMode ? colors.whiteText : "black"}
+                  ></EyeIcon>
                 )}
                 {isHidePassword && (
                   <HideEyeIcon
-                    color={isDarkMode ? "#fff" : "black"}
+                    color={isDarkMode ? colors.whiteText : "black"}
                   ></HideEyeIcon>
                 )}
               </View>
             </TouchableOpacity>
             <TextInput
               secureTextEntry={isHidePassword}
-              placeholder="Password"
+              placeholder="Mật khẩu"
               style={[
                 styles.input,
                 {
-                  color: !isPassword ? "red" : isDarkMode ? "#fff" : "black",
+                  color: !isPassword
+                    ? "red"
+                    : isDarkMode
+                    ? colors.whiteText
+                    : "black",
                 },
               ]}
               placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
@@ -173,7 +201,7 @@ const Login = ({ route, navigation }: RouterProps) => {
               onPress={onForgotPassword}
               style={{ justifyContent: "center", paddingRight: 12 }}
             >
-              <Text style={styles.forgotPassword}>Forgot</Text>
+              <Text style={styles.forgotPassword}>Quên</Text>
             </TouchableOpacity>
           </Button>
           <TouchableOpacity
@@ -187,7 +215,7 @@ const Login = ({ route, navigation }: RouterProps) => {
               opacity: !isValidated ? 0.5 : 1,
             }}
           >
-            <NavButton>Login</NavButton>
+            <NavButton>Đăng nhập</NavButton>
           </TouchableOpacity>
         </View>
         <View
@@ -202,22 +230,22 @@ const Login = ({ route, navigation }: RouterProps) => {
         >
           <Text
             style={{
-              fontSize: width < 400 ? 16 : 18,
-              fontFamily: montserratFonts.semi,
-              color: isDarkMode ? "#fff" : "black",
+              fontSize: width < 400 ? 20 : 22,
+              fontFamily: baloo2Fonts.semi,
+              color: isDarkMode ? colors.whiteText : "black",
             }}
           >
-            You don't have an account?{" "}
+            Chưa có mật khẩu?{" "}
           </Text>
           <TouchableOpacity activeOpacity={0.7} onPress={onMoveRegister}>
             <Text
               style={{
                 color: colors.primary,
-                fontSize: width < 400 ? 16 : 18,
-                fontFamily: montserratFonts.semi,
+                fontSize: width < 400 ? 20 : 22,
+                fontFamily: baloo2Fonts.semi,
               }}
             >
-              Sign up
+              Đăng ký
             </Text>
           </TouchableOpacity>
         </View>

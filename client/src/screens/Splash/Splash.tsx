@@ -6,13 +6,7 @@ import {
   Animated,
   Easing,
 } from "react-native";
-import {
-  useState,
-  useRef,
-  useEffect,
-  useContext,
-  useLayoutEffect,
-} from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import styles from "./style";
 import { splashesDark, splashesLight } from "../../../assets/img/splash";
 import Paginator from "../../components/Paginator";
@@ -150,7 +144,7 @@ const Splash = ({ route, navigation }: RouterProps) => {
                           {
                             marginTop: 20,
                             maxWidth: width < 400 ? 300 : 320,
-                            lineHeight: width < 400 ? 20 : 24,
+                            lineHeight: width < 400 ? 20 : 28,
                             fontSize: width < 400 ? 16 : 20,
                           },
                           {
