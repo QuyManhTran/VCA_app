@@ -147,7 +147,6 @@ const Header = ({
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                marginRight: width < 400 ? 24 : 32,
               }}
             >
               <Animatable.View ref={heartRef}>
@@ -184,7 +183,6 @@ const Header = ({
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                marginRight: width < 400 ? 24 : 32,
               }}
             >
               <Animatable.View ref={rateRef}>
@@ -197,7 +195,7 @@ const Header = ({
                       ? colors.whiteText
                       : "black"
                   }
-                  size={32}
+                  size={30}
                   style={{ paddingRight: 4 }}
                   onPress={openModal}
                 ></AntDesign>
@@ -318,6 +316,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: -6,
+    justifyContent: "space-between",
   },
   amount: {
     fontSize: 20,

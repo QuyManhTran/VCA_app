@@ -4,6 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearColors } from "../../../constants/colors";
 import { baloo2Fonts, montserratFonts } from "../../../constants/fontFamiles";
 import RightArrow from "../../../assets/icons/RightArrow";
+import { ActivityIndicator } from "react-native";
 interface NavBtnProps {
   children: React.ReactNode;
   width?: number;
@@ -11,6 +12,7 @@ interface NavBtnProps {
   rightArrow?: boolean;
   customeStyle?: object;
   customeText?: object;
+  isLoading?: boolean;
 }
 const NavButton = ({
   children,
@@ -19,6 +21,7 @@ const NavButton = ({
   customeText = {},
   rightArrow = false,
   customeStyle = {},
+  isLoading = false,
 }: NavBtnProps) => {
   return (
     <LinearGradient
@@ -26,11 +29,24 @@ const NavButton = ({
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
       style={[
-        { minWidth: width, height: height, borderRadius: 20 },
+        {
+          // flexDirection: "row",
+          alignItems: "center",
+          minWidth: width,
+          height: height,
+          borderRadius: 20,
+        },
         customeStyle,
       ]}
     >
       <View style={styles.container}>
+        {isLoading && (
+          <ActivityIndicator
+            size={"large"}
+            color={"white"}
+            style={{ marginRight: 12 }}
+          ></ActivityIndicator>
+        )}
         <Text style={[styles.text, customeText]}>{children}</Text>
         {rightArrow && <RightArrow color="#fff" size={28}></RightArrow>}
       </View>

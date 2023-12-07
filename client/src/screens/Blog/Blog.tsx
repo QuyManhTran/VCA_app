@@ -380,7 +380,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
           <Ionicons
             name="arrow-back"
             size={30}
-            color={isDarkMode ? colors.primary : "black"}
+            color={isDarkMode ? colors.whiteText : "black"}
           ></Ionicons>
         </TouchableOpacity>
         <TouchableOpacity
@@ -391,7 +391,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
           <MaterialIcons
             name="3d-rotation"
             size={28}
-            color={isDarkMode ? colors.primary : "black"}
+            color={isDarkMode ? colors.whiteText : "black"}
           />
         </TouchableOpacity>
       </View>
@@ -482,7 +482,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
               inputRange: [-150, 0],
               outputRange: [50, 194],
             }),
-            paddingBottom: 114,
+            paddingBottom: 130,
           }}
         >
           <View

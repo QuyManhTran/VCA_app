@@ -25,6 +25,7 @@ import screenWidth from "../../../../constants/screenWidth";
 import Modal from "../../../components/Modal";
 import ThemeContext from "../../../utilies/theme";
 import { sendEmailService } from "../../../services/forgotService";
+import { ActivityIndicator } from "react-native";
 const EmailRequirement = ({ route, navigation }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
   const width = screenWidth();
@@ -32,10 +33,12 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
   const [isEmail, setIsEmail] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [isExistEmail, setIsExistEmail] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const emailDebounce = useDebounce(email, 500);
   const onSendCode = async () => {
     // if otp is sent, will be navigated
     if (isEmail && email.length > 0) {
+      setIsLoading(true);
       const response = await sendEmailService.sendEmail(
         sendEmailService.sendEmailPath,
         {
@@ -43,12 +46,14 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
         }
       );
       if (response.message !== 200) {
+        setIsLoading(false);
         setIsExistEmail(false);
         setIsModal(true);
       } else {
         navigation.navigate("CodeVerifying", {
           email: email,
         });
+        setIsLoading(false);
       }
     } else {
       setIsModal(true);
@@ -139,15 +144,19 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
             ></TextInput>
           </Button>
           <TouchableOpacity
+            disabled={isLoading}
             activeOpacity={0.7}
             onPress={onSendCode}
             style={{
               alignSelf: "flex-end",
               marginRight: width < 400 ? 26 : 34,
               marginTop: 34,
+              opacity: isLoading ? 0.5 : 1,
             }}
           >
-            <NavButton>Tiếp tục</NavButton>
+            <NavButton isLoading={isLoading}>
+              {isLoading ? "Đang xác thực" : "Tiếp tục"}
+            </NavButton>
           </TouchableOpacity>
         </View>
         {isModal && (
@@ -155,10 +164,10 @@ const EmailRequirement = ({ route, navigation }: RouterProps) => {
             title={"Email"}
             content={
               !isExistEmail
-                ? "Email do not exist!"
+                ? "Email không tồn tại!"
                 : email.length === 0
-                ? `Email can't be empty!`
-                : `Email isn't in correct format!`
+                ? `Email không được trống!`
+                : `Email không đúng định dạng!`
             }
             isDarkMode={isDarkMode}
             onPress={() => {

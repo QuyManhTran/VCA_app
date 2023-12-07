@@ -93,7 +93,9 @@ const rateReact = async (req, res) => {
         }
       );
 
-      const newRate = oldRateFood + (rateUser - oldRateUser) / length;
+      const newRate = (oldRateFood + (rateUser - oldRateUser) / length).toFixed(
+        1
+      );
       console.log(oldRateFood + "\t" + oldRateUser + "\t" + rateUser);
       console.log(newRate);
       // update rate food
@@ -119,7 +121,7 @@ const rateReact = async (req, res) => {
     }
   );
 
-  const newRate = (oldRateFood * length + rateUser) / (length + 1);
+  const newRate = ((oldRateFood * length + rateUser) / (length + 1)).toFixed(1);
   // console.log(sum + "\t" + food.rate_list.length + "\t" + newRate);
 
   const updateRate = await Food.findOneAndUpdate(
