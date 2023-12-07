@@ -12,7 +12,7 @@ import {
 import { avatar } from "../assets/img/avatars";
 
 export const variousFoods = [
-  { img: noodles, title: "Mỳ" },
+  { img: noodles, title: "Mì" },
   { img: rice, title: "Cơm" },
   { img: cake, title: "Bánh" },
 ];

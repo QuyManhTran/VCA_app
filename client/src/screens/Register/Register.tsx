@@ -295,22 +295,7 @@ const Register = ({ route, navigation }: RouterProps) => {
               opacity: isPending ? 0.6 : 1,
             }}
           >
-            <NavButton
-              customeStyle={isPending && { width: "auto" }}
-              customeText={
-                isPending && {
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginHorizontal: 12,
-                }
-              }
-            >
-              {isPending && (
-                <ActivityIndicator
-                  color={"white"}
-                  style={{ marginRight: 24 }}
-                ></ActivityIndicator>
-              )}
+            <NavButton isLoading={isPending}>
               {isPending ? "Đang tạo" : "Tạo mới"}
             </NavButton>
           </TouchableOpacity>

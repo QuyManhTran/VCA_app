@@ -23,7 +23,7 @@ const resetPassword = async (
   const response = await request.post(path, payload);
   return response;
 };
-const resetPath = "/account/change-password";
+const resetPath = "/account/reset-password";
 export const sendEmailService = { sendEmail, sendEmailPath };
 export const sendOTPService = { sendOTP, sendOTPPath };
 export const resetService = { resetPassword, resetPath };

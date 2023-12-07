@@ -29,6 +29,7 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
   const { isDarkMode } = useContext(ThemeContext);
   const keyBoardUp = useRef(new Animated.Value(141)).current;
   const arrowUp = useRef(new Animated.Value(72)).current;
+  const [isLoading, setIsLoading] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [isHidePassword, setIsHidePassWord] = useState(true);
   const [password, setPassword] = useState("");
@@ -40,7 +41,7 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
     if (password !== confirmPassword || !isPassword || password.length === 0) {
       setIsModal(true);
     } else {
-      // navigation.navigate("SuccessfullyChange");
+      setIsLoading(true);
       const response = await resetService.resetPassword(
         resetService.resetPath,
         {
@@ -49,9 +50,12 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
         }
       );
       if (response.message !== 200) {
+        console.log(response.message);
         alert("Có lỗi xảy ra!");
+        setIsLoading(false);
       } else {
         navigation.navigate("SuccessfullyChange");
+        setIsLoading(false);
       }
     }
   };
@@ -124,7 +128,19 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
               },
             ]}
           >
-            Change Password
+            Thay đổi
+          </Text>
+          <Text
+            style={[
+              styles.heading,
+              {
+                fontSize: width < 400 ? 48 : 50,
+                color: isDarkMode ? "#fff" : "black",
+                marginTop: -20,
+              },
+            ]}
+          >
+            mật khẩu
           </Text>
           <View style={{ marginTop: 16, marginBottom: 16 }}>
             <Text
@@ -135,8 +151,9 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
                 color: isDarkMode ? "#fff" : "black",
               }}
             >
-              Your password contains at least{" "}
-              <Text style={{ color: colors.primary }}>8</Text> characters
+              Mật khẩu cần tối thiểu{" "}
+              <Text style={{ color: colors.primary }}>8</Text> kí tự bao gồm 1
+              kí tự đặc biệt, 1 số và 1 chữ cái
             </Text>
           </View>
           <Button loginStyle>
@@ -156,7 +173,7 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
               </View>
             </TouchableOpacity>
             <TextInput
-              placeholder="New Password"
+              placeholder="Mật khẩu mới"
               style={[
                 styles.input,
                 {
@@ -189,7 +206,7 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
               </View>
             </TouchableOpacity>
             <TextInput
-              placeholder="Confirm Password"
+              placeholder="Xác nhận mật khẩu"
               style={[styles.input, { color: isDarkMode ? "#fff" : "black" }]}
               placeholderTextColor={isDarkMode ? colors.placeHolder : undefined}
               spellCheck={false}
@@ -201,21 +218,25 @@ const ResetPassword = ({ route, navigation }: RouterProps) => {
             ></TextInput>
           </Button>
           <TouchableOpacity
+            disabled={isLoading}
             activeOpacity={0.7}
             onPress={onSave}
             style={{
               alignSelf: "flex-end",
               marginRight: width < 400 ? 26 : 34,
               marginTop: 20,
+              opacity: isLoading ? 0.5 : 1,
             }}
           >
-            <NavButton>Save</NavButton>
+            <NavButton isLoading={isLoading}>
+              {isLoading ? "Đang gửi" : "Lưu"}
+            </NavButton>
           </TouchableOpacity>
         </Animated.View>
         {isModal && (
           <Modal
-            title="Password"
-            content={`password don't match`}
+            title="Mật khẩu"
+            content={`Mật khẩu không khớp`}
             onPress={() => setIsModal(false)}
             isDarkMode={isDarkMode}
           ></Modal>

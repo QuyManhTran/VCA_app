@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 import { colors } from "../../../../constants";
-import { montserratFonts } from "../../../../constants/fontFamiles";
+import {
+  baloo2Fonts,
+  montserratFonts,
+} from "../../../../constants/fontFamiles";
 
 const styles = StyleSheet.create({
   container: {
@@ -12,9 +15,8 @@ const styles = StyleSheet.create({
   },
 
   heading: {
-    fontFamily: montserratFonts.extra,
+    fontFamily: baloo2Fonts.extra,
     fontSize: 50,
-    lineHeight: 56,
   },
   input: {
     fontSize: 20,

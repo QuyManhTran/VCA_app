@@ -48,6 +48,7 @@ const Search = ({ route, navigation }: RouterProps) => {
   const timeoutRef: { current: NodeJS.Timeout } = useRef(null);
   const scrollOpacity = useRef(new Animated.Value(0)).current;
   const [keyword, setKeyword] = useState(route.params?.keyword || "");
+  const [handle, setHandle] = useState<number>(route.params?.keyword ? 0 : 1);
   const debounceKeyword = useDebounce(keyword, 300);
   const [data, setData] = useState([]);
   const [activeTag, setActiveTag] = useState(0);
@@ -216,8 +217,16 @@ const Search = ({ route, navigation }: RouterProps) => {
   }, []);
 
   useEffect(() => {
-    blankKeywordHandler();
+    if (handle >= 1) {
+      blankKeywordHandler();
+    }
   }, [activeTag]);
+
+  useEffect(() => {
+    if (handle === 0) {
+      setHandle(1);
+    }
+  }, [handle]);
 
   useEffect(() => {
     if (debounceKeyword === "") {

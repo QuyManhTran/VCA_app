@@ -30,9 +30,11 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
   const [otp, setOTP] = useState("");
   const [isErrorOTP, setIsErrorOTP] = useState(false);
   const [isModal, setIsModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const width = screenWidth();
   const onChangePassword = async () => {
     if (isOTP(otp)) {
+      setIsLoading(true);
       const response = await sendOTPService.sendOTP(
         sendOTPService.sendOTPPath,
         {
@@ -43,10 +45,12 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
       if (response.message !== 200) {
         setIsErrorOTP(true);
         setIsModal(true);
+        setIsLoading(false);
       } else {
         navigation.navigate("ResetPassword", {
           email: email,
         });
+        setIsLoading(false);
       }
     } else {
       setIsModal(true);
@@ -123,15 +127,19 @@ const CodeVerifying = ({ route, navigation }: RouterProps) => {
             ></TextInput>
           </Button>
           <TouchableOpacity
+            disabled={isLoading}
             activeOpacity={0.7}
             onPress={onChangePassword}
             style={{
               alignSelf: "flex-end",
               marginRight: width < 400 ? 26 : 34,
               marginTop: 20,
+              opacity: isLoading ? 0.5 : 1,
             }}
           >
-            <NavButton>Xác nhận</NavButton>
+            <NavButton isLoading={isLoading}>
+              {isLoading ? "Đang xác thực" : "Xác nhận"}
+            </NavButton>
           </TouchableOpacity>
         </View>
         <View

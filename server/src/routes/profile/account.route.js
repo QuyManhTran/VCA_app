@@ -21,6 +21,7 @@ const {
 } = require("../../controllers/profile/confirmOtpController");
 const {
   changePasswordController,
+  resetPasswordController,
 } = require("../../controllers/profile/changePasswordController");
 const {
   addImageController,
@@ -39,6 +40,7 @@ accountRouter.get("/login", loginController);
 accountRouter.post("/signup", signUpController);
 accountRouter.post("/forgot", sendMailController);
 accountRouter.post("/confirm", confirmOtpController);
+accountRouter.post("/reset-password", resetPasswordController);
 accountRouter.patch("/change-password", changePasswordController);
 accountRouter.put("/delete", deleteAccount);
 accountRouter.patch("/add-image", addImageController);
