@@ -90,7 +90,7 @@ const AskRegister = ({ navigation, route }: RouterProps) => {
           style={[
             styles.heading,
             {
-              fontSize: width < 400 ? 42 : 46,
+              fontSize: width < 400 ? 46 : 50,
               color: isDarkMode ? colors.whiteText : "black",
             },
           ]}
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   heading: {
-    fontFamily: montserratFonts.extra,
+    fontFamily: baloo2Fonts.extra,
     fontSize: 46,
     lineHeight: 78,
   },

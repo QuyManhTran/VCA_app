@@ -116,13 +116,6 @@ const AskLogin = ({ navigation, route }: RouterProps) => {
             isDarkMode={isDarkMode}
             width={width}
           ></AuthButton>
-          {/* <AuthButton
-            content="Đăng xuất Google"
-            icon="google"
-            onAccess={signOutFireBase}
-            isDarkMode={isDarkMode}
-            width={width}
-          ></AuthButton> */}
         </View>
         <View
           style={{
