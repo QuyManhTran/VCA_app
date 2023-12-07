@@ -8,6 +8,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 12,
   },
+  headerWrapper: {
+    position: "absolute",
+    left: 12,
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   wrapperNav: {
     position: "absolute",
     top: 148,

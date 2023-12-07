@@ -35,6 +35,8 @@ import "expo-dev-client";
 import ExpoGoogle from "./src/screens/ExpoGoogle";
 import AskLogin from "./src/screens/AskAccount/AskLogin";
 import AskRegister from "./src/screens/AskAccount/AskRegister";
+import Model3d from "./src/screens/Blog/CustomerExperience/Model3d";
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -59,6 +61,7 @@ export default function App() {
   };
   useEffect(() => {
     LogBox.ignoreLogs([
+      'Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation',
       "new NativeEventEmitter()",
       "Non-serializable values were found in the navigation state",
     ]);
@@ -124,6 +127,7 @@ export default function App() {
               <Stack.Screen name="History" component={History} />
               <Stack.Screen name="Trending" component={TrendingList} />
               <Stack.Screen name="PlayList" component={PlayList} />
+              <Stack.Screen name="Model3d" component={Model3d} />
             </Stack.Navigator>
           </NavigationContainer>
         </GlobalContext>

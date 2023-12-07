@@ -9,7 +9,7 @@ import {
 import { useCallback, useState, useContext, useRef, useEffect } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import * as Animatable from "react-native-animatable";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { RouterProps } from "../Splash/Splash";
 import Header from "./Header";
 import Description from "./Description";
@@ -57,6 +57,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const [video, setVideo] = useState<string>("");
   const [like, setLike] = useState(route.params.like);
   const [rate, setRate] = useState(route.params.rate);
+  const [model3d, setModel3d] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [isRated, setIsRated] = useState(false);
   const [isFavorite, setIsFavorite] = useState(isFavoriteOrigin);
@@ -91,6 +92,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
   const onBack = () => {
     navigation.goBack();
   };
+
   const toggleFullscreen = useCallback(async () => {
     if (isFullscreen) {
       await ScreenOrientation.lockAsync(
@@ -170,6 +172,14 @@ const Blog = ({ route, navigation }: RouterProps) => {
     setIsComment(false);
   }, []);
 
+  const onNavigate3D = () => {
+    navigation.navigate("Model3d", {
+      isDarkMode,
+      model3d,
+      name,
+    });
+  };
+
   useEffect(() => {
     const updateActivity = async () => {
       const response = await postHistoryService.postHistory(
@@ -199,7 +209,9 @@ const Blog = ({ route, navigation }: RouterProps) => {
           ingredient_list,
           like,
           rate,
+          model_3d,
         } = response.data;
+        setModel3d(model_3d || model3d);
         setHistories(history);
         setDescription(descriptionAPI);
         setVideo(video);
@@ -359,17 +371,23 @@ const Blog = ({ route, navigation }: RouterProps) => {
         },
       ]}
     >
-      <TouchableOpacity
-        activeOpacity={0.6}
-        style={[styles.backBtn, { top: width < 400 ? 24 : 32 }]}
-        onPress={onBack}
-      >
-        <Ionicons
-          name="arrow-back"
-          size={30}
-          color={isDarkMode ? colors.primary : "black"}
-        ></Ionicons>
-      </TouchableOpacity>
+      <View style={[styles.headerWrapper, { top: width < 400 ? 24 : 36 }]}>
+        <TouchableOpacity activeOpacity={0.6} onPress={onBack}>
+          <Ionicons
+            name="arrow-back"
+            size={30}
+            color={isDarkMode ? colors.primary : "black"}
+          ></Ionicons>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.6} onPress={onNavigate3D}>
+          <MaterialIcons
+            name="3d-rotation"
+            size={30}
+            color={isDarkMode ? colors.primary : "black"}
+          />
+        </TouchableOpacity>
+        <View></View>
+      </View>
       <Video
         isFullscreen={isFullscreen}
         toggleFullscreen={toggleFullscreen}

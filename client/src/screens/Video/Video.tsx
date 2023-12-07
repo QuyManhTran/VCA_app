@@ -334,7 +334,7 @@ const Video = ({
             {
               marginLeft: isFullscreen ? 0 : -20,
               top: !isFullscreen ? (width < 400 ? 220 + 64 : 220 + 72) : "84%",
-              width: !isFullscreen ? width + 32 : width,
+              width: !isFullscreen ? width + 362 : width,
               justifyContent: isFullscreen ? "center" : "flex-start",
             },
           ]}
