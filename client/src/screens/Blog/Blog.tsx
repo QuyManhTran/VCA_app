@@ -482,7 +482,7 @@ const Blog = ({ route, navigation }: RouterProps) => {
               inputRange: [-150, 0],
               outputRange: [50, 194],
             }),
-            paddingBottom: 130,
+            paddingBottom: width < 400 ? 130 : 124,
           }}
         >
           <View
