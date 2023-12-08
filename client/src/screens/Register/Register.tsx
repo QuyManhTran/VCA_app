@@ -56,8 +56,8 @@ const Register = ({ route, navigation }: RouterProps) => {
   const onRegister = async () => {
     if (!isValidated) {
       if (!userName.length) {
-        const title = "UserName";
-        const content = "Username can not be blank!";
+        const title = "Tên đăng nhập";
+        const content = "Tên đăng nhập không được để trống!";
         if (title !== modalTitle) {
           setModalTitle(title);
           setModalContent(content);
@@ -67,17 +67,17 @@ const Register = ({ route, navigation }: RouterProps) => {
         const title = "Email";
         const content =
           email.length === 0
-            ? `Email can't be empty!`
-            : `Email isn't in correct format!`;
+            ? `Email không được để trống!`
+            : `Email không đúng định dạng!`;
         setModalTitle(title);
         setModalContent(content);
         setIsModal(true);
       } else {
-        const title = "Password";
+        const title = "Mật khẩu";
         const content =
           password.length === 0
-            ? `Password can't be empty!`
-            : `Password must contain at least 8 characters`;
+            ? `Mật khẩu không được để trống!`
+            : `Mật khẩu phải chứa tối thiểu 8 kí tự bao gồm: 1 kí tự đặc biệt, 1 số, 1 chữ cái`;
         setModalTitle(title);
         setModalContent(content);
         setIsModal(true);
@@ -110,7 +110,7 @@ const Register = ({ route, navigation }: RouterProps) => {
           }
         }
       } catch (error) {
-        console.log("memeya", error);
+        console.log(error);
       }
     }
   };
