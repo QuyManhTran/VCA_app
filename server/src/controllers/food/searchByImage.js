@@ -79,10 +79,11 @@ const searchByImage = async (req, res) => {
     const sortedData = filteredData.sort(
       (a, b) => b.probability - a.probability
     );
+    console.log(sortedData);
     const results = await Promise.all(
       filteredData.map(async (item) => {
         const foodByLabel = await food.findOne(
-          { $text: { $search: item.label } },
+          { name: item.label },
           { _id: 1, name: 1, image: 1, tags: 1, like: 1, rate: 1 }
         );
         if (foodByLabel !== null) {
