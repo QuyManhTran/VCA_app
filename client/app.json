@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "VCA_Project",
+    "name": "VCAdventure",
     "slug": "VCA_Project",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/img/splash/splash0.png",
+    "icon": "./assets/img/splash/icon.jpg",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/img/splash/splash0.png",
