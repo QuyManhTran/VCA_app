@@ -17,7 +17,7 @@ import { colors } from "../../../constants";
 import NavButton from "../../components/NavButton";
 import { RouterProps } from "../Splash/Splash";
 import ThemeContext from "../../utilies/theme";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import RecommendList from "../../components/RecommendList";
 import { list, recommendLists } from "../../../assets/img/foods";
 import { getHistoriesService } from "../../services/profileService";
@@ -34,9 +34,9 @@ const Explore = ({ route, navigation }: RouterProps) => {
   } = useContext(ThemeContext);
   const [newList, setNewList] = useState<string | null>("");
   const [isModal, setIsModal] = useState(false);
-  const [isGoBack, setIsGoBack] = useState(true);
   const [isNotify, setIsNotify] = useState(true);
   const [prevOffSetY, setPrevOffSetY] = useState(0);
+  const isFocused = useIsFocused();
   const onSingleList = (
     name: string,
     data,
@@ -87,9 +87,10 @@ const Explore = ({ route, navigation }: RouterProps) => {
   // When navigation goBack and set state
   useFocusEffect(
     useCallback(() => {
-      setHomeNavbar(false);
-      setIsGoBack(true);
-    }, [isHomeScrollDown])
+      if (isFocused) {
+        setHomeNavbar(false);
+      }
+    }, [isFocused])
   );
 
   return (
@@ -173,7 +174,6 @@ const Explore = ({ route, navigation }: RouterProps) => {
                   activeOpacity={0.6}
                   key={index}
                   onPress={() => {
-                    setIsGoBack(false);
                     onSingleList(
                       item.name,
                       recommendLists,
